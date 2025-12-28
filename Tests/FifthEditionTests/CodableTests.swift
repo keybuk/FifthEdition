@@ -9,23 +9,17 @@ import Foundation
 import Testing
 @testable import FifthEdition
 
-protocol CodableTest {
-    func testCodable<Value: Equatable & Codable>(json: String, value: Value, sourceLocation: SourceLocation) throws
+func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: Value, sourceLocation: SourceLocation = #_sourceLocation) throws {
+    let value = try JSONDecoder().decode(Value.self, from: json.data(using: .utf8)!)
+    #expect(value == expectedValue, sourceLocation: sourceLocation)
+
+    // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode and decode the value, and make sure it stayed the same.
+    let encodedJson = String(data: try JSONEncoder().encode(expectedValue), encoding: .utf8)!
+    let decodedValue = try JSONDecoder().decode(Value.self, from: encodedJson.data(using: .utf8)!)
+    #expect(decodedValue == expectedValue, sourceLocation: sourceLocation)
 }
 
-extension CodableTest {
-    func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: Value, sourceLocation: SourceLocation = #_sourceLocation) throws {
-        let value = try JSONDecoder().decode(Value.self, from: json.data(using: .utf8)!)
-        #expect(value == expectedValue, sourceLocation: sourceLocation)
-
-        // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode and decode the value, and make sure it stayed the same.
-        let encodedJson = String(data: try JSONEncoder().encode(expectedValue), encoding: .utf8)!
-        let decodedValue = try JSONDecoder().decode(Value.self, from: encodedJson.data(using: .utf8)!)
-        #expect(decodedValue == expectedValue, sourceLocation: sourceLocation)
-    }
-}
-
-struct DynamicCodingKeyTests: CodableTest {
+struct DynamicCodingKeyTests {
 
     struct Hobbit: Equatable, Codable {
         var frodo: Int
@@ -69,7 +63,7 @@ struct DynamicCodingKeyTests: CodableTest {
 
 }
 
-struct EnumCodingKeyTests: CodableTest {
+struct EnumCodingKeyTests {
 
     struct Wizard: Equatable, Codable {
         enum Name: String, CaseIterable {

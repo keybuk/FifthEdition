@@ -8,7 +8,7 @@
 import Testing
 @testable import FifthEdition
 
-struct AlignmentCodableTests: CodableTest {
+struct AlignmentCodableTests {
 
     static let testAlignments: [Alignment: [String]] = [
         [.lawful, .good]:
@@ -71,7 +71,7 @@ struct AlignmentCodableTests: CodableTest {
 
 }
 
-struct CreatureTypeCodableTests: CodableTest {
+struct CreatureTypeCodableTests {
 
     @Test("Creature types", arguments: CreatureType.allCases)
     func creatureType(_ creatureType: CreatureType) throws {
@@ -85,7 +85,7 @@ struct CreatureTypeCodableTests: CodableTest {
 
 }
 
-struct EditionCodableTests: CodableTest {
+struct EditionCodableTests {
 
     @Test("Editions", arguments: Edition.allCases)
     func editon(_ edition: Edition) throws {
@@ -99,7 +99,7 @@ struct EditionCodableTests: CodableTest {
 
 }
 
-struct PageCodableTests: CodableTest {
+struct PageCodableTests {
 
     @Test("Numeric page")
     func number() throws {
@@ -123,7 +123,7 @@ struct PageCodableTests: CodableTest {
 
 }
 
-struct ProficiencyCodableTests: CodableTest {
+struct ProficiencyCodableTests {
 
     @Test("Proficient")
     func proficient() throws {
@@ -147,7 +147,7 @@ struct ProficiencyCodableTests: CodableTest {
 
 }
 
-struct ReprintCodableTests: CodableTest {
+struct ReprintCodableTests {
 
     @Test("Reprint")
     func reprint() throws {
@@ -193,7 +193,7 @@ struct ReprintCodableTests: CodableTest {
 
 }
 
-struct SizeCodableTests: CodableTest {
+struct SizeCodableTests {
 
     static let testSizes: [Size: String] = [
         .tiny:       "T",
@@ -216,7 +216,7 @@ struct SizeCodableTests: CodableTest {
 
 }
 
-struct SkillCodableTests: CodableTest {
+struct SkillCodableTests {
 
     @Test("Skills", arguments: Skill.allCases)
     func skill(_ skill: Skill) throws {
@@ -230,7 +230,7 @@ struct SkillCodableTests: CodableTest {
 
 }
 
-struct SourceCodableTests: CodableTest {
+struct SourceCodableTests {
 
     @Test("Source")
     func source() throws {
@@ -261,7 +261,7 @@ struct SourceCodableTests: CodableTest {
     }
 }
 
-struct SpeedCodableTests: CodableTest {
+struct SpeedCodableTests {
 
     @Test("Walk speed")
     func walk() throws {
@@ -588,7 +588,7 @@ struct SpeedSubscriptTests {
 
 }
 
-struct TagCodableTests: CodableTest {
+struct TagCodableTests {
 
     @Test("Tag")
     func tag() throws {
@@ -615,7 +615,7 @@ struct TagCodableTests: CodableTest {
 
 }
 
-struct ToolCodableTests: CodableTest {
+struct ToolCodableTests {
 
     @Test("Tools", arguments: Tool.allCases)
     func tool(_ tool: Tool) throws {

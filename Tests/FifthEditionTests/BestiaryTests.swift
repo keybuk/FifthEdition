@@ -8,7 +8,7 @@
 import Testing
 @testable import FifthEdition
 
-struct CreatureCodableTests: CodableTest {
+struct CreatureCodableTests {
 
     @Test("Minimal creature")
     func minimal() throws {
@@ -228,7 +228,7 @@ struct CreatureCodableTests: CodableTest {
     }
 }
 
-struct CreatureAbilityScoreCodableTests: CodableTest {
+struct CreatureAbilityScoreCodableTests {
 
     @Test("Ability score")
     func score() throws {
@@ -255,7 +255,7 @@ struct CreatureAbilityScoreCodableTests: CodableTest {
 
 }
 
-struct CreatureAlignmentCodableTests: CodableTest {
+struct CreatureAlignmentCodableTests {
 
     @Test("Simple alignment")
     func common() throws {
@@ -382,7 +382,7 @@ struct CreatureAlignmentCodableTests: CodableTest {
 
 }
 
-struct CreatureArmorClassCodableTests: CodableTest {
+struct CreatureArmorClassCodableTests {
 
     @Test("Armor class")
     func object() throws {
@@ -462,7 +462,7 @@ struct CreatureArmorClassCodableTests: CodableTest {
 
 }
 
-struct CreatureChallengeRatingCodableTests: CodableTest {
+struct CreatureChallengeRatingCodableTests {
 
     @Test("Challenge rating")
     func cr() throws {
@@ -540,7 +540,7 @@ struct CreatureChallengeRatingCodableTests: CodableTest {
 
 }
 
-struct CreatureCreatureTypeCodableTests: CodableTest {
+struct CreatureCreatureTypeCodableTests {
 
     @Test("Creature type")
     func type() throws {
@@ -670,7 +670,7 @@ struct CreatureCreatureTypeCodableTests: CodableTest {
 
 }
 
-struct CreatureGearCodableTests: CodableTest {
+struct CreatureGearCodableTests {
 
     @Test("Gear")
     func gear() throws {
@@ -698,7 +698,7 @@ struct CreatureGearCodableTests: CodableTest {
 }
 
 
-struct CreatureHitPointsCodableTests: CodableTest {
+struct CreatureHitPointsCodableTests {
 
     @Test("Hit points")
     func hitPoints() throws {
@@ -756,7 +756,7 @@ struct CreatureHitPointsCodableTests: CodableTest {
 
 }
 
-struct CreatureInitiativeCodableTests: CodableTest {
+struct CreatureInitiativeCodableTests {
 
     @Test("Initiative value")
     func initiative() throws {
@@ -829,7 +829,7 @@ struct CreatureInitiativeCodableTests: CodableTest {
 
 }
 
-class CreaturePassiveCodableTests: CodableTest {
+class CreaturePassiveCodableTests {
 
     @Test("Passive score")
     func score() throws {
@@ -854,7 +854,7 @@ class CreaturePassiveCodableTests: CodableTest {
 
 }
 
-struct CreatureSaveCodableTests: CodableTest {
+struct CreatureSaveCodableTests {
 
     @Test("Saving throws")
     func save() throws {
@@ -874,7 +874,7 @@ struct CreatureSaveCodableTests: CodableTest {
 
 }
 
-struct CreatureShortNameCodableTests: CodableTest {
+struct CreatureShortNameCodableTests {
 
     @Test("Name")
     func name() throws {
@@ -899,7 +899,7 @@ struct CreatureShortNameCodableTests: CodableTest {
 }
 
 
-struct CreatureSkillSetCodableTests: CodableTest {
+struct CreatureSkillSetCodableTests {
 
     @Test("Skill set")
     func skill() throws {
@@ -1008,7 +1008,7 @@ struct CreatureSkillSetSubscriptTests {
 
 }
 
-struct CreatureToolSetTests: CodableTest {
+struct CreatureToolSetTests {
 
     @Test("Tool set")
     func tool() throws {
