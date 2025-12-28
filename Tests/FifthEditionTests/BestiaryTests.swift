@@ -228,25 +228,313 @@ struct CreatureCodableTests: CodableTest {
     }
 }
 
-struct CreatureShortNameCodableTests: CodableTest {
+struct CreatureAbilityScoreCodableTests: CodableTest {
 
-    @Test("Name")
-    func name() throws {
+    @Test("Ability score")
+    func score() throws {
         try testCodable(
             json: """
-            "name"
+            16
             """,
-            value: Creature.ShortName.name("name")
+            value: Creature.AbilityScore.score(16),
         )
     }
 
-    @Test("Use (full) name")
-    func useName() throws {
+    @Test("Special ability score")
+    func special() throws {
+        // This doesn't appear anywhere in the bestiary, but is valid in the schema.
         try testCodable(
             json: """
-            true
+            {
+                "special": "same as player"
+            }
             """,
-            value: Creature.ShortName.useName
+            value: Creature.AbilityScore.special("same as player"),
+        )
+    }
+
+}
+
+struct CreatureAlignmentCodableTests: CodableTest {
+
+    @Test("Simple alignment")
+    func common() throws {
+        try testCodable(
+            json: """
+            [
+                "C",
+                "G"
+            ]
+            """,
+            value: Creature.Alignment.alignment([.chaotic, .good])
+        )
+    }
+
+    @Test("Alignment in object")
+    func object() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "alignment": [
+                        "L",
+                        "G"
+                    ]
+                }
+            ]
+            """,
+            value: Creature.Alignment.choice([
+                .init(alignment: [.lawful, .good]),
+            ]),
+        )
+    }
+
+    @Test("Alignment with note")
+    func note() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "alignment": [
+                        "C",
+                        "G"
+                    ],
+                    "note": "chaotic evil when hungry"
+                }
+            ]
+            """,
+            value: Creature.Alignment.choice([
+                .init(
+                    alignment: [.chaotic, .good],
+                    note: "chaotic evil when hungry"
+                ),
+            ]),
+        )
+    }
+
+    @Test("Choice of alignment")
+    func choice() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "alignment": [
+                        "L",
+                        "G"
+                    ]
+                },
+                {
+                    "alignment": [
+                        "C",
+                        "E"
+                    ]
+                }
+            ]
+            """,
+            value: Creature.Alignment.choice([
+                .init(alignment: [.lawful, .good]),
+                .init(alignment: [.chaotic, .evil]),
+            ]),
+        )
+    }
+
+    @Test("Alignments with random chance")
+    func chance() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "alignment": [
+                        "L",
+                        "G"
+                    ],
+                    "chance": 60
+                },
+                {
+                    "alignment": [
+                        "C",
+                        "E"
+                    ],
+                    "chance": 40
+                }
+            ]
+            """,
+            value: Creature.Alignment.choice([
+                .init(alignment: [.lawful, .good], chance: 60),
+                .init(alignment: [.chaotic, .evil], chance: 40),
+            ]),
+        )
+    }
+
+    @Test("Special alignment")
+    func special() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "special": "player's alignment"
+                }
+            ]
+            """,
+            value: Creature.Alignment.special("player's alignment"),
+        )
+    }
+
+}
+
+struct CreatureArmorClassCodableTests: CodableTest {
+
+    @Test("Armor class")
+    func object() throws {
+        try testCodable(
+            json: """
+            [
+                15
+            ]
+            """,
+            value: [
+                Creature.ArmorClass.ac(15)
+            ],
+        )
+    }
+
+    @Test("Obtained armor class")
+    func obtained() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "ac": 16,
+                    "from": [
+                        "natural armor"
+                    ]
+                }
+            ]
+            """,
+            value: [
+                Creature.ArmorClass.obtained(
+                    16,
+                    from: ["natural armor"]
+                )
+            ],
+        )
+    }
+
+    @Test("Conditional armor class")
+    func conditional() throws {
+        try testCodable(
+            json: """
+            [
+                13,
+                {
+                    "ac": 17,
+                    "condition": "with {@spell mage armor}",
+                    "braces": true
+                }
+            ]
+            """,
+            value: [
+                Creature.ArmorClass.ac(13),
+                Creature.ArmorClass.obtained(
+                    17,
+                    condition: "with {@spell mage armor}",
+                    braces: true
+                )
+            ],
+        )
+    }
+
+    @Test("Special armor class")
+    func special() throws {
+        try testCodable(
+            json: """
+            [
+                {
+                    "special": "12 + your Intelligence modifier"
+                }
+            ]
+            """,
+            value: [
+                Creature.ArmorClass.special("12 + your Intelligence modifier")
+            ],
+        )
+    }
+
+}
+
+struct CreatureChallengeRatingCodableTests: CodableTest {
+
+    @Test("Challenge rating")
+    func cr() throws {
+        try testCodable(
+            json: """
+            "17"
+            """,
+            value: Creature.ChallengeRating("17"),
+        )
+    }
+
+    @Test("Challenge rating with XP")
+    func xp() throws {
+        try testCodable(
+            json: """
+            {
+                "cr": "1",
+                "xp": 100
+            }
+            """,
+            value: Creature.ChallengeRating(
+                "1",
+                xp: 100
+            ),
+        )
+    }
+
+    @Test("Challenge rating with lair")
+    func lair() throws {
+        try testCodable(
+            json: """
+            {
+                "cr": "5",
+                "lair": "6"
+            }
+            """,
+            value: Creature.ChallengeRating(
+                "5",
+                lair: "6",
+            ),
+        )
+    }
+
+    @Test("Challenge rating with lair XP")
+    func lairXP() throws {
+        try testCodable(
+            json: """
+            {
+                "cr": "14",
+                "xpLair": 13000
+            }
+            """,
+            value: Creature.ChallengeRating(
+                "14",
+                xpLair: 13000,
+            ),
+        )
+    }
+
+    @Test("Challenge rating with coven")
+    func coven() throws {
+        try testCodable(
+            json: """
+            {
+                "cr": "5",
+                "coven": "6"
+            }
+            """,
+            value: Creature.ChallengeRating(
+                "5",
+                coven: "6",
+            ),
         )
     }
 
@@ -382,212 +670,33 @@ struct CreatureCreatureTypeCodableTests: CodableTest {
 
 }
 
-struct CreatureAlignmentCodableTests: CodableTest {
+struct CreatureGearCodableTests: CodableTest {
 
-    @Test("Simple alignment")
-    func common() throws {
+    @Test("Gear")
+    func gear() throws {
         try testCodable(
             json: """
-            [
-                "C",
-                "G"
-            ]
+            "chain mail|xphb"
             """,
-            value: Creature.Alignment.alignment([.chaotic, .good])
+            value: Creature.Gear("chain mail|xphb"),
         )
     }
 
-    @Test("Alignment in object")
-    func object() throws {
+    @Test("Gear with quantity")
+    func gearWithQuantity() throws {
         try testCodable(
             json: """
-            [
-                {
-                    "alignment": [
-                        "L",
-                        "G"
-                    ]
-                }
-            ]
+            {
+                "item": "dagger|xphb",
+                "quantity": 4
+            }
             """,
-            value: Creature.Alignment.choice([
-                .init(alignment: [.lawful, .good]),
-            ]),
-        )
-    }
-
-    @Test("Alignment with note")
-    func note() throws {
-        try testCodable(
-            json: """
-            [
-                {
-                    "alignment": [
-                        "C",
-                        "G"
-                    ],
-                    "note": "chaotic evil when hungry"
-                }
-            ]
-            """,
-            value: Creature.Alignment.choice([
-                .init(
-                    alignment: [.chaotic, .good],
-                    note: "chaotic evil when hungry"
-                ),
-            ]),
-        )
-    }
-
-    @Test("Choice of alignment")
-    func choice() throws {
-        try testCodable(
-            json: """
-            [
-                {
-                    "alignment": [
-                        "L",
-                        "G"
-                    ]
-                },
-                {
-                    "alignment": [
-                        "C",
-                        "E"
-                    ]
-                }
-            ]
-            """,
-            value: Creature.Alignment.choice([
-                .init(alignment: [.lawful, .good]),
-                .init(alignment: [.chaotic, .evil]),
-            ]),
-        )
-    }
-
-    @Test("Alignments with random chance")
-    func chance() throws {
-        try testCodable(
-            json: """
-            [
-                {
-                    "alignment": [
-                        "L",
-                        "G"
-                    ],
-                    "chance": 60
-                },
-                {
-                    "alignment": [
-                        "C",
-                        "E"
-                    ],
-                    "chance": 40
-                }
-            ]
-            """,
-            value: Creature.Alignment.choice([
-                .init(alignment: [.lawful, .good], chance: 60),
-                .init(alignment: [.chaotic, .evil], chance: 40),
-            ]),
-        )
-    }
-
-    @Test("Special alignment")
-    func special() throws {
-        try testCodable(
-            json: """
-            [
-                {
-                    "special": "player's alignment"
-                }
-            ]
-            """,
-            value: Creature.Alignment.special("player's alignment"),
+            value: Creature.Gear("dagger|xphb", quantity: 4),
         )
     }
 
 }
 
-struct CreatureArmorClassTests: CodableTest {
-
-    @Test("Armor class")
-    func object() throws {
-        try testCodable(
-            json: """
-            [
-                15
-            ]
-            """,
-            value: [
-                Creature.ArmorClass.ac(15)
-            ],
-        )
-    }
-
-    @Test("Obtained armor class")
-    func obtained() throws {
-        try testCodable(
-            json: """
-            [
-                {
-                    "ac": 16,
-                    "from": [
-                        "natural armor"
-                    ]
-                }
-            ]
-            """,
-            value: [
-                Creature.ArmorClass.obtained(
-                    16,
-                    from: ["natural armor"]
-                )
-            ],
-        )
-    }
-
-    @Test("Conditional armor class")
-    func conditional() throws {
-        try testCodable(
-            json: """
-            [
-                13,
-                {
-                    "ac": 17,
-                    "condition": "with {@spell mage armor}",
-                    "braces": true
-                }
-            ]
-            """,
-            value: [
-                Creature.ArmorClass.ac(13),
-                Creature.ArmorClass.obtained(
-                    17,
-                    condition: "with {@spell mage armor}",
-                    braces: true
-                )
-            ],
-        )
-    }
-
-    @Test("Special armor class")
-    func special() throws {
-        try testCodable(
-            json: """
-            [
-                {
-                    "special": "12 + your Intelligence modifier"
-                }
-            ]
-            """,
-            value: [
-                Creature.ArmorClass.special("12 + your Intelligence modifier")
-            ],
-        )
-    }
-
-}
 
 struct CreatureHitPointsCodableTests: CodableTest {
 
@@ -647,31 +756,7 @@ struct CreatureHitPointsCodableTests: CodableTest {
 
 }
 
-struct CreatureAdvantageCodableTests: CodableTest {
-
-    @Test("Advantage")
-    func advantage() throws {
-        try testCodable(
-            json: """
-            "adv"
-            """,
-            value: Creature.Initiative.Advantage.advantage,
-        )
-    }
-
-    @Test("Disadvantage")
-    func disadvantage() throws {
-        try testCodable(
-            json: """
-            "dis"
-            """,
-            value: Creature.Initiative.Advantage.disadvantage,
-        )
-    }
-
-}
-
-struct CreatureInitiativeTests: CodableTest {
+struct CreatureInitiativeCodableTests: CodableTest {
 
     @Test("Initiative value")
     func initiative() throws {
@@ -701,7 +786,7 @@ struct CreatureInitiativeTests: CodableTest {
         )
     }
 
-    @Test("Advantage mode")
+    @Test("Advantage")
     func advantage() throws {
         try testCodable(
             json: """
@@ -711,6 +796,20 @@ struct CreatureInitiativeTests: CodableTest {
             """,
             value: Creature.Initiative(
                 advantage: .advantage,
+            ),
+        )
+    }
+
+    @Test("Disadvantage")
+    func disadvantage() throws {
+        try testCodable(
+            json: """
+            {
+                "advantageMode": "dis"
+            }
+            """,
+            value: Creature.Initiative(
+                advantage: .disadvantage,
             ),
         )
     }
@@ -730,34 +829,77 @@ struct CreatureInitiativeTests: CodableTest {
 
 }
 
-struct CreatureAbilityScoreTests: CodableTest {
+class CreaturePassiveCodableTests: CodableTest {
 
-    @Test("Ability score")
+    @Test("Passive score")
     func score() throws {
         try testCodable(
             json: """
             16
             """,
-            value: Creature.AbilityScore.score(16),
+            value: Creature.Passive.score(16),
         )
     }
 
-    @Test("Special ability score")
+    @Test("Special passive score")
     func special() throws {
-        // This doesn't appear anywhere in the bestiary, but is valid in the schema.
+        // Unlike other specials, this is just a string instead of an integer.
         try testCodable(
             json: """
-            {
-                "special": "same as player"
-            }
+            "can't see"
             """,
-            value: Creature.AbilityScore.special("same as player"),
+            value: Creature.Passive.special("can't see"),
         )
     }
 
 }
 
-struct CreatureSkillSetTests: CodableTest {
+struct CreatureSaveCodableTests: CodableTest {
+
+    @Test("Saving throws")
+    func save() throws {
+        try testCodable(
+            json: """
+            {
+                "str": "+5",
+                "con": "+3",
+            }
+            """,
+            value: Creature.Save(
+                str: "+5",
+                con: "+3",
+            ),
+        )
+    }
+
+}
+
+struct CreatureShortNameCodableTests: CodableTest {
+
+    @Test("Name")
+    func name() throws {
+        try testCodable(
+            json: """
+            "name"
+            """,
+            value: Creature.ShortName.name("name")
+        )
+    }
+
+    @Test("Use (full) name")
+    func useName() throws {
+        try testCodable(
+            json: """
+            true
+            """,
+            value: Creature.ShortName.useName
+        )
+    }
+
+}
+
+
+struct CreatureSkillSetCodableTests: CodableTest {
 
     @Test("Skill set")
     func skill() throws {
@@ -787,10 +929,10 @@ struct CreatureSkillSetTests: CodableTest {
                 "other": [
                     {
                         "oneOf": {
-                        "arcana": "+7",
-                        "history": "+7",
-                        "nature": "+7",
-                        "religion": "+7"
+                            "arcana": "+7",
+                            "history": "+7",
+                            "nature": "+7",
+                            "religion": "+7"
                         }
                     }
                 ]
@@ -815,8 +957,59 @@ struct CreatureSkillSetTests: CodableTest {
 
 }
 
+struct CreatureSkillSetSubscriptTests {
+
+    @Test("Get skill by subscript")
+    func getSubscript() {
+        let skill = Creature.SkillSet([
+            .deception: "+5",
+            .perception: "+4",
+        ])
+        #expect(skill[.deception] == "+5")
+    }
+
+    @Test("Get unset skill by subscript")
+    func getSubscriptUnset() {
+        let skill = Creature.SkillSet([
+            .deception: "+5",
+            .perception: "+4",
+        ])
+        #expect(skill[.nature] == nil)
+    }
+
+    @Test("Set skill by subscript")
+    func setSubscript() {
+        var skill = Creature.SkillSet([
+            .deception: "+5",
+            .perception: "+4",
+        ])
+        skill[.nature] = "+2"
+
+        #expect(skill.skills == [
+            .deception: "+5",
+            .perception: "+4",
+            .nature: "+2",
+        ])
+    }
+
+    @Test("Change skill by subscript")
+    func changeSubscript() {
+        var skill = Creature.SkillSet([
+            .deception: "+5",
+            .perception: "+4",
+        ])
+        skill[.perception] = "+2"
+
+        #expect(skill.skills == [
+            .deception: "+5",
+            .perception: "+2",
+        ])
+    }
+
+}
+
 struct CreatureToolSetTests: CodableTest {
-    
+
     @Test("Tool set")
     func tool() throws {
         try testCodable(
@@ -832,135 +1025,56 @@ struct CreatureToolSetTests: CodableTest {
             ]),
         )
     }
-    
-}
-
-struct CreatureGearTests: CodableTest {
-
-    @Test("Gear")
-    func gear() throws {
-        try testCodable(
-            json: """
-            "chain mail|xphb"
-            """,
-            value: Creature.Gear("chain mail|xphb"),
-        )
-    }
-
-    @Test("Gear with quantity")
-    func gearWithQuantity() throws {
-        try testCodable(
-            json: """
-            {
-                "item": "dagger|xphb",
-                "quantity": 4
-            }
-            """,
-            value: Creature.Gear("dagger|xphb", quantity: 4),
-        )
-    }
 
 }
 
-class CreaturePassiveTests: CodableTest {
+struct CreatureToolSetSubscriptTests {
 
-    @Test("Passive score")
-    func score() throws {
-        try testCodable(
-            json: """
-            16
-            """,
-            value: Creature.Passive.score(16),
-        )
+    @Test("Get tool by subscript")
+    func getSubscript() {
+        let tool = Creature.ToolSet([
+            .cobblersTools: "+1",
+            .smithsTools: "+2",
+        ])
+        #expect(tool[.smithsTools] == "+2")
     }
 
-    @Test("Special passive score")
-    func special() throws {
-        // Unlike other specials, this is just a string instead of an integer.
-        try testCodable(
-            json: """
-            "can't see"
-            """,
-            value: Creature.Passive.special("can't see"),
-        )
+    @Test("Get unset tool by subscript")
+    func getSubscriptUnset() {
+        let tool = Creature.ToolSet([
+            .cobblersTools: "+1",
+            .smithsTools: "+2",
+        ])
+        #expect(tool[.brewersSupplies] == nil)
     }
 
-}
+    @Test("Set tool by subscript")
+    func setSubscript() {
+        var tool = Creature.ToolSet([
+            .cobblersTools: "+1",
+            .smithsTools: "+2",
+        ])
+        tool[.brewersSupplies] = "+3"
 
-struct CreatureChallengeRatingTests: CodableTest {
-
-    @Test("Challenge rating")
-    func cr() throws {
-        try testCodable(
-            json: """
-            "17"
-            """,
-            value: Creature.ChallengeRating("17"),
-        )
+        #expect(tool.tools == [
+            .cobblersTools: "+1",
+            .smithsTools: "+2",
+            .brewersSupplies: "+3",
+        ])
     }
 
-    @Test("Challenge rating with XP")
-    func xp() throws {
-        try testCodable(
-            json: """
-            {
-                "cr": "1",
-                "xp": 100
-            }
-            """,
-            value: Creature.ChallengeRating(
-                "1",
-                xp: 100
-            ),
-        )
-    }
+    @Test("Change tool by subscript")
+    func changeSubscript() {
+        var tool = Creature.ToolSet([
+            .cobblersTools: "+1",
+            .smithsTools: "+2",
+        ])
+        tool[.smithsTools] = "+3"
 
-    @Test("Challenge rating with lair")
-    func lair() throws {
-        try testCodable(
-            json: """
-            {
-                "cr": "5",
-                "lair": "6"
-            }
-            """,
-            value: Creature.ChallengeRating(
-                "5",
-                lair: "6",
-            ),
-        )
-    }
-
-    @Test("Challenge rating with lair XP")
-    func lairXP() throws {
-        try testCodable(
-            json: """
-            {
-                "cr": "14",
-                "xpLair": 13000
-            }
-            """,
-            value: Creature.ChallengeRating(
-                "14",
-                xpLair: 13000,
-            ),
-        )
-    }
-
-    @Test("Challenge rating with coven")
-    func coven() throws {
-        try testCodable(
-            json: """
-            {
-                "cr": "5",
-                "coven": "6"
-            }
-            """,
-            value: Creature.ChallengeRating(
-                "5",
-                coven: "6",
-            ),
-        )
+        #expect(tool.tools == [
+            .cobblersTools: "+1",
+            .smithsTools: "+3",
+        ])
     }
 
 }
