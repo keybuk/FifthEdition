@@ -46,6 +46,12 @@ public struct Creature: Equatable, Sendable {
         public var xpLair: Int? = nil
     }
 
+    public enum ConditionImmunity: Equatable, Hashable, Sendable {
+        case condition(Condition)
+        case conditional(Set<ConditionImmunity>, preNote: String? = nil, note: String? = nil, conditional: Bool? = nil)
+        case special(String)
+    }
+
     @MemberwiseInit(.public)
     public struct CreatureType: Equatable, Sendable {
         public enum Choice: Equatable, Sendable {
@@ -68,6 +74,24 @@ public struct Creature: Equatable, Sendable {
         public var sidekickTags: Set<Tag>? = nil
         public var sidekickHidden: Bool? = nil
         public var note: String? = nil
+    }
+
+    public enum DamageImmunity: Equatable, Hashable, Sendable {
+        case damage(DamageType)
+        case conditional(Set<DamageImmunity>, preNote: String? = nil, note: String? = nil, conditional: Bool? = nil)
+        case special(String)
+    }
+
+    public enum DamageResistance: Equatable, Hashable, Sendable {
+        case damage(DamageType)
+        case conditional(Set<DamageResistance>, preNote: String? = nil, note: String? = nil, conditional: Bool? = nil)
+        case special(String)
+    }
+
+    public enum DamageVulnerability: Equatable, Hashable, Sendable {
+        case damage(DamageType)
+        case conditional(Set<DamageVulnerability>, preNote: String? = nil, note: String? = nil, conditional: Bool? = nil)
+        case special(String)
     }
 
     @MemberwiseInit(.public)
@@ -185,6 +209,11 @@ public struct Creature: Equatable, Sendable {
     public var languages: Set<String>? = nil
     public var proficiencyBonus: String? = nil
     public var challengeRating: ChallengeRating? = nil
+
+    public var damageVulnerability: Set<DamageVulnerability>? = nil
+    public var damageResistance: Set<DamageResistance>? = nil
+    public var damageImmunity: Set<DamageImmunity>? = nil
+    public var conditionImmunity: Set<ConditionImmunity>? = nil
 }
 
 // MARK: - Codable
@@ -227,6 +256,10 @@ extension Creature: Codable {
         case languages
         case proficiencyBonus = "pbNote"
         case challengeRating = "cr"
+        case damageVulnerability = "vulnerable"
+        case damageResistance = "resist"
+        case damageImmunity = "immune"
+        case conditionImmunity = "conditionImmune"
     }
 }
 
@@ -377,6 +410,57 @@ extension Creature.ChallengeRating: Codable {
 
 }
 
+extension Creature.ConditionImmunity: Codable {
+    enum CodingKeys: String, CodingKey {
+        case conditions = "conditionImmune"
+        case preNote
+        case note
+        case conditional = "cond"
+    }
+
+    enum SpecialCodingKeys: String, CodingKey {
+        case special
+    }
+
+    public init(from decoder: any Decoder) throws {
+        if let container = try? decoder.singleValueContainer(),
+           let value = try? container.decode(Condition.self)
+        {
+            self = .condition(value)
+        } else if let container = try? decoder.container(keyedBy: SpecialCodingKeys.self),
+                  let value = try? container.decode(String.self, forKey: .special)
+        {
+            self = .special(value)
+        } else {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self = .conditional(
+                try container.decode(Set<Creature.ConditionImmunity>.self, forKey: .conditions),
+                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
+                note: try container.decodeIfPresent(String.self, forKey: .note),
+                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        switch self {
+        case .condition(let value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case .special(let value):
+            var container = encoder.container(keyedBy: SpecialCodingKeys.self)
+            try container.encode(value, forKey: .special)
+        case .conditional(let conditions, let preNote, let note, let cond):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(conditions, forKey: .conditions)
+            try container.encodeIfPresent(preNote, forKey: .preNote)
+            try container.encodeIfPresent(note, forKey: .note)
+            try container.encodeIfPresent(cond, forKey: .conditional)
+        }
+    }
+
+}
+
 extension Creature.CreatureType.Choice: Codable {
     enum ChoiceCodingKeys: String, CodingKey {
         case choose
@@ -446,6 +530,159 @@ extension Creature.CreatureType: Codable {
             try container.encodeIfPresent(note, forKey: .note)
         }
     }
+}
+
+extension Creature.DamageImmunity: Codable {
+    enum CodingKeys: String, CodingKey {
+        case damageTypes = "immune"
+        case preNote
+        case note
+        case conditional = "cond"
+    }
+
+    enum SpecialCodingKeys: String, CodingKey {
+        case special
+    }
+
+    public init(from decoder: any Decoder) throws {
+        if let container = try? decoder.singleValueContainer(),
+           let value = try? container.decode(DamageType.self)
+        {
+            self = .damage(value)
+        } else if let container = try? decoder.container(keyedBy: SpecialCodingKeys.self),
+                  let value = try? container.decode(String.self, forKey: .special)
+        {
+            self = .special(value)
+        } else {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self = .conditional(
+                try container.decode(Set<Creature.DamageImmunity>.self, forKey: .damageTypes),
+                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
+                note: try container.decodeIfPresent(String.self, forKey: .note),
+                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        switch self {
+        case .damage(let value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case .special(let value):
+            var container = encoder.container(keyedBy: SpecialCodingKeys.self)
+            try container.encode(value, forKey: .special)
+        case .conditional(let damageTypes, let preNote, let note, let cond):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(damageTypes, forKey: .damageTypes)
+            try container.encodeIfPresent(preNote, forKey: .preNote)
+            try container.encodeIfPresent(note, forKey: .note)
+            try container.encodeIfPresent(cond, forKey: .conditional)
+        }
+    }
+
+}
+
+extension Creature.DamageResistance: Codable {
+    enum CodingKeys: String, CodingKey {
+        case damageTypes = "resist"
+        case preNote
+        case note
+        case conditional = "cond"
+    }
+
+    enum SpecialCodingKeys: String, CodingKey {
+        case special
+    }
+
+    public init(from decoder: any Decoder) throws {
+        if let container = try? decoder.singleValueContainer(),
+           let value = try? container.decode(DamageType.self)
+        {
+            self = .damage(value)
+        } else if let container = try? decoder.container(keyedBy: SpecialCodingKeys.self),
+                  let value = try? container.decode(String.self, forKey: .special)
+        {
+            self = .special(value)
+        } else {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self = .conditional(
+                try container.decode(Set<Creature.DamageResistance>.self, forKey: .damageTypes),
+                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
+                note: try container.decodeIfPresent(String.self, forKey: .note),
+                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        switch self {
+        case .damage(let value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case .special(let value):
+            var container = encoder.container(keyedBy: SpecialCodingKeys.self)
+            try container.encode(value, forKey: .special)
+        case .conditional(let damageTypes, let preNote, let note, let cond):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(damageTypes, forKey: .damageTypes)
+            try container.encodeIfPresent(preNote, forKey: .preNote)
+            try container.encodeIfPresent(note, forKey: .note)
+            try container.encodeIfPresent(cond, forKey: .conditional)
+        }
+    }
+
+}
+
+extension Creature.DamageVulnerability: Codable {
+    enum CodingKeys: String, CodingKey {
+        case damageTypes = "vulnerable"
+        case preNote
+        case note
+        case conditional = "cond"
+    }
+
+    enum SpecialCodingKeys: String, CodingKey {
+        case special
+    }
+
+    public init(from decoder: any Decoder) throws {
+        if let container = try? decoder.singleValueContainer(),
+           let value = try? container.decode(DamageType.self)
+        {
+            self = .damage(value)
+        } else if let container = try? decoder.container(keyedBy: SpecialCodingKeys.self),
+                  let value = try? container.decode(String.self, forKey: .special)
+        {
+            self = .special(value)
+        } else {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self = .conditional(
+                try container.decode(Set<Creature.DamageVulnerability>.self, forKey: .damageTypes),
+                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
+                note: try container.decodeIfPresent(String.self, forKey: .note),
+                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        switch self {
+        case .damage(let value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case .special(let value):
+            var container = encoder.container(keyedBy: SpecialCodingKeys.self)
+            try container.encode(value, forKey: .special)
+        case .conditional(let damageTypes, let preNote, let note, let cond):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(damageTypes, forKey: .damageTypes)
+            try container.encodeIfPresent(preNote, forKey: .preNote)
+            try container.encodeIfPresent(note, forKey: .note)
+            try container.encodeIfPresent(cond, forKey: .conditional)
+        }
+    }
+
 }
 
 extension Creature.Gear: Codable {

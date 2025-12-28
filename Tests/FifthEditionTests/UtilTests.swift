@@ -71,6 +71,20 @@ struct AlignmentCodableTests {
 
 }
 
+struct ConditionCodableTests {
+
+    @Test("Conditions", arguments: Condition.allCases)
+    func condition(_ condition: Condition) throws {
+        try testCodable(
+            json: """
+            "\(condition.rawValue)"
+            """,
+            value: condition
+        )
+    }
+
+}
+
 struct CreatureTypeCodableTests {
 
     @Test("Creature types", arguments: CreatureType.allCases)
@@ -80,6 +94,20 @@ struct CreatureTypeCodableTests {
             "\(creatureType.rawValue)"
             """,
             value: creatureType
+        )
+    }
+
+}
+
+struct DamageTypeCodableTests {
+
+    @Test("Damage types", arguments: DamageType.allCases)
+    func damageType(_ damageType: DamageType) throws {
+        try testCodable(
+            json: """
+            "\(damageType.rawValue)"
+            """,
+            value: damageType
         )
     }
 

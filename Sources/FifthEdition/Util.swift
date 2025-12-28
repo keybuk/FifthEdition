@@ -27,6 +27,25 @@ extension Alignment: Hashable {
     static let any: Self = .all
 }
 
+public enum Condition: String, CaseIterable, Codable, Sendable {
+    case blinded
+    case charmed
+    case deafened
+    case exhaustion
+    case frightened
+    case grappled
+    case incapacitated
+    case invisible
+    case paralyzed
+    case petrified
+    case poisoned
+    case prone
+    case restrained
+    case stunned
+    case unconscious
+    case disease
+}
+
 public enum CreatureType: String, CaseIterable, Codable, Sendable {
     case aberration
     case beast
@@ -42,6 +61,22 @@ public enum CreatureType: String, CaseIterable, Codable, Sendable {
     case ooze
     case plant
     case undead
+}
+
+public enum DamageType: String, CaseIterable, Codable, Sendable {
+    case acid
+    case bludgeoning
+    case cold
+    case fire
+    case force
+    case lightning
+    case necrotic
+    case piercing
+    case poison
+    case psychic
+    case radiant
+    case slashing
+    case thunder
 }
 
 public enum Edition: String, CaseIterable, Codable, Sendable {

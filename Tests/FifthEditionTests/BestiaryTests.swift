@@ -102,7 +102,24 @@ struct CreatureCodableTests {
                 "cr": "5",
                 "initiative": {
                     "proficiency": 1
-                }
+                },
+                "immune": [
+                    "cold",
+                    "poison",
+                    {
+                        "immune": [
+                            "bludgeoning",
+                            "piercing",
+                            "slashing"
+                        ],
+                        "note": "from nonmagical attacks",
+                        "cond": true
+                    }
+                ],
+                "conditionImmune": [
+                    "charmed",
+                    "frightened"
+                ]
             }
             """,
             value: Creature(
@@ -143,6 +160,23 @@ struct CreatureCodableTests {
                 passive: .score(16),
                 languages: ["Common", "Undercommon"],
                 challengeRating: .init("5"),
+                damageImmunity: [
+                    .damage(.cold),
+                    .damage(.poison),
+                    .conditional(
+                        [
+                            .damage(.bludgeoning),
+                            .damage(.piercing),
+                            .damage(.slashing),
+                        ],
+                        note: "from nonmagical attacks",
+                        conditional: true,
+                    )
+                ],
+                conditionImmunity: [
+                    .condition(.charmed),
+                    .condition(.frightened),
+                ],
             )
         )
     }
@@ -195,7 +229,20 @@ struct CreatureCodableTests {
                     "vehicles (land)": "expertise"
                 },
                 "passive": "10 + (PB × 2)",
-                "pbNote": "+10"
+                "pbNote": "+10",
+                "vulnerable": [
+                    "poison",
+                ],
+                "resist": [
+                    {
+                        "resist": [
+                            "acid",
+                            "cold",
+                            "fire"
+                        ],
+                        "preNote": "While wearing racing suit:"
+                    }
+                ]
             }
             """,
             value: Creature(
@@ -223,6 +270,19 @@ struct CreatureCodableTests {
                 ]),
                 passive: .special("10 + (PB × 2)"),
                 proficiencyBonus: "+10",
+                damageVulnerability: [
+                    .damage(.poison),
+                ],
+                damageResistance: [
+                    .conditional(
+                        [
+                            .damage(.acid),
+                            .damage(.cold),
+                            .damage(.fire),
+                        ],
+                        preNote: "While wearing racing suit:",
+                    ),
+                ],
             )
         )
     }
@@ -540,6 +600,116 @@ struct CreatureChallengeRatingCodableTests {
 
 }
 
+struct CreatureConditionImmunityCodableTests {
+
+    @Test("Condition immunity")
+    func conditionImmunity() throws {
+        try testCodable(
+            json: """
+            "blinded"
+            """,
+            value: Creature.ConditionImmunity.condition(.blinded),
+        )
+    }
+
+    @Test("Special condition immunity")
+    func specialConditionImmunity() throws {
+        try testCodable(
+            json: """
+            {
+                "special": "immune to hungry"
+            }
+            """,
+            value: Creature.ConditionImmunity.special("immune to hungry"),
+        )
+    }
+
+    @Test("Conditional immunity")
+    func conditionalImmunity() throws {
+        try testCodable(
+            json: """
+            {
+                "conditionImmune": [
+                    "charmed",
+                    "frightened"
+                ],
+                "note": "while raging",
+                "cond": true
+            }
+            """,
+            value: Creature.ConditionImmunity.conditional(
+                [
+                    .condition(.charmed),
+                    .condition(.frightened),
+                ],
+                note: "while raging",
+                conditional: true,
+            ),
+        )
+    }
+
+    @Test("Conditional immunity with pre-note")
+    func conditionalImmunityPreNote() throws {
+        try testCodable(
+            json: """
+            {
+                "conditionImmune": [
+                    "blinded",
+                    "deafened"
+                ],
+                "preNote": "While hooded:"
+            }
+            """,
+            value: Creature.ConditionImmunity.conditional(
+                [
+                    .condition(.blinded),
+                    .condition(.deafened),
+                ],
+                preNote: "While hooded:",
+            ),
+        )
+    }
+
+    @Test("Recursive conditional immunity")
+    func recursiveConditionalImmunity() throws {
+        try testCodable(
+            json: """
+            {
+                "conditionImmune": [
+                    "blinded",
+                    "deafened",
+                    {
+                        "conditionImmune": [
+                            "charmed",
+                            "frightened"
+                        ],
+                        "note": "when sight or hearing required",
+                        "cond": true
+                    }
+                ],
+                "preNote": "While hooded:"
+            }
+            """,
+            value: Creature.ConditionImmunity.conditional(
+                [
+                    .condition(.blinded),
+                    .condition(.deafened),
+                    .conditional(
+                        [
+                            .condition(.charmed),
+                            .condition(.frightened),
+                        ],
+                        note: "when sight or hearing required",
+                        conditional: true,
+                    ),
+                ],
+                preNote: "While hooded:",
+            ),
+        )
+    }
+
+}
+
 struct CreatureCreatureTypeCodableTests {
 
     @Test("Creature type")
@@ -665,6 +835,322 @@ struct CreatureCreatureTypeCodableTests {
                 .type(.fiend),
                 note: "only when hungry"
             )
+        )
+    }
+
+}
+
+struct CreatureDamageImmunityCodableTests {
+
+    @Test("Damage immunity")
+    func damageImmunity() throws {
+        try testCodable(
+            json: """
+            "necrotic"
+            """,
+            value: Creature.DamageImmunity.damage(.necrotic),
+        )
+    }
+
+    @Test("Special damage immunity")
+    func specialDamageImmunity() throws {
+        try testCodable(
+            json: """
+            {
+                "special": "immune to custard damage"
+            }
+            """,
+            value: Creature.DamageImmunity.special("immune to custard damage"),
+        )
+    }
+
+    @Test("Conditional immunity")
+    func conditionalImmunity() throws {
+        try testCodable(
+            json: """
+            {
+                "immune": [
+                    "bludgeoning",
+                    "piercing",
+                    "slashing"
+                ],
+                "note": "from nonmagical attacks that aren't silvered",
+                "cond": true
+            }
+            """,
+            value: Creature.DamageImmunity.conditional(
+                [
+                    .damage(.bludgeoning),
+                    .damage(.piercing),
+                    .damage(.slashing),
+                ],
+                note: "from nonmagical attacks that aren't silvered",
+                conditional: true,
+            ),
+        )
+    }
+
+    @Test("Conditional immunity with pre-note")
+    func conditionalImmunityPreNote() throws {
+        try testCodable(
+            json: """
+            {
+                "immune": [
+                    "psychic",
+                ],
+                "preNote": "While wearing tin foil hat:"
+            }
+            """,
+            value: Creature.DamageImmunity.conditional(
+                [
+                    .damage(.psychic),
+                ],
+                preNote: "While wearing tin foil hat:",
+            ),
+        )
+    }
+
+    @Test("Recursive conditional immunity")
+    func recursiveConditionalImmunity() throws {
+        try testCodable(
+            json: """
+            {
+                "immune": [
+                    "psychic",
+                    {
+                        "immune": [
+                            "lightning"
+                        ],
+                        "note": "when grounded",
+                        "cond": true
+                    }
+                ],
+                "preNote": "While wearing tin foil hat:"
+            }
+            """,
+            value: Creature.DamageImmunity.conditional(
+                [
+                    .damage(.psychic),
+                    .conditional(
+                        [
+                            .damage(.lightning),
+                        ],
+                        note: "when grounded",
+                        conditional: true,
+                    ),
+                ],
+                preNote: "While wearing tin foil hat:",
+            ),
+        )
+    }
+
+}
+
+struct CreatureDamageResistanceCodableTests {
+
+    @Test("Damage resistance")
+    func damageResistance() throws {
+        try testCodable(
+            json: """
+            "necrotic"
+            """,
+            value: Creature.DamageResistance.damage(.necrotic),
+        )
+    }
+
+    @Test("Special damage resistance")
+    func specialDamageResistance() throws {
+        try testCodable(
+            json: """
+            {
+                "special": "resistant to custard damage"
+            }
+            """,
+            value: Creature.DamageResistance.special("resistant to custard damage"),
+        )
+    }
+
+    @Test("Conditional resistance")
+    func conditionalResistance() throws {
+        try testCodable(
+            json: """
+            {
+                "resist": [
+                    "bludgeoning",
+                    "piercing",
+                    "slashing"
+                ],
+                "note": "from nonmagical attacks that aren't silvered",
+                "cond": true
+            }
+            """,
+            value: Creature.DamageResistance.conditional(
+                [
+                    .damage(.bludgeoning),
+                    .damage(.piercing),
+                    .damage(.slashing),
+                ],
+                note: "from nonmagical attacks that aren't silvered",
+                conditional: true,
+            ),
+        )
+    }
+
+    @Test("Conditional resistance with pre-note")
+    func conditionalResistancePreNote() throws {
+        try testCodable(
+            json: """
+            {
+                "resist": [
+                    "psychic",
+                ],
+                "preNote": "While wearing tin foil hat:"
+            }
+            """,
+            value: Creature.DamageResistance.conditional(
+                [
+                    .damage(.psychic),
+                ],
+                preNote: "While wearing tin foil hat:",
+            ),
+        )
+    }
+
+    @Test("Recursive conditional resistance")
+    func recursiveConditionalResistance() throws {
+        try testCodable(
+            json: """
+            {
+                "resist": [
+                    "psychic",
+                    {
+                        "resist": [
+                            "lightning"
+                        ],
+                        "note": "when grounded",
+                        "cond": true
+                    }
+                ],
+                "preNote": "While wearing tin foil hat:"
+            }
+            """,
+            value: Creature.DamageResistance.conditional(
+                [
+                    .damage(.psychic),
+                    .conditional(
+                        [
+                            .damage(.lightning),
+                        ],
+                        note: "when grounded",
+                        conditional: true,
+                    ),
+                ],
+                preNote: "While wearing tin foil hat:",
+            ),
+        )
+    }
+
+}
+
+struct CreatureDamageVulnerabilityCodableTests {
+
+    @Test("Damage vulnerability")
+    func damageVulnerability() throws {
+        try testCodable(
+            json: """
+            "necrotic"
+            """,
+            value: Creature.DamageVulnerability.damage(.necrotic),
+        )
+    }
+
+    @Test("Special damage vulnerability")
+    func specialDamageVulnerability() throws {
+        try testCodable(
+            json: """
+            {
+                "special": "vulnerable to custard damage"
+            }
+            """,
+            value: Creature.DamageVulnerability.special("vulnerable to custard damage"),
+        )
+    }
+
+    @Test("Conditional vulnerability")
+    func conditionalVulnerability() throws {
+        try testCodable(
+            json: """
+            {
+                "vulnerable": [
+                    "piercing"
+                ],
+                "note": "from magic weapons wielded by good creatures",
+                "cond": true
+            }
+            """,
+            value: Creature.DamageVulnerability.conditional(
+                [
+                    .damage(.piercing),
+                ],
+                note: "from magic weapons wielded by good creatures",
+                conditional: true,
+            ),
+        )
+    }
+
+    @Test("Conditional vulnerability with pre-note")
+    func conditionalVulnerabilityPreNote() throws {
+        try testCodable(
+            json: """
+            {
+                "vulnerable": [
+                    "cold",
+                ],
+                "preNote": "While not wearing pants:"
+            }
+            """,
+            value: Creature.DamageVulnerability.conditional(
+                [
+                    .damage(.cold),
+                ],
+                preNote: "While not wearing pants:"
+            ),
+        )
+    }
+
+    @Test("Recursive conditional vulnerability")
+    func recursiveConditionalVulnerability() throws {
+        try testCodable(
+            json: """
+            {
+                "vulnerable": [
+                    "piercing",
+                    {
+                        "vulnerable": [
+                            "psychic"
+                        ],
+                        "note": "while charmed by the attacker",
+                        "cond": true
+                    }
+                ],
+                "note": "from magic weapons wielded by good creatures",
+                "cond": true
+            }
+            """,
+            value: Creature.DamageVulnerability.conditional(
+                [
+                    .damage(.piercing),
+                    .conditional(
+                        [
+                            .damage(.psychic),
+                        ],
+                        note: "while charmed by the attacker",
+                        conditional: true
+                    ),
+                ],
+                note: "from magic weapons wielded by good creatures",
+                conditional: true,
+            ),
         )
     }
 
