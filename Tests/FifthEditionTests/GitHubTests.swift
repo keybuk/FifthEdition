@@ -46,4 +46,40 @@ struct GitHubTests {
         #expect(asset.name == "example.zip")
     }
 
+    @Test("Latest release from collection")
+    func latest() async throws {
+        let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
+                               "Missing test data")
+
+        let releases = try await GitHubRelease.releasesFrom(url: url)
+        let release = try #require(releases.latest)
+        #expect(release.name == "v1.0.0")
+    }
+
+    @Test("Named release from collection")
+    func nameSubscript() async throws {
+        let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
+                               "Missing test data")
+
+        let releases = try await GitHubRelease.releasesFrom(url: url)
+        let release = try #require(releases[name: "v1.0.0"])
+        #expect(release.name == "v1.0.0")
+
+        #expect(releases[name: "v2.0.0"] == nil)
+    }
+
+    @Test("Asset of content type from collection")
+    func contentTypeSubscript() async throws {
+        let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
+                               "Missing test data")
+
+        let releases = try await GitHubRelease.releasesFrom(url: url)
+        let release = try #require(releases[name: "v1.0.0"])
+
+        let asset = try #require(release.assets[contentType: "application/zip"])
+        #expect(asset.name == "example.zip")
+
+        #expect(release.assets[contentType: "image/png"] == nil)
+    }
+
 }
