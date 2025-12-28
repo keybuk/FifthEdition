@@ -42,6 +42,41 @@ public struct GitHubRelease {
     public var mentionsCount: Int?
     public var discussionURL: URL?
     public var reactions: GitHubReaction?
+
+    /// Construct URL for GitHub releases API.
+    /// - Parameters:
+    ///   - owner: Repository owner.
+    ///   - name: Repository name.
+    /// - Returns: GitHub releases API URL for the given parameters..
+    internal static func urlFor(owner: String, name: String) -> URL {
+        URL(string: "https://api.github.com/repos/\(owner)/\(name)/releases")!
+    }
+
+    /// Fetch releases from GitHub API.
+    /// - Parameter url: GitHub releases API URL.
+    /// - Returns: Array of releases from the given API URL.
+    internal static func releasesFrom(url: URL) async throws -> [GitHubRelease] {
+        var request = URLRequest(url: url)
+        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        request.setValue(apiVersion, forHTTPHeaderField: "X-GitHub-Api-Version")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+
+        return try decoder.decode([GitHubRelease].self, from: data)
+    }
+
+    /// Fetch releases from GitHub API.
+    /// - Parameters:
+    ///   - owner: Repository owner.
+    ///   - name: Repository name.
+    /// - Returns: Array of releases for the given repository.
+    public static func releasesFor(owner: String, name: String) async throws -> [GitHubRelease] {
+        let url = Self.urlFor(owner: owner, name: name)
+        return try await Self.releasesFrom(url: url)
+    }
 }
 
 /// Data releases to a release.
