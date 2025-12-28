@@ -905,12 +905,12 @@ struct CreatureChallengeRatingTests: CodableTest {
             json: """
             {
                 "cr": "1",
-                "xp": "100"
+                "xp": 100
             }
             """,
             value: Creature.ChallengeRating(
                 "1",
-                xp: "100"
+                xp: 100
             ),
         )
     }
@@ -937,12 +937,12 @@ struct CreatureChallengeRatingTests: CodableTest {
             json: """
             {
                 "cr": "14",
-                "xpLair": "13000"
+                "xpLair": 13000
             }
             """,
             value: Creature.ChallengeRating(
                 "14",
-                xpLair: "13000",
+                xpLair: 13000,
             ),
         )
     }

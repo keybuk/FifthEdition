@@ -128,8 +128,8 @@ public struct Creature: Equatable, Sendable {
 
         public var lair: String? = nil
         public var coven: String? = nil
-        public var xp: String? = nil
-        public var xpLair: String? = nil
+        public var xp: Int? = nil
+        public var xpLair: Int? = nil
     }
 
     @MemberwiseInit(.public)
@@ -702,8 +702,8 @@ extension Creature.ChallengeRating: Codable {
             cr = try container.decode(String.self, forKey: .cr)
             lair = try? container.decodeIfPresent(String.self, forKey: .lair)
             coven = try? container.decodeIfPresent(String.self, forKey: .coven)
-            xp = try container.decodeIfPresent(String.self, forKey: .xp)
-            xpLair = try? container.decodeIfPresent(String.self, forKey: .xpLair)
+            xp = try container.decodeIfPresent(Int.self, forKey: .xp)
+            xpLair = try? container.decodeIfPresent(Int.self, forKey: .xpLair)
         }
     }
 
