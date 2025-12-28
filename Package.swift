@@ -20,7 +20,10 @@ let package = Package(
         ),
         .testTarget(
             name: "FifthEditionTests",
-            dependencies: ["FifthEdition"]
+            dependencies: ["FifthEdition"],
+            resources: [
+                .copy("Resources/releases.json"),
+            ],
         ),
     ]
 )
