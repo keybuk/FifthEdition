@@ -8,6 +8,97 @@
 import Testing
 @testable import FifthEdition
 
+struct AlignmentCodableTests: CodableTest {
+
+    static let testAlignments: [Alignment: [String]] = [
+        [.lawful, .good]:
+            ["L", "G"],
+        [.lawful, .neutral]:
+            ["L", "N"],
+        [.lawful, .evil]:
+            ["L", "E"],
+        [.neutral]:
+            ["N"],
+        [.chaotic, .good]:
+            ["C", "G"],
+        [.chaotic, .neutral]:
+            ["C", "N"],
+        [.chaotic, .evil]:
+            ["C", "E"],
+        [.lawful, .neutralLawfulChaotic, .chaotic]:
+            ["L", "NX", "C"],
+        [.neutralGoodEvil, .good, .evil]:
+            ["NY", "G", "E"],
+        [.lawful, .neutralLawfulChaotic, .chaotic, .evil]:
+            ["L", "NX", "C", "E"],
+        [.lawful, .neutralLawfulChaotic, .chaotic, .neutralGoodEvil, .evil]:
+            ["L", "NX", "C", "NY", "E"],
+        [.neutralLawfulChaotic, .neutralGoodEvil, .neutral]:
+            ["NX", "NY", "N"],
+    ]
+
+    @Test("Alignment", arguments: testAlignments)
+    func alignment(_ alignment: Alignment, strings: [String]) throws {
+        try testCodable(
+            json: "[\"" + strings.joined(separator: "\",\"") + "\"]",
+            value: alignment
+        )
+    }
+
+    @Test("Unaligned")
+    func unaligned() throws {
+        try testCodable(
+            json: """
+            [
+                "U"
+            ]
+            """,
+            value: Alignment.unaligned
+        )
+    }
+
+    @Test("Any")
+    func any() throws {
+        try testCodable(
+            json: """
+            [
+                "A"
+            ]
+            """,
+            value: Alignment.any
+        )
+    }
+
+}
+
+struct CreatureTypeCodableTests: CodableTest {
+
+    @Test("Creature types", arguments: CreatureType.allCases)
+    func creatureType(_ creatureType: CreatureType) throws {
+        try testCodable(
+            json: """
+            "\(creatureType.rawValue)"
+            """,
+            value: creatureType
+        )
+    }
+
+}
+
+struct EditionCodableTests: CodableTest {
+
+    @Test("Editions", arguments: Edition.allCases)
+    func editon(_ edition: Edition) throws {
+        try testCodable(
+            json: """
+            "\(edition.rawValue)"
+            """,
+            value: edition
+        )
+    }
+
+}
+
 struct PageCodableTests: CodableTest {
 
     @Test("Numeric page")
@@ -32,35 +123,28 @@ struct PageCodableTests: CodableTest {
 
 }
 
-struct SourceCodableTests: CodableTest {
+struct ProficiencyCodableTests: CodableTest {
 
-    @Test("Source")
-    func source() throws {
+    @Test("Proficient")
+    func proficient() throws {
         try testCodable(
             json: """
-            {
-                "source": "XMM"
-            }
+            1
             """,
-            value: Source(source: "XMM")
+            value: Proficiency.proficient
         )
     }
 
-    @Test("Source with page")
-    func sourceWithPage() throws {
+    @Test("Expertise")
+    func expertise() throws {
         try testCodable(
             json: """
-            {
-                "source": "XPHB",
-                "page": 346
-            }
+            2
             """,
-            value: Source(
-                source: "XPHB",
-                page: .number(346)
-            )
+            value: Proficiency.expertise
         )
     }
+
 }
 
 struct ReprintCodableTests: CodableTest {
@@ -109,31 +193,72 @@ struct ReprintCodableTests: CodableTest {
 
 }
 
-struct TagCodableTests: CodableTest {
+struct SizeCodableTests: CodableTest {
 
-    @Test("Tag")
-    func tag() throws {
+    static let testSizes: [Size: String] = [
+        .tiny:       "T",
+        .small:      "S",
+        .medium:     "M",
+        .large:      "L",
+        .huge:       "H",
+        .gargantuan: "G",
+    ]
+
+    @Test("Sizes", arguments: testSizes)
+    func common(_ size: Size, string: String) throws {
         try testCodable(
             json: """
-            "tag"
+            "\(string)"
             """,
-            value: Tag.tag("tag")
+            value: size
         )
     }
 
-    @Test("Prefixed tag")
-    func prefixed() throws {
+}
+
+struct SkillCodableTests: CodableTest {
+
+    @Test("Skills", arguments: Skill.allCases)
+    func skill(_ skill: Skill) throws {
+        try testCodable(
+            json: """
+            "\(skill.rawValue)"
+            """,
+            value: skill
+        )
+    }
+
+}
+
+struct SourceCodableTests: CodableTest {
+
+    @Test("Source")
+    func source() throws {
         try testCodable(
             json: """
             {
-                "tag": "tag",
-                "prefix": "prefix"
+                "source": "XMM"
             }
             """,
-            value: Tag.prefixed("tag", prefix: "prefix")
+            value: Source(source: "XMM")
         )
     }
 
+    @Test("Source with page")
+    func sourceWithPage() throws {
+        try testCodable(
+            json: """
+            {
+                "source": "XPHB",
+                "page": 346
+            }
+            """,
+            value: Source(
+                source: "XPHB",
+                page: .number(346)
+            )
+        )
+    }
 }
 
 struct SpeedCodableTests: CodableTest {
@@ -463,127 +588,28 @@ struct SpeedSubscriptTests {
 
 }
 
-struct CreatureTypeCodableTests: CodableTest {
+struct TagCodableTests: CodableTest {
 
-    @Test("Creature types", arguments: CreatureType.allCases)
-    func creatureType(_ creatureType: CreatureType) throws {
+    @Test("Tag")
+    func tag() throws {
         try testCodable(
             json: """
-            "\(creatureType.rawValue)"
+            "tag"
             """,
-            value: creatureType
+            value: Tag.tag("tag")
         )
     }
 
-}
-
-struct AlignmentCodableTests: CodableTest {
-
-    static let encodedAlignments: [Alignment: [String]] = [
-        [.lawful, .good]: ["L", "G"],
-        [.lawful, .neutral]: ["L", "N"],
-        [.lawful, .evil]: ["L", "E"],
-        [.neutral]: ["N"],
-        [.chaotic, .good]: ["C", "G"],
-        [.chaotic, .neutral]: ["C", "N"],
-        [.chaotic, .evil]: ["C", "E"],
-        [.lawful, .neutralLawfulChaotic, .chaotic]: ["L", "NX", "C"],
-        [.neutralGoodEvil, .good, .evil]: ["NY", "G", "E"],
-        [.lawful, .neutralLawfulChaotic, .chaotic, .evil]: ["L", "NX", "C", "E"],
-        [.lawful, .neutralLawfulChaotic, .chaotic, .neutralGoodEvil, .evil]: ["L", "NX", "C", "NY", "E"],
-        [.neutralLawfulChaotic, .neutralGoodEvil, .neutral]: ["NX", "NY", "N"],
-    ]
-
-    @Test("Alignment", arguments: encodedAlignments)
-    func alignment(_ alignment: Alignment, strings: [String]) throws {
-        try testCodable(
-            json: "[\"" + strings.joined(separator: "\",\"") + "\"]",
-            value: alignment
-        )
-    }
-
-    @Test("Unaligned")
-    func unaligned() throws {
+    @Test("Prefixed tag")
+    func prefixed() throws {
         try testCodable(
             json: """
-            [
-                "U"
-            ]
+            {
+                "tag": "tag",
+                "prefix": "prefix"
+            }
             """,
-            value: Alignment.unaligned
-        )
-    }
-
-    @Test("Any")
-    func any() throws {
-        try testCodable(
-            json: """
-            [
-                "A"
-            ]
-            """,
-            value: Alignment.any
-        )
-    }
-
-}
-
-struct SizeCodableTests: CodableTest {
-
-    static let encodedSizes: [Size: String] = [
-        .tiny:       "T",
-        .small:      "S",
-        .medium:     "M",
-        .large:      "L",
-        .huge:       "H",
-        .gargantuan: "G",
-    ]
-
-    @Test("Sizes", arguments: encodedSizes)
-    func common(_ size: Size, string: String) throws {
-        try testCodable(
-            json: """
-            "\(string)"
-            """,
-            value: size
-        )
-    }
-
-}
-
-struct ProficiencyCodableTests: CodableTest {
-
-    @Test("Proficient")
-    func proficient() throws {
-        try testCodable(
-            json: """
-            1
-            """,
-            value: Proficiency.proficient
-        )
-    }
-
-    @Test("Expertise")
-    func expertise() throws {
-        try testCodable(
-            json: """
-            2
-            """,
-            value: Proficiency.expertise
-        )
-    }
-
-}
-
-struct SkillCodableTests: CodableTest {
-
-    @Test("Skills", arguments: Skill.allCases)
-    func skill(_ skill: Skill) throws {
-        try testCodable(
-            json: """
-            "\(skill.rawValue)"
-            """,
-            value: skill
+            value: Tag.prefixed("tag", prefix: "prefix")
         )
     }
 
