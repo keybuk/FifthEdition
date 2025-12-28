@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "FifthEdition",
     platforms: [
-        .macOS(.v12),
+        .macOS(.v13),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -26,6 +26,8 @@ let package = Package(
             dependencies: ["FifthEdition"],
             resources: [
                 .copy("Resources/releases.json"),
+                .copy("Resources/example.zip"),
+                .copy("Resources/bad_example.zip"),
             ],
         ),
     ]

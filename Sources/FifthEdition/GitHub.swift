@@ -5,6 +5,7 @@
 //  Created by Scott James Remnant on 12/24/25.
 //
 
+import CryptoKit
 import Foundation
 
 /// Release published on GitHub.
@@ -106,6 +107,45 @@ public struct GitHubAsset {
     public var updatedAt: Date
 
     public var uploader: GitHubSimpleUser?
+
+    public enum AssetError: Error {
+        case digestMismatch
+    }
+
+    /// Download the asset into a target directory, verifying the digest.
+    /// - Parameter directory: Target directory for file.
+    /// - Returns: URL of downloaded file.
+    ///
+    /// The file is downloaded from the asset source URL into the target directory, with the same name as the asset itself. The directory must already exist before calling this function.
+    ///
+    /// If the file already exists, the digest is checked, and if the same, the download is skipped. If the downloaded file has the wrong asset, an error is thrown.
+    public func downloadInto(directory: URL) async throws -> URL {
+        let targetURL = directory.appending(component: name, directoryHint: .notDirectory)
+
+        // If the target already exists, and the digest matches that in the asset, we can avoid downloading again.
+        if let handle = try? FileHandle(forReadingFrom: targetURL) {
+            if let digest, digest.hasPrefix("sha256:"),
+               try handle.sha256Digest() == digest
+            {
+                return targetURL
+            }
+
+            try FileManager.default.removeItem(at: targetURL)
+        }
+
+        // Download and then verify the digest.
+        let (downloadedURL, _) = try await URLSession.shared.download(from: browserDownloadURL)
+        if let digest, digest.hasPrefix("sha256:") {
+            let handle = try FileHandle(forReadingFrom: downloadedURL)
+            guard try handle.sha256Digest() == digest else {
+                try FileManager.default.removeItem(at: downloadedURL)
+                throw AssetError.digestMismatch
+            }
+        }
+
+        try FileManager.default.moveItem(at: downloadedURL, to: targetURL)
+        return targetURL
+    }
 }
 
 /// User on GitHub.
@@ -189,6 +229,21 @@ extension Collection where Element == GitHubAsset {
             }
     }
 
+}
+
+// MARK: - FileHandle digest
+
+extension FileHandle {
+    public func sha256Digest() throws -> String {
+        var hasher = SHA256()
+        while let chunk = try read(upToCount: SHA256.blockByteCount) {
+            hasher.update(data: chunk)
+        }
+
+        return "sha256:" + Data(hasher.finalize()).map { byte in
+            String(format: "%02x", byte)
+        }.joined()
+    }
 }
 
 // MARK: - Codable
