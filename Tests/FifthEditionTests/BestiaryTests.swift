@@ -589,6 +589,64 @@ struct CreatureArmorClassTests: CodableTest {
 
 }
 
+struct CreatureHitPointsCodableTests: CodableTest {
+
+    @Test("Hit points")
+    func hitPoints() throws {
+        try testCodable(
+            json: """
+            {
+                "formula": "2d8 + 3",
+                "average": 12
+            }
+            """,
+            value: Creature.HitPoints.hp(DiceNotation(.d8, count: 2, modifier: 3)),
+        )
+    }
+
+    @Test("Hit points with wrong average")
+    func wrongAverage() throws {
+        try testCodable(
+            json: """
+            {
+                "formula": "2d8 + 3",
+                "average": 14
+            }
+            """,
+            value: Creature.HitPoints.hp(
+                DiceNotation(.d8, count: 2, modifier: 3),
+                givenAverage: 14
+            ),
+        )
+    }
+
+    @Test("Hit points with unparseable formula")
+    func invalidFormula() throws {
+        try testCodable(
+            json: """
+            {
+                "formula": "50d1",
+                "average": 50
+            }
+            """,
+            value: Creature.HitPoints.unrollable(formula: "50d1", average: 50),
+        )
+    }
+
+    @Test("Special")
+    func special() throws {
+        try testCodable(
+            json: """
+            {
+                "special": "as summoner"
+            }
+            """,
+            value: Creature.HitPoints.special("as summoner"),
+        )
+    }
+
+}
+
 struct CreatureAdvantageCodableTests: CodableTest {
 
     @Test("Advantage")

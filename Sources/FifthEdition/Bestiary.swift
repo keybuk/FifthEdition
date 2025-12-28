@@ -4,6 +4,8 @@
 //
 //  Created by Scott James Remnant on 12/25/25.
 //
+//  Derived from schema/site/bestiary/bestiary.json
+//  Version: 1.21.56
 
 import MemberwiseInit
 
@@ -58,7 +60,8 @@ public struct Creature: Equatable, Sendable {
     }
 
     public enum HitPoints: Equatable, Sendable {
-        case hp(DiceNotation)
+        case hp(DiceNotation, givenAverage: Int? = nil)
+        case unrollable(formula: String, average: Int)
         case special(String)
     }
 
@@ -418,31 +421,28 @@ extension Creature.HitPoints: Codable {
             let formula = try container.decode(String.self, forKey: .formula)
             let average = try container.decode(Int.self, forKey: .average)
 
-            guard let value = DiceNotation(formula) else {
-                throw DecodingError.dataCorruptedError(
-                    forKey: .formula,
-                    in: container,
-                    debugDescription: "Not a valid dice expression"
-                )
+            if let notation = DiceNotation(formula) {
+                if average == notation.average {
+                    self = .hp(notation)
+                } else {
+                    self = .hp(notation, givenAverage: average)
+                }
+            } else {
+                self = .unrollable(formula: formula, average: average)
             }
-            guard value.average == average else {
-                throw DecodingError.dataCorruptedError(
-                    forKey: .average,
-                    in: container,
-                    debugDescription: "Does not match formula"
-                )
-            }
-
-            self = .hp(value)
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .hp(let expression):
+        case .hp(let notation, let givenAverage):
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(expression.stringValue, forKey: .formula)
-            try container.encode(expression.average, forKey: .average)
+            try container.encode(notation.stringValue, forKey: .formula)
+            try container.encode(givenAverage ?? notation.average, forKey: .average)
+        case .unrollable(let formula, let average):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(formula, forKey: .formula)
+            try container.encode(average, forKey: .average)
         case .special(let special):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(special, forKey: .special)
