@@ -625,11 +625,11 @@ struct CreatureHitPointsCodableTests: CodableTest {
         try testCodable(
             json: """
             {
-                "formula": "50d1",
+                "formula": "fixed",
                 "average": 50
             }
             """,
-            value: Creature.HitPoints.unrollable(formula: "50d1", average: 50),
+            value: Creature.HitPoints.unrollable(formula: "fixed", average: 50),
         )
     }
 

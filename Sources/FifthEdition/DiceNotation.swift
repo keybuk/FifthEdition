@@ -11,6 +11,8 @@ import Foundation
 ///
 /// Can represent those both in and out of jail.
 public enum Die: Int, Comparable, Equatable, Sendable {
+    case d1   = 1
+    case d2   = 2
     case d3   = 3
     case d4   = 4
     case d6   = 6
