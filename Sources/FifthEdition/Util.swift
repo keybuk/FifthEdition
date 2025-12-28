@@ -444,7 +444,7 @@ extension Proficiency: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         let value = try container.decode(Int.self)
-        
+
         switch value {
         case 1: self = .proficient
         case 2: self = .expertise
