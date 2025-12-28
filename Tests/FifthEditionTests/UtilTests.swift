@@ -574,3 +574,31 @@ struct ProficiencyCodableTests: CodableTest {
     }
 
 }
+
+struct SkillCodableTests: CodableTest {
+
+    @Test("Skills", arguments: Skill.allCases)
+    func skill(_ skill: Skill) throws {
+        try testCodable(
+            json: """
+            "\(skill.rawValue)"
+            """,
+            value: skill
+        )
+    }
+
+}
+
+struct ToolCodableTests: CodableTest {
+
+    @Test("Tools", arguments: Tool.allCases)
+    func tool(_ tool: Tool) throws {
+        try testCodable(
+            json: """
+            "\(tool.rawValue)"
+            """,
+            value: tool
+        )
+    }
+
+}

@@ -39,7 +39,7 @@ public enum Tag: Equatable, Hashable, Sendable {
 }
 
 @MemberwiseInit(.public)
-public struct Speed: Equatable {
+public struct Speed: Equatable, Sendable {
     public enum Value: Equatable, Hashable, Sendable {
         case speed(Int)
         case conditional(Int, condition: String)
@@ -139,6 +139,75 @@ public enum Size: String, CaseIterable, Comparable, Sendable {
 public enum Proficiency: Equatable, Sendable {
     case proficient
     case expertise
+}
+
+public enum Skill: String, CaseIterable, Sendable {
+    case acrobatics
+    case animalHandling = "animal handling"
+    case arcana
+    case athletics
+    case deception
+    case history
+    case insight
+    case intimidation
+    case investigation
+    case medicine
+    case nature
+    case perception
+    case performance
+    case persuasion
+    case religion
+    case sleightOfHand = "sleight of hand"
+    case stealth
+    case survival
+}
+
+public enum Tool: String, CaseIterable, Sendable {
+    case artisansTools = "artisan's tools"
+    case alchemistsSupplies = "alchemist's supplies"
+    case brewersSupplies = "brewer's supplies"
+    case calligraphersSupplies = "calligrapher's supplies"
+    case carpentersTools = "carpenter's tools"
+    case cartographersTools = "cartographer's tools"
+    case cobblersTools = "cobbler's tools"
+    case cooksUtensils = "cook's utensils"
+    case glassblowersTools = "glassblower's tools"
+    case jewelersTools = "jeweler's tools"
+    case leatherworkersTools = "leatherworker's tools"
+    case masonsTools = "mason's tools"
+    case paintersSupplies = "painter's supplies"
+    case pottersTools = "potter's tools"
+    case smithsTools = "smith's tools"
+    case tinkersTools = "tinker's tools"
+    case weaversTools = "weaver's tools"
+    case woodcarversTools = "woodcarver's tools"
+    case disguisKit = "disguise kit"
+    case forgeryKit = "forgery kit"
+    case gamingSet = "gaming set"
+    case dragonchessSet = "dragonchess set"
+    case diceSet = "dice set"
+    case threeDragonAnteSet = "three-dragon ante set"
+    case playingCardSet = "playing card set"
+    case herbalismKit = "herbalism kit"
+    case musicalInstrument = "musical instrument"
+    case bagpipes = "bagpipes"
+    case drum = "drum"
+    case dulcimer = "dulcimer"
+    case flute = "flute"
+    case horn = "horn"
+    case lute = "lute"
+    case lyre = "lyre"
+    case panFlute = "pan flute"
+    case shawm = "shawm"
+    case viol = "viol"
+    case navigatorsTools = "navigator's tools"
+    case thievesTools = "thieves' tools"
+    case poisonersKit = "poisoner's kit"
+    case vehicles = "vehicles"
+    case vehiclesAir = "vehicles (air)"
+    case vehiclesLand = "vehicles (land)"
+    case vehiclesWater = "vehicles (water)"
+    case vehiclesSpace = "vehicles (space)"
 }
 
 // MARK: - Codable
@@ -462,4 +531,44 @@ extension Proficiency: Codable {
         case .expertise: try container.encode(2)
         }
     }
+}
+
+extension Skill: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+        guard let skill = Skill(rawValue: value) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown skill: \(value)")
+        }
+
+        self = skill
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+
+}
+
+extension Tool: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+        guard let tool = Tool(rawValue: value) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown tool: \(value)")
+        }
+
+        self = tool
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+
 }
