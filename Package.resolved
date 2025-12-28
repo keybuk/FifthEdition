@@ -1,0 +1,33 @@
+{
+  "originHash" : "7c414750bd5fa007cc9eb2543622c56484c01950a58f8e43d2e4cca26441e3d7",
+  "pins" : [
+    {
+      "identity" : "enumoptionset",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DnV1eX/EnumOptionSet.git",
+      "state" : {
+        "revision" : "5d510d530657b4198a3e15717950be2cba8e91ed",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "swift-memberwise-init-macro",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gohanlon/swift-memberwise-init-macro.git",
+      "state" : {
+        "revision" : "47a2bdf45f1567e7324438f8482e362ee1c3fb44",
+        "version" : "0.5.2"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}
