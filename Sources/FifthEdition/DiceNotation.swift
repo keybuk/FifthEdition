@@ -61,6 +61,11 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
         }
     }
 
+    /// The dice notation described including its average.
+    public var description: String {
+        "\(average) (\(stringValue))"
+    }
+
     /// Crates a new dice notation.
     /// - Parameters:
     ///   - die: The die to roll.

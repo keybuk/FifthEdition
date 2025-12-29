@@ -41,5 +41,15 @@ extension MediaHref: Codable {
             try container.encode(path, forKey: .path)
         }
     }
+}
 
+// MARK: - String conversion
+
+extension MediaHref: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .url(let url): url.absoluteString
+        case .path(let path): path
+        }
+    }
 }
