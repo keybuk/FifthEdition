@@ -30,7 +30,7 @@ public enum Die: Int, Comparable, Equatable, Sendable {
 /// Dice notation.
 ///
 /// Encodes the notation of a number of dice to be rolled, and a modifier added or subtracted, e.g. `"2d6 + 4"`.
-public struct DiceNotation: Equatable, Sendable {
+public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
     /// Number of dice to be rolled.
     public let count: Int
 

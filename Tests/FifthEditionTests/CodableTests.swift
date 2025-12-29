@@ -9,9 +9,13 @@ import Foundation
 import Testing
 @testable import FifthEdition
 
-func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: Value, sourceLocation: SourceLocation = #_sourceLocation) throws {
+func testDecodable<Value: Equatable & Decodable>(json: String, value expectedValue: Value, sourceLocation: SourceLocation = #_sourceLocation) throws {
     let value = try JSONDecoder().decode(Value.self, from: json.data(using: .utf8)!)
     #expect(value == expectedValue, sourceLocation: sourceLocation)
+}
+
+func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: Value, sourceLocation: SourceLocation = #_sourceLocation) throws {
+    try testDecodable(json: json, value: expectedValue, sourceLocation: sourceLocation)
 
     // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode and decode the value, and make sure it stayed the same.
     let encodedJson = String(data: try JSONEncoder().encode(expectedValue), encoding: .utf8)!
@@ -46,7 +50,7 @@ struct DynamicCodingKeyTests {
     }
 
     @Test("Implement Codable with DynamicCodingKey")
-    func dynamicCodingKey() async throws {
+    func dynamicCodingKey() throws {
         try testCodable(
             json: """
             {
@@ -112,7 +116,7 @@ struct EnumCodingKeyTests {
     }
 
     @Test("Implement Codable with EnumCodingKey")
-    func enumCodingKey() async throws {
+    func enumCodingKey() throws {
         try testCodable(
             json: """
             {
@@ -135,6 +139,124 @@ struct EnumCodingKeyTests {
                 ],
             )
         )
+    }
+
+}
+
+struct TagSetCodableTests {
+
+    enum Species: String, TagCoding {
+        case human
+        case dwarf
+        case elf
+        case hobbit
+
+        static let tags: [(Species, String)] = [
+            (.human,  "H"),
+            (.dwarf,  "D"),
+            (.elf,    "E"),
+            (.hobbit, "O"),
+        ]
+    }
+
+    @Test("Implement Codable with TagSet")
+    func tagSet() throws {
+        try testCodable(
+            json: """
+            [
+                "H",
+                "O"
+            ]
+            """,
+            value: TagSet<Species>([.human, .hobbit])
+        )
+    }
+
+    @Test("Empty TagSet")
+    func tagEmpty() throws {
+        try testCodable(
+            json: """
+            [
+            ]
+            """,
+            value: TagSet<Species>()
+        )
+    }
+
+    @Test("Unknown tag in set")
+    func unknownTag() throws {
+        #expect(throws: DecodingError.self) {
+            try testDecodable(
+                json: """
+                [
+                    "X"
+                ]
+                """,
+                value: TagSet<Species>()
+            )
+        }
+    }
+
+}
+
+struct TaggedCodableTests {
+
+    enum Species: String, TagCoding {
+        case human
+        case dwarf
+        case elf
+        case hobbit
+
+        static let tags: [(Species, String)] = [
+            (.human,  "H"),
+            (.dwarf,  "D"),
+            (.elf,    "E"),
+            (.hobbit, "O"),
+        ]
+    }
+
+    @Test("Tagged holds its initialized value")
+    func value() throws {
+        let value: Species = .human
+        #expect(Tagged(value).value == value)
+    }
+
+    @Test("Tagged is nil when initialized with nil")
+    func nilValue() throws {
+        let value: Species? = nil
+        #expect(Tagged(value) == nil)
+    }
+
+    @Test("Implement Codable with Tagged")
+    func tagged() throws {
+        try testCodable(
+            json: """
+            "H"
+            """,
+            value: Tagged<Species>(.human)
+        )
+    }
+
+    @Test("Tagged enumeration values", arguments: Species.tags)
+    func taggedValue(species: Species, tag: String) throws {
+        try testCodable(
+            json: """
+            "\(tag)"
+            """,
+            value: Tagged(species)
+        )
+    }
+
+    @Test("Unknown tag")
+    func unknownTag() throws {
+        #expect(throws: DecodingError.self) {
+            try testDecodable(
+                json: """
+                "X"
+                """,
+                value: Tagged<Species>(.human)
+            )
+        }
     }
 
 }

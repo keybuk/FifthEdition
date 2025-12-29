@@ -112,7 +112,7 @@ struct AssetDownloadTests {
     }
 
     @Test("FileHandle SHA256 digest")
-    func fileHandleSHA256Digest() async throws {
+    func fileHandleSHA256Digest() throws {
         let digest = try FileHandle(forReadingFrom: Self.exampleZipURL).sha256Digest()
         #expect(digest == Self.exampleZipDigest)
     }

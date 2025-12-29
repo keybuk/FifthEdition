@@ -121,6 +121,7 @@ public struct Creature: Equatable, Sendable {
 
     @MemberwiseInit(.public)
     public struct Save: Equatable, Codable, Sendable {
+        // FIXME: Convert this into a SavingThrow-indexed dictionary like skills.
         public var str: String? = nil
         public var dex: String? = nil
         public var con: String? = nil
@@ -179,7 +180,7 @@ public struct Creature: Equatable, Sendable {
 
     public var level: Int? = nil
 
-    public var size: Set<Size>? = nil
+    public var size: TagSet<Size>? = nil
     public var sizeNote: String? = nil
 
     public var type: CreatureType? = nil
@@ -221,17 +222,17 @@ public struct Creature: Equatable, Sendable {
     public var savingThrowForcedLegendary: Set<SavingThrow>? = nil
     public var savingThrowForcedSpell: Set<SavingThrow>? = nil
 
-    public var damageDealt: Set<DamageType>? = nil
-    public var damageDealtLegendary: Set<DamageType>? = nil
-    public var damageDealtSpell: Set<DamageType>? = nil
+    public var damageDealt: TagSet<DamageType>? = nil
+    public var damageDealtLegendary: TagSet<DamageType>? = nil
+    public var damageDealtSpell: TagSet<DamageType>? = nil
 
     public var environment: Set<Environment>? = nil
 
     public var actionTags: Set<ActionTag>? = nil
-    public var languageTags: Set<LanguageTag>? = nil
-    public var miscTags: Set<MiscTag>? = nil
-    public var senseTags: Set<SenseTag>? = nil
-    public var spellcastingTags: Set<SpellcastingTag>? = nil
+    public var languageTags: TagSet<LanguageTag>? = nil
+    public var miscTags: TagSet<MiscTag>? = nil
+    public var senseTags: TagSet<Sense>? = nil
+    public var spellcastingTags: TagSet<SpellcastingType>? = nil
     public var traitTags: Set<TraitTag>? = nil
 
     // TODO: spellcasting, array of entry.json/entrySpellcasting
@@ -621,7 +622,7 @@ extension Creature.CreatureType: Codable {
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             type = try container.decode(Choice.self, forKey: .type)
-            swarmSize = try container.decodeIfPresent(Size.self, forKey: .swarmSize)
+            swarmSize = try container.decodeIfPresent(Tagged<Size>.self, forKey: .swarmSize)?.value
             tags = try container.decodeIfPresent(Set<Tag>.self, forKey: .tags)
             sidekickType = try container.decodeIfPresent(SidekickType.self, forKey: .sidekickType)
             sidekickTags = try container.decodeIfPresent(Set<Tag>.self, forKey: .sidekickTags)
@@ -639,7 +640,7 @@ extension Creature.CreatureType: Codable {
         } else {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(type, forKey: .type)
-            try container.encodeIfPresent(swarmSize, forKey: .swarmSize)
+            try container.encodeIfPresent(Tagged(swarmSize), forKey: .swarmSize)
             try container.encodeIfPresent(tags, forKey: .tags)
             try container.encodeIfPresent(sidekickType, forKey: .sidekickType)
             try container.encodeIfPresent(sidekickTags, forKey: .sidekickTags)

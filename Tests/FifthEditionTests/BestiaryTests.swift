@@ -127,18 +127,34 @@ struct CreatureCodableTests {
                     "wisdom"
                 ],
                 "damageTags": [
-                    "psychic"
+                    "B"
+                ],
+                "damageTagsSpell": [
+                    "Y"
                 ],
                 "environment": [
                     "underdark",
                     "planar, lower"
                 ],
+                "actionTags": [
+                    "Frightful Presence"
+                ],
+                "languageTags": [
+                    "C"
+                ],
+                "miscTags": [
+                    "CUR",
+                    "DIS"
+                ],
+                "senseTags": [
+                    "D"
+                ],
+                "spellcastingTags": [
+                    "I"
+                ],
                 "traitTags": [
                     "False Appearance",
                     "Unusual Nature"
-                ],
-                "actionTags": [
-                    "Frightful Presence",
                 ],
                 "treasure": [
                     "arcana"
@@ -207,6 +223,9 @@ struct CreatureCodableTests {
                     .wisdom
                 ],
                 damageDealt: [
+                    .bludgeoning,
+                ],
+                damageDealtSpell: [
                     .psychic,
                 ],
                 environment: [
@@ -215,6 +234,19 @@ struct CreatureCodableTests {
                 ],
                 actionTags: [
                     .frightfulPresence,
+                ],
+                languageTags: [
+                    .common,
+                ],
+                miscTags: [
+                    .inflictsCurse,
+                    .inflictsDisease,
+                ],
+                senseTags: [
+                    .darkvision,
+                ],
+                spellcastingTags: [
+                    .innate,
                 ],
                 traitTags: [
                     .falseAppearance,

@@ -102,3 +102,257 @@ where Value: CaseIterable
         Value.allCases.map { value in Self(value) }
     }
 }
+
+/// Wrapper around Set<Element> in order to provide an alternate Codable implementation.
+public struct TagSet<Element>: Collection, ExpressibleByArrayLiteral, Hashable, Sequence, SetAlgebra
+where Element : Hashable
+{
+    private var set: Set<Element>
+
+    public init<S>(_ sequence: S) where S : Sequence, Element == S.Element {
+        self.set = Set(sequence)
+    }
+
+    // ExpressibleByArrayLiteral
+
+    public init(arrayLiteral elements: Element...) {
+        self.set = Set(elements)
+    }
+
+    // Collection
+
+    public typealias Element = Element
+    public typealias Index = Set<Element>.Index
+
+    public var startIndex: Index {
+        get { set.startIndex }
+    }
+
+    public var endIndex: Index {
+        get { set.endIndex }
+    }
+
+    public func index(after i: Index) -> Index {
+        set.index(after: i)
+    }
+
+    public subscript(i: Index) -> Element {
+        get { set[i] }
+    }
+
+    // Sequence
+
+    public typealias Iterator = Set<Element>.Iterator
+
+    public func makeIterator() -> Iterator {
+        set.makeIterator()
+    }
+
+    // SetAlgebra
+
+    public init() {
+        self.set = []
+    }
+
+    public var isEmpty: Bool {
+        get { set.isEmpty }
+    }
+
+    public func contains(_ member: Element) -> Bool {
+        set.contains(member)
+    }
+
+    @discardableResult
+    public mutating func insert(_ newMember: Element) -> (inserted: Bool, memberAfterInsert: Element) {
+        set.insert(newMember)
+    }
+
+    @discardableResult
+    public mutating func update(with newMember: Element) -> Element? {
+        set.update(with: newMember)
+    }
+
+    @discardableResult
+    public mutating func remove(_ member: Element) -> Element? {
+        set.remove(member)
+    }
+
+    public mutating func formIntersection(_ other: TagSet<Element>) {
+        set.formIntersection(other)
+    }
+
+    public mutating func formSymmetricDifference(_ other: TagSet<Element>) {
+        set.formSymmetricDifference(other)
+    }
+
+    public mutating func formUnion(_ other: TagSet<Element>) {
+        set.formUnion(other)
+    }
+
+    public func intersection(_ other: TagSet<Element>) -> TagSet<Element> {
+        TagSet(set.intersection(other.set))
+    }
+
+    public func symmetricDifference(_ other: TagSet<Element>) -> TagSet<Element> {
+        TagSet(set.symmetricDifference(other.set))
+    }
+
+    public func union(_ other: TagSet<Element>) -> TagSet<Element> {
+        TagSet(set.union(other.set))
+    }
+}
+
+extension TagSet: Equatable where Element : Equatable {}
+extension TagSet: Sendable where Element : Sendable {}
+
+extension TagSet: CustomStringConvertible
+where Set<Element> : CustomStringConvertible {
+    public var description: String {
+        get { set.description }
+    }
+}
+
+extension TagSet: CustomDebugStringConvertible
+where Set<Element> : CustomDebugStringConvertible {
+    public var debugDescription: String {
+        get { set.debugDescription }
+    }
+}
+
+
+/// Maps a value of itself to a tag.
+public protocol TagCoding {
+    associatedtype Tag
+
+    static var tags: [(Self, Tag)] { get }
+}
+
+extension TagCoding
+where Tag : Equatable {
+    static func value(for tag: Tag) -> Self? {
+        Self.tags.first { this in
+            this.1 == tag
+        }?.0
+    }
+}
+
+extension TagCoding
+where Self : Equatable {
+    static func tag(for value: Self) -> Tag? {
+        Self.tags.first { this in
+            this.0 == value
+        }?.1
+    }
+}
+
+extension TagSet: Decodable
+where Element : Equatable,
+      Element : TagCoding,
+      Element.Tag : Decodable,
+      Element.Tag : Equatable
+{
+    public init(from decoder: any Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+
+        var values = Self()
+        while let tag = try? container.decode(Element.Tag.self) {
+            guard let value = Element.value(for: tag) else {
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Unknown tag: \(tag)")
+            }
+
+            values.insert(value)
+        }
+
+        self = values
+    }
+}
+
+extension TagSet: Encodable
+where Element : Equatable,
+      Element : TagCoding,
+      Element.Tag : Encodable,
+      Element.Tag : Equatable
+{
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        for value in self {
+            guard let tag = Element.tag(for: value) else {
+                throw EncodingError.invalidValue(
+                    value, EncodingError.Context(
+                        codingPath: container.codingPath,
+                        debugDescription: "No tag for value: \(value)"))
+            }
+
+            try container.encode(tag)
+        }
+    }
+}
+
+/// Wrapper around Value in order to provide an alternate Codable implementation.
+public struct Tagged<Value>
+where Value : TagCoding
+{
+    public var value: Value
+
+    public init(_ value: Value) {
+        self.value = value
+    }
+
+    public init?(_ value: Value?) {
+        guard let value else { return nil }
+
+        self.value = value
+    }
+}
+
+extension Tagged: Equatable where Value : Equatable {}
+extension Tagged: Hashable where Value : Hashable {}
+extension Tagged: Sendable where Value : Sendable {}
+
+extension Tagged: CustomStringConvertible
+where Value : CustomStringConvertible {
+    public var description: String { value.description }
+}
+
+extension Tagged: CustomDebugStringConvertible
+where Value : CustomDebugStringConvertible {
+    public var debugDescription: String { value.debugDescription }
+}
+
+extension Tagged: Decodable
+where Value : Equatable,
+      Value.Tag : Decodable,
+      Value.Tag : Equatable
+{
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let tag = try container.decode(Value.Tag.self)
+        guard let value = Value.value(for: tag) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown tag: \(tag)")
+        }
+
+        self.value = value
+    }
+}
+
+extension Tagged: Encodable
+where Value : Equatable,
+      Value.Tag : Encodable,
+      Value.Tag : Equatable
+{
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        guard let tag = Value.tag(for: value) else {
+            throw EncodingError.invalidValue(
+                value, EncodingError.Context(
+                    codingPath: container.codingPath,
+                    debugDescription: "No tag for value: \(value)"))
+        }
+
+        try container.encode(tag)
+    }
+}
