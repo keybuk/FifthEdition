@@ -59,12 +59,6 @@ public struct Creature: Equatable, Sendable {
             case choice(Set<FifthEdition.CreatureType>)
         }
 
-        public enum SidekickType: String, CaseIterable, Codable, Sendable {
-            case expert
-            case spellcaster
-            case warrior
-        }
-
         @Init(label: "_")
         public var type: Choice
 
@@ -174,6 +168,11 @@ public struct Creature: Equatable, Sendable {
     public var page: Page? = nil
     public var otherSources: Set<Source>? = nil
     public var additionalSources: Set<Source>? = nil
+    public var inSrd: SrdReference? = nil
+    public var inSrd52: SrdReference? = nil
+    public var inBasicRules: Bool? = nil
+    public var inBasicRules2024: Bool? = nil
+    public var isLegacy: Bool? = nil
 
     public var reprintedAs: Set<Reprint>? = nil
     public var isReprinted: Bool? = nil
@@ -203,7 +202,6 @@ public struct Creature: Equatable, Sendable {
     public var save: Save? = nil
     public var skill: SkillSet? = nil
     public var tool: ToolSet? = nil
-    public var gear: [Gear]? = nil
     public var senses: [String]? = nil
     public var passive: Passive? = nil
     public var languages: Set<String>? = nil
@@ -214,6 +212,84 @@ public struct Creature: Equatable, Sendable {
     public var damageResistance: Set<DamageResistance>? = nil
     public var damageImmunity: Set<DamageImmunity>? = nil
     public var conditionImmunity: Set<ConditionImmunity>? = nil
+
+    public var conditionInflict: Set<Condition>? = nil
+    public var conditionInflictLegendary: Set<Condition>? = nil
+    public var conditionInflictSpell: Set<Condition>? = nil
+
+    public var savingThrowForced: Set<SavingThrow>? = nil
+    public var savingThrowForcedLegendary: Set<SavingThrow>? = nil
+    public var savingThrowForcedSpell: Set<SavingThrow>? = nil
+
+    public var damageDealt: Set<DamageType>? = nil
+    public var damageDealtLegendary: Set<DamageType>? = nil
+    public var damageDealtSpell: Set<DamageType>? = nil
+
+    public var environment: Set<Environment>? = nil
+
+    public var actionTags: Set<ActionTag>? = nil
+    public var languageTags: Set<LanguageTag>? = nil
+    public var miscTags: Set<MiscTag>? = nil
+    public var senseTags: Set<SenseTag>? = nil
+    public var spellcastingTags: Set<SpellcastingTag>? = nil
+    public var traitTags: Set<TraitTag>? = nil
+
+    // TODO: spellcasting, array of entry.json/entrySpellcasting
+    // TODO: trait, array of { name, entries: entry.json, type: entries/inset?, sort: Int? }
+
+    // TODO: public var actionNote: String? = nil
+    // TODO: actionHeader, array of entry.json
+    // TODO: action, array of { name, entries: entry.json }
+
+    // TODO: public var bonusNote: String? = nil
+    // TODO: bonusHeader, array of entry.json
+    // TODO: bonus, array of { name, entries: entry.json }
+
+    // TODO: public var reactionNote: String? = nil
+    // TODO: reactionHeader, array of entry.json
+    // TODO: reaction, array of { name, entries: entry.json }
+
+    // TODO: legendaryGroup, should be easy, array of {name, source}
+
+    // TODO: legendaryActions, ? defs/_legendaryActions
+    // TODO: legendaryActionsLair, ? defs/_legendaryActions
+    // TODO: legendaryHeader, array of entry.json
+    // TODO: legendary, array of { name?, entries: entry.json }
+
+    // TODO: mythicHeader, array of entry.json
+    // TODO: mythic, array of { name?, entries: entry.json }
+
+    // TODO: footer, array of entry.json
+
+    public var attachedItems: Set<String>? = nil
+    public var gear: [Gear]? = nil
+    public var treasure: Set<Treasure>? = nil
+
+    public var dragonCastingColor: DragonColor? = nil
+    public var dragonAge: DragonAge? = nil
+
+    public var summonedBySpell: String? = nil
+    public var summonedBySpellLevel: Int? = nil
+    public var summonedByClass: String? = nil
+    public var summonedScaleByPlayerLevel: Bool? = nil
+
+    public var canBeFamiliar: Bool? = nil
+    public var isNamedCreature: Bool? = nil
+    public var isNPC: Bool? = nil
+
+    public var hasToken: Bool? = nil
+    public var token: Token? = nil
+    public var tokenCredit: String? = nil
+    public var isTokenCustom: Bool? = nil
+    public var foundryTokenScale: Float? = nil
+    public var hasFluff: Bool? = nil
+    public var hasFluffImages: Bool? = nil
+    public var art: [ArtItem]? = nil
+    public var soundClip: MediaHref? = nil
+
+    // TODO: variant, ? defs/entryVariantBestiary
+    // TODO: _isCopy Bool
+    // TODO: _versions, array /creatureVersion
 }
 
 // MARK: - Codable
@@ -231,6 +307,11 @@ extension Creature: Codable {
         case additionalSources
         case reprintedAs
         case isReprinted
+        case inSrd = "srd"
+        case inSrd52 = "srd52"
+        case inBasicRules = "basicRules"
+        case inBasicRules2024 = "basicRules2024"
+        case isLegacy = "legacy"
         case level
         case size
         case sizeNote
@@ -249,7 +330,6 @@ extension Creature: Codable {
         case cha
         case save
         case skill
-        case gear
         case tool
         case senses
         case passive
@@ -260,6 +340,43 @@ extension Creature: Codable {
         case damageResistance = "resist"
         case damageImmunity = "immune"
         case conditionImmunity = "conditionImmune"
+        case conditionInflict
+        case conditionInflictLegendary
+        case conditionInflictSpell
+        case savingThrowForced
+        case savingThrowForcedLegendary
+        case savingThrowForcedSpell
+        case damageDealt = "damageTags"
+        case damageDealtLegendary = "damageTagsLegendary"
+        case damageDealtSpell = "damageTagsSpell"
+        case environment
+        case actionTags
+        case languageTags
+        case miscTags
+        case senseTags
+        case spellcastingTags
+        case traitTags
+        case attachedItems
+        case gear
+        case treasure
+        case dragonCastingColor
+        case dragonAge
+        case summonedBySpell
+        case summonedBySpellLevel
+        case summonedByClass
+        case summonedScaleByPlayerLevel
+        case canBeFamiliar = "familiar"
+        case isNamedCreature
+        case isNPC
+        case hasToken
+        case token
+        case tokenCredit
+        case isTokenCustom = "tokenCustom"
+        case foundryTokenScale
+        case hasFluff
+        case hasFluffImages
+        case art = "altArt"
+        case soundClip
     }
 }
 
@@ -682,7 +799,6 @@ extension Creature.DamageVulnerability: Codable {
             try container.encodeIfPresent(cond, forKey: .conditional)
         }
     }
-
 }
 
 extension Creature.Gear: Codable {
@@ -869,8 +985,18 @@ extension Creature.SkillSet: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        for key in CodingKeys.allCases {
-            skills[key.value!] = try container.decodeIfPresent(String.self, forKey: key)
+        for key in container.allKeys {
+            if key.stringValue == "other" {
+                continue
+            }
+
+            guard let value = key.value else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: key,
+                    in: container,
+                    debugDescription: "Unknown skill: \(key)")
+            }
+            skills[value] = try container.decodeIfPresent(String.self, forKey: key)
         }
 
         if var array = try? container.nestedUnkeyedContainer(forKey: CodingKeys(stringValue: "other")) {
@@ -906,7 +1032,6 @@ extension Creature.SkillSet: Codable {
             }
         }
     }
-
 }
 
 extension Creature.ToolSet: Codable {
@@ -914,8 +1039,14 @@ extension Creature.ToolSet: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        for key in CodingKeys.allCases {
-            tools[key.value!] = try container.decodeIfPresent(String.self, forKey: key)
+        for key in container.allKeys {
+            guard let value = key.value else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: key,
+                    in: container,
+                    debugDescription: "Unknown tool: \(key)")
+            }
+            tools[value] = try container.decodeIfPresent(String.self, forKey: key)
         }
     }
 
@@ -925,6 +1056,4 @@ extension Creature.ToolSet: Codable {
             try container.encodeIfPresent(tools[key.value!], forKey: key)
         }
     }
-
 }
-

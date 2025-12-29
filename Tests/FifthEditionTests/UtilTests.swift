@@ -113,6 +113,34 @@ struct DamageTypeCodableTests {
 
 }
 
+struct DragonAgeCodableTests {
+
+    @Test("Dragon ages", arguments: DragonAge.allCases)
+    func dragonAge(_ dragonAge: DragonAge) throws {
+        try testCodable(
+            json: """
+            "\(dragonAge.rawValue)"
+            """,
+            value: dragonAge
+        )
+    }
+
+}
+
+struct DragonColorCodableTests {
+
+    @Test("Dragon colors", arguments: DragonColor.allCases)
+    func dragonColor(_ dragonColor: DragonColor) throws {
+        try testCodable(
+            json: """
+            "\(dragonColor.rawValue)"
+            """,
+            value: dragonColor
+        )
+    }
+
+}
+
 struct EditionCodableTests {
 
     @Test("Editions", arguments: Edition.allCases)
@@ -122,6 +150,20 @@ struct EditionCodableTests {
             "\(edition.rawValue)"
             """,
             value: edition
+        )
+    }
+
+}
+
+struct EnvironmentCodableTests {
+
+    @Test("Environments", arguments: Environment.allCases)
+    func environment(_ environment: Environment) throws {
+        try testCodable(
+            json: """
+            "\(environment.rawValue)"
+            """,
+            value: environment
         )
     }
 
@@ -216,6 +258,34 @@ struct ReprintCodableTests {
                 uid: "Amethyst|XDMG",
                 edition: .one,
             )
+        )
+    }
+
+}
+
+struct SavingThrowCodableTests {
+
+    @Test("Saving throws", arguments: SavingThrow.allCases)
+    func savingThrow(_ savingThrow: SavingThrow) throws {
+        try testCodable(
+            json: """
+            "\(savingThrow.rawValue)"
+            """,
+            value: savingThrow
+        )
+    }
+
+}
+
+struct SidekickTypeCodableTests {
+
+    @Test("Sidekick types", arguments: SidekickType.allCases)
+    func sidekickType(_ sidekickType: SidekickType) throws {
+        try testCodable(
+            json: """
+            "\(sidekickType.rawValue)"
+            """,
+            value: sidekickType
         )
     }
 
@@ -616,6 +686,30 @@ struct SpeedSubscriptTests {
 
 }
 
+struct SrdReferenceCodableTests {
+
+    @Test("In SRD")
+    func srd() throws {
+        try testCodable(
+            json: """
+            true
+            """,
+            value: SrdReference.present(true)
+        )
+    }
+
+    @Test("In SRD with alternate name")
+    func srdAlteranteName() throws {
+        try testCodable(
+            json: """
+            "Generic Monster"
+            """,
+            value: SrdReference.presentAs("Generic Monster")
+        )
+    }
+
+}
+
 struct TagCodableTests {
 
     @Test("Tag")
@@ -656,3 +750,18 @@ struct ToolCodableTests {
     }
 
 }
+
+struct TreasureCodableTests {
+
+    @Test("Treasure", arguments: Treasure.allCases)
+    func treasure(_ treasure: Treasure) throws {
+        try testCodable(
+            json: """
+            "\(treasure.rawValue)"
+            """,
+            value: treasure
+        )
+    }
+
+}
+

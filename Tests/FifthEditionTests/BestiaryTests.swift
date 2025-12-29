@@ -119,7 +119,34 @@ struct CreatureCodableTests {
                 "conditionImmune": [
                     "charmed",
                     "frightened"
-                ]
+                ],
+                "conditionInflict": [
+                    "frightened"
+                ],
+                "savingThrowForced": [
+                    "wisdom"
+                ],
+                "damageTags": [
+                    "psychic"
+                ],
+                "environment": [
+                    "underdark",
+                    "planar, lower"
+                ],
+                "traitTags": [
+                    "False Appearance",
+                    "Unusual Nature"
+                ],
+                "actionTags": [
+                    "Frightful Presence",
+                ],
+                "treasure": [
+                    "arcana"
+                ],
+                "familiar": true,
+                "hasToken": true,
+                "hasFluff": true,
+                "hasFluffImages": true,
             }
             """,
             value: Creature(
@@ -152,10 +179,6 @@ struct CreatureCodableTests {
                     .nature: "+5",
                     .perception: "+7",
                 ]),
-                gear: [
-                    .init("dagger|xphb", quantity: 6),
-                    .init("studded leather armor|xphb"),
-                ],
                 senses: ["darkvision 60 ft."],
                 passive: .score(16),
                 languages: ["Common", "Undercommon"],
@@ -177,6 +200,35 @@ struct CreatureCodableTests {
                     .condition(.charmed),
                     .condition(.frightened),
                 ],
+                conditionInflict: [
+                    .frightened
+                ],
+                savingThrowForced: [
+                    .wisdom
+                ],
+                damageDealt: [
+                    .psychic,
+                ],
+                environment: [
+                    .underdark,
+                    .planarLower
+                ],
+                actionTags: [
+                    .frightfulPresence,
+                ],
+                traitTags: [
+                    .falseAppearance,
+                    .unusualNature,
+                ],
+                gear: [
+                    .init("dagger|xphb", quantity: 6),
+                    .init("studded leather armor|xphb"),
+                ],
+                treasure: [.arcana],
+                canBeFamiliar: true,
+                hasToken: true,
+                hasFluff: true,
+                hasFluffImages: true,
             )
         )
     }
@@ -189,7 +241,7 @@ struct CreatureCodableTests {
             {
                 "name": "Fat Stig",
                 "shortName": "Stig",
-                "source": "XPHB",
+                "source": "TG",
                 "level": 9,
                 "size": [
                     "L"
@@ -242,13 +294,25 @@ struct CreatureCodableTests {
                         ],
                         "preNote": "While wearing racing suit:"
                     }
-                ]
+                ],
+                "attachedItems": [
+                    "racing suit|TG"
+                ],
+                "isNamedCreature": true,
+                "isNPC": true,
+                "hasToken": true,
+                "tokenCustom": true,
+                "tokenCredit": "BBC",
+                "token": {
+                    "name": "The Stig",
+                    "source": "TG"
+                }
             }
             """,
             value: Creature(
                 name: "Fat Stig",
                 shortName: .name("Stig"),
-                source: "XPHB",
+                source: "TG",
                 level: 9,
                 size: [.large],
                 sizeNote: "from eating",
@@ -283,9 +347,72 @@ struct CreatureCodableTests {
                         preNote: "While wearing racing suit:",
                     ),
                 ],
+                attachedItems: [
+                    "racing suit|TG",
+                ],
+                isNamedCreature: true,
+                isNPC: true,
+                hasToken: true,
+                token: .init(name: "The Stig", source: "TG"),
+                tokenCredit: "BBC",
+                isTokenCustom: true,
             )
         )
     }
+
+    @Test("Summoned creature")
+    func summoned() throws {
+        try testCodable(
+            json: """
+            {
+                "name": "Talkie Toaster",
+                "source": "RD",
+                "size": [
+                    "T"
+                ],
+                "type": "construct",
+                "alignment": [
+                    "C", "E",
+                ],
+                "ac": [
+                    15
+                ],
+                "hp": {
+                    "average": 17,
+                    "formula": "2d6 + 10"
+                },
+                "speed": 0,
+                "languages": [
+                    "Common"
+                ],
+                "summonedBySpell": "Animate Toaster|RD",
+                "summonedBySpellLevel": 6,
+                "summonedByClass": "Artificer|EFA",
+                "summonedScaleByPlayerLevel": true,
+                "isNamedCreature": true,
+                "isNPC": true
+            }
+            """,
+            value: Creature(
+                name: "Talkie Toaster",
+                source: "RD",
+                size: [.tiny],
+                type: .init(.type(.construct)),
+                alignment: .alignment([.chaotic, .evil]),
+                armorClass: [.ac(15)],
+                hitPoints: .hp(.init(.d6, count: 2, modifier: 10)),
+                speed: .init([.walk: .speed(0)]),
+                languages: ["Common"],
+                summonedBySpell: "Animate Toaster|RD",
+                summonedBySpellLevel: 6,
+                summonedByClass: "Artificer|EFA",
+                summonedScaleByPlayerLevel: true,
+                isNamedCreature: true,
+                isNPC: true,
+            )
+        )
+    }
+
 }
 
 struct CreatureAbilityScoreCodableTests {
@@ -1183,7 +1310,6 @@ struct CreatureGearCodableTests {
 
 }
 
-
 struct CreatureHitPointsCodableTests {
 
     @Test("Hit points")
@@ -1383,7 +1509,6 @@ struct CreatureShortNameCodableTests {
     }
 
 }
-
 
 struct CreatureSkillSetCodableTests {
 

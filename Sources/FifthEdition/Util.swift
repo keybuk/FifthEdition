@@ -79,9 +79,86 @@ public enum DamageType: String, CaseIterable, Codable, Sendable {
     case thunder
 }
 
+public enum DragonAge: String, CaseIterable, Codable, Sendable {
+    case young
+    case adult
+    case wyrmling
+    case greatwyrm
+    case ancient
+    case aspect
+}
+
+public enum DragonColor: String, CaseIterable, Codable, Sendable {
+    case black
+    case blue
+    case green
+    case red
+    case white
+    case brass
+    case bronze
+    case copper
+    case gold
+    case silver
+    case deep
+    case spirit
+}
+
 public enum Edition: String, CaseIterable, Codable, Sendable {
     case classic
     case one
+}
+
+public enum Environment: String, CaseIterable, Codable, Sendable {
+    case any
+    case underwater
+    case coastal
+    case mountain
+    case grassland
+    case hill
+    case arctic
+    case urban
+    case forest
+    case swamp
+    case underdark
+    case desert
+    case badlands
+    case farmland
+    case planar
+    case planarTransitive     = "planar, transitive"
+    case planarElemental      = "planar, elemental"
+    case planarInner          = "planar, inner"
+    case planarUpper          = "planar, upper"
+    case planarLower          = "planar, lower"
+    case planarFeywild        = "planar, feywild"
+    case planarShadowfell     = "planar, shadowfell"
+    case planarWater          = "planar, water"
+    case planarEarth          = "planar, earth"
+    case planarFire           = "planar, fire"
+    case planarAir            = "planar, air"
+    case planarOoze           = "planar, ooze"
+    case planarMagma          = "planar, magma"
+    case planarAsh            = "planar, ash"
+    case planarIce            = "planar, ice"
+    case planarElementalChaos = "planar, elemental chaos"
+    case planarEthereal       = "planar, ethereal"
+    case planarAstral         = "planar, astral"
+    case planarArborea        = "planar, arborea"
+    case planarArcadia        = "planar, arcadia"
+    case planarBeastlands     = "planar, beastlands"
+    case planarBytopia        = "planar, bytopia"
+    case planarElysium        = "planar, elysium"
+    case planarMountCelestia  = "planar, mount celestia"
+    case planarYsgard         = "planar, ysgard"
+    case planarAbyss          = "planar, abyss"
+    case planarAcheron        = "planar, acheron"
+    case planarCarceri        = "planar, carceri"
+    case planarGehenna        = "planar, gehenna"
+    case planarHades          = "planar, hades"
+    case planarNineHells      = "planar, nine hells"
+    case planarPandemonium    = "planar, pandemonium"
+    case planarLimbo          = "planar, limbo"
+    case planarMechanus       = "planar, mechanus"
+    case planarOutlands       = "planar, outlands"
 }
 
 public enum Page: Equatable, Hashable, Sendable {
@@ -99,6 +176,21 @@ public struct Reprint: Equatable, Hashable, Sendable {
     public var uid: String
     public var tag: String? = nil
     public var edition: Edition? = nil
+}
+
+public enum SavingThrow: String, CaseIterable, Codable, Sendable {
+    case strength
+    case constitution
+    case dexterity
+    case intelligence
+    case wisdom
+    case charisma
+}
+
+public enum SidekickType: String, CaseIterable, Codable, Sendable {
+    case expert
+    case spellcaster
+    case warrior
 }
 
 public enum Size: String, CaseIterable, Comparable, Sendable {
@@ -130,7 +222,7 @@ public enum Skill: String, CaseIterable, Codable, Sendable {
     case performance
     case persuasion
     case religion
-    case sleightOfHand = "sleight of hand"
+    case sleightOfHand  = "sleight of hand"
     case stealth
     case survival
 }
@@ -192,57 +284,71 @@ public struct Speed: Equatable, Sendable {
     }
 }
 
+public enum SrdReference: Equatable, Hashable, Sendable {
+    case present(Bool)
+    case presentAs(String)
+}
+
 public enum Tag: Equatable, Hashable, Sendable {
     case tag(String)
     case prefixed(String, prefix: String)
 }
 
 public enum Tool: String, CaseIterable, Sendable {
-    case artisansTools = "artisan's tools"
-    case alchemistsSupplies = "alchemist's supplies"
-    case brewersSupplies = "brewer's supplies"
+    case artisansTools         = "artisan's tools"
+    case alchemistsSupplies    = "alchemist's supplies"
+    case brewersSupplies       = "brewer's supplies"
     case calligraphersSupplies = "calligrapher's supplies"
-    case carpentersTools = "carpenter's tools"
-    case cartographersTools = "cartographer's tools"
-    case cobblersTools = "cobbler's tools"
-    case cooksUtensils = "cook's utensils"
-    case glassblowersTools = "glassblower's tools"
-    case jewelersTools = "jeweler's tools"
-    case leatherworkersTools = "leatherworker's tools"
-    case masonsTools = "mason's tools"
-    case paintersSupplies = "painter's supplies"
-    case pottersTools = "potter's tools"
-    case smithsTools = "smith's tools"
-    case tinkersTools = "tinker's tools"
-    case weaversTools = "weaver's tools"
-    case woodcarversTools = "woodcarver's tools"
-    case disguisKit = "disguise kit"
-    case forgeryKit = "forgery kit"
-    case gamingSet = "gaming set"
-    case dragonchessSet = "dragonchess set"
-    case diceSet = "dice set"
-    case threeDragonAnteSet = "three-dragon ante set"
-    case playingCardSet = "playing card set"
-    case herbalismKit = "herbalism kit"
-    case musicalInstrument = "musical instrument"
-    case bagpipes = "bagpipes"
-    case drum = "drum"
-    case dulcimer = "dulcimer"
-    case flute = "flute"
-    case horn = "horn"
-    case lute = "lute"
-    case lyre = "lyre"
-    case panFlute = "pan flute"
-    case shawm = "shawm"
-    case viol = "viol"
-    case navigatorsTools = "navigator's tools"
-    case thievesTools = "thieves' tools"
-    case poisonersKit = "poisoner's kit"
-    case vehicles = "vehicles"
-    case vehiclesAir = "vehicles (air)"
-    case vehiclesLand = "vehicles (land)"
-    case vehiclesWater = "vehicles (water)"
-    case vehiclesSpace = "vehicles (space)"
+    case carpentersTools       = "carpenter's tools"
+    case cartographersTools    = "cartographer's tools"
+    case cobblersTools         = "cobbler's tools"
+    case cooksUtensils         = "cook's utensils"
+    case glassblowersTools     = "glassblower's tools"
+    case jewelersTools         = "jeweler's tools"
+    case leatherworkersTools   = "leatherworker's tools"
+    case masonsTools           = "mason's tools"
+    case paintersSupplies      = "painter's supplies"
+    case pottersTools          = "potter's tools"
+    case smithsTools           = "smith's tools"
+    case tinkersTools          = "tinker's tools"
+    case weaversTools          = "weaver's tools"
+    case woodcarversTools      = "woodcarver's tools"
+    case disguisKit            = "disguise kit"
+    case forgeryKit            = "forgery kit"
+    case gamingSet             = "gaming set"
+    case dragonchessSet        = "dragonchess set"
+    case diceSet               = "dice set"
+    case threeDragonAnteSet    = "three-dragon ante set"
+    case playingCardSet        = "playing card set"
+    case herbalismKit          = "herbalism kit"
+    case musicalInstrument     = "musical instrument"
+    case bagpipes              = "bagpipes"
+    case drum                  = "drum"
+    case dulcimer              = "dulcimer"
+    case flute                 = "flute"
+    case horn                  = "horn"
+    case lute                  = "lute"
+    case lyre                  = "lyre"
+    case panFlute              = "pan flute"
+    case shawm                 = "shawm"
+    case viol                  = "viol"
+    case navigatorsTools       = "navigator's tools"
+    case thievesTools          = "thieves' tools"
+    case poisonersKit          = "poisoner's kit"
+    case vehicles              = "vehicles"
+    case vehiclesAir           = "vehicles (air)"
+    case vehiclesLand          = "vehicles (land)"
+    case vehiclesWater         = "vehicles (water)"
+    case vehiclesSpace         = "vehicles (space)"
+}
+
+public enum Treasure: String, CaseIterable, Codable, Sendable {
+    case any
+    case individual
+    case arcana
+    case armaments
+    case implements
+    case relics
 }
 
 // MARK: - Codable
@@ -383,6 +489,15 @@ extension Reprint: Codable {
 }
 
 extension Size: Codable {
+    enum CodingKeys: String, CodingKey {
+        case tiny       = "T"
+        case small      = "S"
+        case medium     = "M"
+        case large      = "L"
+        case huge       = "H"
+        case gargantuan = "G"
+    }
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         let value = try container.decode(String.self)
@@ -418,8 +533,14 @@ extension Speed.Alternate: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        for key in CodingKeys.allCases {
-            speeds[key.value!] = try container.decodeIfPresent(Set<Speed.Value>.self, forKey: key)
+        for key in container.allKeys {
+            guard let value = key.value else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: key,
+                    in: container,
+                    debugDescription: "Unknown speed: \(key)")
+            }
+            speeds[value] = try container.decodeIfPresent(Set<Speed.Value>.self, forKey: key)
         }
     }
 
@@ -519,6 +640,25 @@ extension Speed: Codable {
             try container.encodeIfPresent(choose, forKey: .choose)
             try container.encodeIfPresent(alternate, forKey: .alternate)
             try container.encodeIfPresent(hidden, forKey: .hidden)
+        }
+    }
+}
+
+extension SrdReference: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(String.self) {
+            self = .presentAs(value)
+        } else {
+            self = .present(try container.decode(Bool.self))
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .present(let value): try container.encode(value)
+        case .presentAs(let value): try container.encode(value)
         }
     }
 }
