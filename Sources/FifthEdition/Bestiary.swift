@@ -16,6 +16,13 @@ public struct Creature: Equatable, Sendable {
         case special(String)
     }
 
+    @MemberwiseInit(.public)
+    public struct Action: Codable, Equatable, Sendable {
+        @Init(label: "_")
+        public var name: String
+        public var entries: [Entry]
+    }
+
     public enum Alignment: Equatable, Sendable {
         @MemberwiseInit(.public)
         public struct Choice: Equatable, Codable, Sendable {
@@ -114,13 +121,19 @@ public struct Creature: Equatable, Sendable {
         public var advantage: Advantage? = nil
     }
 
+    @MemberwiseInit(.public)
+    public struct LegendaryGroup: Codable, Equatable, Sendable {
+        public var name: String
+        public var source: String
+    }
+
     public enum Passive: Equatable, Sendable {
         case score(Int)
         case special(String)
     }
 
     @MemberwiseInit(.public)
-    public struct Save: Equatable, Codable, Sendable {
+    public struct Save: Codable, Equatable, Sendable {
         // FIXME: Convert this into a SavingThrow-indexed dictionary like skills.
         public var str: String? = nil
         public var dex: String? = nil
@@ -157,6 +170,21 @@ public struct Creature: Equatable, Sendable {
             get { tools[tool] }
             set { tools[tool] = newValue }
         }
+    }
+
+    @MemberwiseInit(.public)
+    public struct Trait: Codable, Equatable, Sendable {
+        public enum TraitType: String, Codable, Equatable, Sendable {
+            case entries
+            case inset
+        }
+
+        @Init(label: "_")
+        public var name: String
+        public var entries: [Entry]
+
+        public var type: TraitType? = nil
+        public var sort: Int? = nil
     }
 
     public var name: String? = nil
@@ -228,43 +256,42 @@ public struct Creature: Equatable, Sendable {
 
     public var environment: Set<Environment>? = nil
 
+    public var spellcasting: [Spellcasting]? = nil
+    public var trait: [Trait]? = nil
+
+    public var actionNote: String? = nil
+    public var actionHeader: [Entry]? = nil
+    public var action: [Action]? = nil
+
+    public var bonusNote: String? = nil
+    public var bonusHeader: [Entry]? = nil
+    public var bonus: [Action]? = nil
+
+    public var reactionNote: String? = nil
+    public var reactionHeader: [Entry]? = nil
+    public var reaction: [Action]? = nil
+
+    public var legendaryGroup: LegendaryGroup? = nil
+    public var legendaryActions: Int? = nil
+    public var legendaryActionsLair: Int? = nil
+    public var legendaryHeader: [Entry]? = nil
+    public var legendary: [Action]? = nil
+
+    public var mythicHeader: [Entry]? = nil
+    public var mythic: [Action]? = nil
+
+    public var footer: [Entry]? = nil
+
+    public var attachedItems: Set<String>? = nil
+    public var gear: [Gear]? = nil
+    public var treasure: Set<Treasure>? = nil
+
     public var actionTags: Set<ActionTag>? = nil
     public var languageTags: TagSet<LanguageTag>? = nil
     public var miscTags: TagSet<MiscTag>? = nil
     public var senseTags: TagSet<Sense>? = nil
     public var spellcastingTags: TagSet<SpellcastingType>? = nil
     public var traitTags: Set<TraitTag>? = nil
-
-    // TODO: spellcasting, array of entry.json/entrySpellcasting
-    // TODO: trait, array of { name, entries: entry.json, type: entries/inset?, sort: Int? }
-
-    // TODO: public var actionNote: String? = nil
-    // TODO: actionHeader, array of entry.json
-    // TODO: action, array of { name, entries: entry.json }
-
-    // TODO: public var bonusNote: String? = nil
-    // TODO: bonusHeader, array of entry.json
-    // TODO: bonus, array of { name, entries: entry.json }
-
-    // TODO: public var reactionNote: String? = nil
-    // TODO: reactionHeader, array of entry.json
-    // TODO: reaction, array of { name, entries: entry.json }
-
-    // TODO: legendaryGroup, should be easy, array of {name, source}
-
-    // TODO: legendaryActions, ? defs/_legendaryActions
-    // TODO: legendaryActionsLair, ? defs/_legendaryActions
-    // TODO: legendaryHeader, array of entry.json
-    // TODO: legendary, array of { name?, entries: entry.json }
-
-    // TODO: mythicHeader, array of entry.json
-    // TODO: mythic, array of { name?, entries: entry.json }
-
-    // TODO: footer, array of entry.json
-
-    public var attachedItems: Set<String>? = nil
-    public var gear: [Gear]? = nil
-    public var treasure: Set<Treasure>? = nil
 
     public var dragonCastingColor: DragonColor? = nil
     public var dragonAge: DragonAge? = nil
@@ -289,8 +316,8 @@ public struct Creature: Equatable, Sendable {
     public var soundClip: MediaHref? = nil
 
     // TODO: variant, ? defs/entryVariantBestiary
-    // TODO: _isCopy Bool
     // TODO: _versions, array /creatureVersion
+    // TODO: _isCopy, _copy
 }
 
 // MARK: - Codable
@@ -351,15 +378,34 @@ extension Creature: Codable {
         case damageDealtLegendary = "damageTagsLegendary"
         case damageDealtSpell = "damageTagsSpell"
         case environment
+        case spellcasting
+        case trait
+        case actionNote
+        case actionHeader
+        case action
+        case bonusNote
+        case bonusHeader
+        case bonus
+        case reactionNote
+        case reactionHeader
+        case reaction
+        case legendaryGroup
+        case legendaryActions
+        case legendaryActionsLair
+        case legendaryHeader
+        case legendary
+        case mythicHeader
+        case mythic
+        case footer
+        case attachedItems
+        case gear
+        case treasure
         case actionTags
         case languageTags
         case miscTags
         case senseTags
         case spellcastingTags
         case traitTags
-        case attachedItems
-        case gear
-        case treasure
         case dragonCastingColor
         case dragonAge
         case summonedBySpell
@@ -1070,12 +1116,12 @@ extension Creature.AbilityScore: CustomStringConvertible {
     }
 }
 
-extension Creature.ChallengeRating: CustomDebugStringConvertible {
+extension Creature.Action: CustomDebugStringConvertible {
     public var debugDescription: String {
         debugDescriptionOf(
             String(describing: type(of: self)),
-            names: "_", "lair", "coven", "xp", "xpLair",
-            values: cr, lair, coven, xp, xpLair,
+            names: "_", "entries",
+            values: name, entries,
         )
     }
 }
@@ -1112,6 +1158,16 @@ extension Creature.ArmorClass: CustomDebugStringConvertible {
                 values: special,
             )
         }
+    }
+}
+
+extension Creature.ChallengeRating: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        debugDescriptionOf(
+            String(describing: type(of: self)),
+            names: "_", "lair", "coven", "xp", "xpLair",
+            values: cr, lair, coven, xp, xpLair,
+        )
     }
 }
 
@@ -1300,3 +1356,14 @@ extension Creature.ToolSet: CustomDebugStringConvertible {
         String(describing: tools)
     }
 }
+
+extension Creature.Trait: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        debugDescriptionOf(
+            String(describing: Swift.type(of: self)),
+            names: "_", "entries", "type", "sort",
+            values: name, entries, type, sort,
+        )
+    }
+}
+
