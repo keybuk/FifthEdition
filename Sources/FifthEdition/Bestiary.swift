@@ -318,6 +318,26 @@ public struct Creature: Equatable, Sendable {
     // TODO: variant, ? defs/entryVariantBestiary
     // TODO: _versions, array /creatureVersion
     // TODO: _isCopy, _copy
+    
+    /// Returns the expected token path.
+    public var tokenPath: String? {
+        guard let name = token?.name ?? name,
+              let source = token?.source ?? source else {
+            return nil
+        }
+
+        let tokenName = String(
+            name
+                .replacingOccurrences(of: "Æ", with: "AE")
+                .replacingOccurrences(of: "æ", with: "ae")
+                .replacingOccurrences(of: "\"", with: "")
+                .decomposedStringWithCanonicalMapping
+                .unicodeScalars
+                .filter { $0.isASCII }
+        )
+
+        return "bestiary/tokens/\(source)/\(tokenName).webp"
+    }
 }
 
 // MARK: - Codable

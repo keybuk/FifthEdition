@@ -232,6 +232,11 @@ struct CreatureCodableTests {
                     .underdark,
                     .planarLower
                 ],
+                gear: [
+                    .init("dagger|xphb", quantity: 6),
+                    .init("studded leather armor|xphb"),
+                ],
+                treasure: [.arcana],
                 actionTags: [
                     .frightfulPresence,
                 ],
@@ -252,11 +257,6 @@ struct CreatureCodableTests {
                     .falseAppearance,
                     .unusualNature,
                 ],
-                gear: [
-                    .init("dagger|xphb", quantity: 6),
-                    .init("studded leather armor|xphb"),
-                ],
-                treasure: [.arcana],
                 canBeFamiliar: true,
                 hasToken: true,
                 hasFluff: true,
@@ -443,6 +443,74 @@ struct CreatureCodableTests {
                 isNPC: true,
             )
         )
+    }
+
+}
+
+struct CreatureTokenPathTests {
+
+    @Test("Token path")
+    func tokenPath() throws {
+        let creature = Creature(
+            name: "Blink Dog",
+            source: "XMM"
+        )
+        #expect(creature.tokenPath == "bestiary/tokens/XMM/Blink Dog.webp")
+    }
+
+    @Test("Token path has diacritics removed")
+    func tokenPathWithoutDiacritics() throws {
+        let creature = Creature(
+            name: "Kupalué",
+            source: "ToA"
+        )
+        #expect(creature.tokenPath == "bestiary/tokens/ToA/Kupalue.webp")
+    }
+
+    @Test("Token path has æ dipthong replaced")
+    func tokenPathWithoutAeDipthong() throws {
+        let creature = Creature(
+            name: "Môrgæn",
+            source: "AI"
+        )
+        #expect(creature.tokenPath == "bestiary/tokens/AI/Morgaen.webp")
+    }
+
+    @Test("Token path has quotes removed")
+    func tokenPathWithoutQuotes() throws {
+        let creature = Creature(
+            name: "\"The Demogorgon\"",
+            source: "IMR"
+        )
+        #expect(creature.tokenPath == "bestiary/tokens/IMR/The Demogorgon.webp")
+    }
+
+    @Test("Token path from token")
+    func tokenPathFromToken() throws {
+        let creature = Creature(
+            name: "Demilich",
+            source: "WDMM",
+            token: Token(
+                name: "Acererak",
+                source: "MM"),
+        )
+        #expect(creature.tokenPath == "bestiary/tokens/MM/Acererak.webp")
+    }
+
+    @Test("No token if no name")
+    func noName() throws {
+        let creature = Creature(
+            source: "XMM",
+        )
+        #expect(creature.tokenPath == nil)
+    }
+
+    @Test("No token if no source")
+    func noSource() throws {
+        let creature = Creature(
+            name: "Blink Dog",
+        )
+        #expect(creature.tokenPath == nil)
     }
 
 }
