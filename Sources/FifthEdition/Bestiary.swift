@@ -254,7 +254,7 @@ public struct Creature: Equatable, Sendable {
     public var damageDealtLegendary: TagSet<DamageType>? = nil
     public var damageDealtSpell: TagSet<DamageType>? = nil
 
-    public var environment: Set<Environment>? = nil
+    public var environment: Set<EnvironmentType>? = nil
 
     public var spellcasting: [Spellcasting]? = nil
     public var trait: [Trait]? = nil

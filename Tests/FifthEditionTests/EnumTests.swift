@@ -132,15 +132,15 @@ struct EditionCodableTests {
 
 }
 
-struct EnvironmentCodableTests {
+struct EnvironmentTypeCodableTests {
 
-    @Test("Environments", arguments: Environment.allCases)
-    func environment(_ environment: Environment) throws {
+    @Test("Environment types", arguments: EnvironmentType.allCases)
+    func environmentType(_ environmentType: EnvironmentType) throws {
         try testCodable(
             json: """
-            "\(environment.rawValue)"
+            "\(environmentType.rawValue)"
             """,
-            value: environment
+            value: environmentType
         )
     }
 

@@ -97,7 +97,7 @@ public enum Edition: String, CaseIterable, Codable, Sendable {
     case one
 }
 
-public enum Environment: String, CaseIterable, Codable, Sendable {
+public enum EnvironmentType: String, CaseIterable, Codable, Sendable {
     case any
     case underwater
     case coastal
