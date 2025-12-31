@@ -319,6 +319,15 @@ public struct Creature: Equatable, Sendable {
     // TODO: _versions, array /creatureVersion
     // TODO: _isCopy, _copy
     
+    /// Returns the uid used to reference this creature.
+    public var uid: String? {
+        guard let name, let source else {
+            return nil
+        }
+
+        return "\(name.localizedLowercase)|\(source.localizedLowercase)"
+    }
+
     /// Returns the expected token path.
     public var tokenPath: String? {
         guard let name = token?.name ?? name,

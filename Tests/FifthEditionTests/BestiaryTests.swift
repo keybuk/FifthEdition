@@ -447,6 +447,35 @@ struct CreatureCodableTests {
 
 }
 
+struct CreatureUidTests {
+
+    @Test("UID")
+    func uid() throws {
+        let creature = Creature(
+            name: "Blink Dog",
+            source: "XMM"
+        )
+        #expect(creature.uid == "blink dog|xmm")
+    }
+
+    @Test("No UID if no name")
+    func noName() throws {
+        let creature = Creature(
+            source: "XMM"
+        )
+        #expect(creature.uid == nil)
+    }
+
+    @Test("No UID if no source")
+    func noSource() throws {
+        let creature = Creature(
+            name: "Blink Dog",
+        )
+        #expect(creature.uid == nil)
+    }
+
+}
+
 struct CreatureTokenPathTests {
 
     @Test("Token path")
