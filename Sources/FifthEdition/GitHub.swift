@@ -112,25 +112,22 @@ public struct GitHubAsset {
         case digestMismatch
     }
 
-    /// Download the asset into a target directory, verifying the digest.
-    /// - Parameter directory: Target directory for file.
-    /// - Returns: URL of downloaded file.
+    /// Download the asset into a target URL, verifying the digest.
+    /// - Parameter url: Target URL for file.
     ///
     /// The file is downloaded from the asset source URL into the target directory, with the same name as the asset itself. The directory must already exist before calling this function.
     ///
     /// If the file already exists, the digest is checked, and if the same, the download is skipped. If the downloaded file has the wrong asset, an error is thrown.
-    public func downloadInto(directory: URL) async throws -> URL {
-        let targetURL = directory.appending(component: name, directoryHint: .notDirectory)
-
+    public func downloadInto(_ url: URL) async throws {
         // If the target already exists, and the digest matches that in the asset, we can avoid downloading again.
-        if let handle = try? FileHandle(forReadingFrom: targetURL) {
+        if let handle = try? FileHandle(forReadingFrom: url) {
             if let digest, digest.hasPrefix("sha256:"),
                try handle.sha256Digest() == digest
             {
-                return targetURL
+                return
             }
 
-            try FileManager.default.removeItem(at: targetURL)
+            try FileManager.default.removeItem(at: url)
         }
 
         // Download and then verify the digest.
@@ -143,8 +140,7 @@ public struct GitHubAsset {
             }
         }
 
-        try FileManager.default.moveItem(at: downloadedURL, to: targetURL)
-        return targetURL
+        try FileManager.default.moveItem(at: downloadedURL, to: url)
     }
 }
 

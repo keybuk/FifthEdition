@@ -131,11 +131,8 @@ struct AssetDownloadTests {
         asset.browserDownloadURL = try Self.exampleZipURL
         asset.digest = Self.exampleZipDigest
 
-        let targetURL = try await asset.downloadInto(directory: targetDirectory)
-
-        #expect(targetURL.isFileURL)
-        #expect(targetURL.deletingLastPathComponent() == targetDirectory)
-        #expect(targetURL.lastPathComponent == asset.name)
+        let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
+        try await asset.downloadInto(targetURL)
 
         try #require(targetURL.checkPromisedItemIsReachable() == true)
 
@@ -161,8 +158,7 @@ struct AssetDownloadTests {
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
         try FileManager.default.copyItem(at: try Self.exampleZipURL, to: targetURL)
 
-        let returnedURL = try await asset.downloadInto(directory: targetDirectory)
-        try #require(returnedURL == targetURL)
+        try await asset.downloadInto(targetURL)
 
         // Verify the digest is correct, meaning the download of the wrong asset didn't happen.
         #expect(try FileHandle(forReadingFrom: targetURL).sha256Digest() == Self.exampleZipDigest)
@@ -186,8 +182,7 @@ struct AssetDownloadTests {
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
         try FileManager.default.copyItem(at: try Self.badExampleZipURL, to: targetURL)
 
-        let returnedURL = try await asset.downloadInto(directory: targetDirectory)
-        try #require(returnedURL == targetURL)
+        try await asset.downloadInto(targetURL)
 
         // Verify the digest is correct, meaning the wrong file was replaced by the right one.
         #expect(try FileHandle(forReadingFrom: targetURL).sha256Digest() == Self.exampleZipDigest)
@@ -207,11 +202,8 @@ struct AssetDownloadTests {
         asset.browserDownloadURL = try Self.exampleZipURL
         asset.digest = nil
 
-        let targetURL = try await asset.downloadInto(directory: targetDirectory)
-
-        #expect(targetURL.isFileURL)
-        #expect(targetURL.deletingLastPathComponent() == targetDirectory)
-        #expect(targetURL.lastPathComponent == asset.name)
+        let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
+        try await asset.downloadInto(targetURL)
 
         try #require(targetURL.checkPromisedItemIsReachable() == true)
 
@@ -237,8 +229,7 @@ struct AssetDownloadTests {
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
         try FileManager.default.copyItem(at: try Self.badExampleZipURL, to: targetURL)
 
-        let returnedURL = try await asset.downloadInto(directory: targetDirectory)
-        try #require(returnedURL == targetURL)
+        try await asset.downloadInto(targetURL)
 
         // Verify the digest is correct, meaning the wrong file was replaced by the right one.
         #expect(try FileHandle(forReadingFrom: targetURL).sha256Digest() == Self.exampleZipDigest)
