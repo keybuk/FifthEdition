@@ -16,8 +16,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/DnV1eX/EnumOptionSet.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", .upToNextMajor(from: "0.5.1")),
+        .package(url: "https://github.com/DnV1eX/EnumOptionSet.git", .upToNextMajor(from: "2.0.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
