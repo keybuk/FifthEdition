@@ -1,5 +1,5 @@
 //
-//  BestiaryTests.swift
+//  Creature+CodableTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 12/25/25.
@@ -443,103 +443,6 @@ struct CreatureCodableTests {
                 isNPC: true,
             )
         )
-    }
-
-}
-
-struct CreatureUidTests {
-
-    @Test("UID")
-    func uid() throws {
-        let creature = Creature(
-            name: "Blink Dog",
-            source: "XMM"
-        )
-        #expect(creature.uid == "blink dog|xmm")
-    }
-
-    @Test("No UID if no name")
-    func noName() throws {
-        let creature = Creature(
-            source: "XMM"
-        )
-        #expect(creature.uid == nil)
-    }
-
-    @Test("No UID if no source")
-    func noSource() throws {
-        let creature = Creature(
-            name: "Blink Dog",
-        )
-        #expect(creature.uid == nil)
-    }
-
-}
-
-struct CreatureTokenPathTests {
-
-    @Test("Token path")
-    func tokenPath() throws {
-        let creature = Creature(
-            name: "Blink Dog",
-            source: "XMM"
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/XMM/Blink Dog.webp")
-    }
-
-    @Test("Token path has diacritics removed")
-    func tokenPathWithoutDiacritics() throws {
-        let creature = Creature(
-            name: "Kupalué",
-            source: "ToA"
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/ToA/Kupalue.webp")
-    }
-
-    @Test("Token path has æ dipthong replaced")
-    func tokenPathWithoutAeDipthong() throws {
-        let creature = Creature(
-            name: "Môrgæn",
-            source: "AI"
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/AI/Morgaen.webp")
-    }
-
-    @Test("Token path has quotes removed")
-    func tokenPathWithoutQuotes() throws {
-        let creature = Creature(
-            name: "\"The Demogorgon\"",
-            source: "IMR"
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/IMR/The Demogorgon.webp")
-    }
-
-    @Test("Token path from token")
-    func tokenPathFromToken() throws {
-        let creature = Creature(
-            name: "Demilich",
-            source: "WDMM",
-            token: Token(
-                name: "Acererak",
-                source: "MM"),
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/MM/Acererak.webp")
-    }
-
-    @Test("No token if no name")
-    func noName() throws {
-        let creature = Creature(
-            source: "XMM",
-        )
-        #expect(creature.tokenPath == nil)
-    }
-
-    @Test("No token if no source")
-    func noSource() throws {
-        let creature = Creature(
-            name: "Blink Dog",
-        )
-        #expect(creature.tokenPath == nil)
     }
 
 }
@@ -1697,57 +1600,6 @@ struct CreatureSkillSetCodableTests {
 
 }
 
-struct CreatureSkillSetSubscriptTests {
-
-    @Test("Get skill by subscript")
-    func getSubscript() {
-        let skill = Creature.SkillSet([
-            .deception: "+5",
-            .perception: "+4",
-        ])
-        #expect(skill[.deception] == "+5")
-    }
-
-    @Test("Get unset skill by subscript")
-    func getSubscriptUnset() {
-        let skill = Creature.SkillSet([
-            .deception: "+5",
-            .perception: "+4",
-        ])
-        #expect(skill[.nature] == nil)
-    }
-
-    @Test("Set skill by subscript")
-    func setSubscript() {
-        var skill = Creature.SkillSet([
-            .deception: "+5",
-            .perception: "+4",
-        ])
-        skill[.nature] = "+2"
-
-        #expect(skill.skills == [
-            .deception: "+5",
-            .perception: "+4",
-            .nature: "+2",
-        ])
-    }
-
-    @Test("Change skill by subscript")
-    func changeSubscript() {
-        var skill = Creature.SkillSet([
-            .deception: "+5",
-            .perception: "+4",
-        ])
-        skill[.perception] = "+2"
-
-        #expect(skill.skills == [
-            .deception: "+5",
-            .perception: "+2",
-        ])
-    }
-
-}
-
 struct CreatureToolSetTests {
 
     @Test("Tool set")
@@ -1764,57 +1616,6 @@ struct CreatureToolSetTests {
                 .smithsTools: "+2",
             ]),
         )
-    }
-
-}
-
-struct CreatureToolSetSubscriptTests {
-
-    @Test("Get tool by subscript")
-    func getSubscript() {
-        let tool = Creature.ToolSet([
-            .cobblersTools: "+1",
-            .smithsTools: "+2",
-        ])
-        #expect(tool[.smithsTools] == "+2")
-    }
-
-    @Test("Get unset tool by subscript")
-    func getSubscriptUnset() {
-        let tool = Creature.ToolSet([
-            .cobblersTools: "+1",
-            .smithsTools: "+2",
-        ])
-        #expect(tool[.brewersSupplies] == nil)
-    }
-
-    @Test("Set tool by subscript")
-    func setSubscript() {
-        var tool = Creature.ToolSet([
-            .cobblersTools: "+1",
-            .smithsTools: "+2",
-        ])
-        tool[.brewersSupplies] = "+3"
-
-        #expect(tool.tools == [
-            .cobblersTools: "+1",
-            .smithsTools: "+2",
-            .brewersSupplies: "+3",
-        ])
-    }
-
-    @Test("Change tool by subscript")
-    func changeSubscript() {
-        var tool = Creature.ToolSet([
-            .cobblersTools: "+1",
-            .smithsTools: "+2",
-        ])
-        tool[.smithsTools] = "+3"
-
-        #expect(tool.tools == [
-            .cobblersTools: "+1",
-            .smithsTools: "+3",
-        ])
     }
 
 }

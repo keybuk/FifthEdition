@@ -1,5 +1,5 @@
 //
-//  EntryTests.swift
+//  Entry+CodableTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 12/28/25.

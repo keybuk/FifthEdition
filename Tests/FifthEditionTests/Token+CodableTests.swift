@@ -1,5 +1,5 @@
 //
-//  Token.swift
+//  Token+CodableTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 12/28/25.
@@ -124,4 +124,3 @@ struct TokenCodableTests {
     }
 
 }
-

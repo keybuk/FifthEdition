@@ -10,7 +10,7 @@
 import MemberwiseInit
 
 @MemberwiseInit(.public)
-public struct ArtItem: Equatable, Sendable {
+public struct ArtItem: Codable, Equatable, Sendable {
     public enum TokenTag: String, Codable, Equatable, Sendable {
         case topDown
     }
@@ -28,17 +28,4 @@ public struct Token: Codable, Equatable, Sendable {
     public var name: String
     public var source: String
     public var page: Page? = nil
-}
-
-// MARK: - Codable
-
-extension ArtItem: Codable {
-    enum CodingKeys: String, CodingKey {
-        case name
-        case source
-        case page
-        case tokenCredit
-        case isTokenCustom = "tokenCustom"
-        case tokenTags
-    }
 }
