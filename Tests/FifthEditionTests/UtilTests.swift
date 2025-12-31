@@ -71,6 +71,31 @@ struct AlignmentCodableTests {
 
 }
 
+struct IndexFileCodableTests {
+
+    @Test("Index file")
+    func index() throws {
+        try testCodable(
+            json: """
+            {
+              "XDMG" : "foo-xdmg.json",
+              "XMM" : "foo-xmm.json",
+              "XPHB" : "foo-xphb.json"
+            }
+            """,
+            value: IndexFile(
+                entries: [
+                    "XDMG": "foo-xdmg.json",
+                    "XMM": "foo-xmm.json",
+                    "XPHB": "foo-xphb.json",
+                ],
+            )
+        )
+
+    }
+
+}
+
 struct PageCodableTests {
 
     @Test("Numeric page")

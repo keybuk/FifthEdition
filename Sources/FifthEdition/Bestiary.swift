@@ -10,6 +10,14 @@
 import MemberwiseInit
 
 @MemberwiseInit(.public)
+public struct Bestiary: Equatable, Codable, Sendable {
+    public static let entryBasePath: String = "data/bestiary"
+    public static let indexEntryPath: String = "\(entryBasePath)/index.json"
+
+    public var monster: [Creature] = []
+}
+
+@MemberwiseInit(.public)
 public struct Creature: Equatable, Sendable {
     public enum AbilityScore: Equatable, Sendable {
         case score(Int)

@@ -27,6 +27,11 @@ extension Alignment: Hashable {
     static let any: Self = .all
 }
 
+@MemberwiseInit(.public)
+public struct IndexFile: Equatable, Sendable {
+    public var entries: [String: String] = [:]
+}
+
 public enum Page: Equatable, Hashable, Sendable {
     case number(Int)
     case numeral(String)
@@ -170,6 +175,18 @@ extension Alignment: Codable {
                 try container.encode("E")
             }
         }
+    }
+}
+
+extension IndexFile: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        entries = try container.decode([String: String].self)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(entries)
     }
 }
 
