@@ -8,7 +8,7 @@
 import Foundation
 
 /// Release published on GitHub.
-public struct GitHubRelease: Codable, Equatable {
+public struct GitHubRelease: Codable, Equatable, Sendable {
     static let apiVersion = "2022-11-28"
 
     public var url: URL
@@ -47,8 +47,8 @@ public struct GitHubRelease: Codable, Equatable {
 /// Data releases to a release.
 ///
 /// Usually a downloadable asset.
-public struct GitHubAsset: Codable, Equatable {
-    public enum State: String, Codable, Equatable {
+public struct GitHubAsset: Codable, Equatable, Sendable {
+    public enum State: String, Codable, Equatable, Sendable {
         case open
         case uploaded
     }
@@ -74,7 +74,7 @@ public struct GitHubAsset: Codable, Equatable {
 }
 
 /// User on GitHub.
-public struct GitHubSimpleUser: Codable, Equatable {
+public struct GitHubSimpleUser: Codable, Equatable, Sendable {
     public var name: String?
     public var email: String?
     public var login: String
@@ -103,7 +103,7 @@ public struct GitHubSimpleUser: Codable, Equatable {
 }
 
 /// Reactions to the release.
-public struct GitHubReaction: Codable, Equatable {
+public struct GitHubReaction: Codable, Equatable, Sendable {
     public var url: URL
 
     public var totalCount: Int
