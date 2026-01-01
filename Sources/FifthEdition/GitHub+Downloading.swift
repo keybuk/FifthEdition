@@ -58,6 +58,8 @@ extension GitHubAsset {
     public func downloadInto(_ url: URL) async throws {
         // If the target already exists, and the digest matches that in the asset, we can avoid downloading again.
         if let handle = try? FileHandle(forReadingFrom: url) {
+            // TODO: Progress reporting
+            print("Validating existing file")
             if let digest, digest.hasPrefix("sha256:"),
                try handle.sha256Digest() == digest
             {
@@ -68,6 +70,7 @@ extension GitHubAsset {
         }
 
         // Download and then verify the digest.
+        // TODO: Progress reporting
         let (downloadedURL, _) = try await URLSession.shared.download(from: browserDownloadURL)
         if let digest, digest.hasPrefix("sha256:") {
             let handle = try FileHandle(forReadingFrom: downloadedURL)
