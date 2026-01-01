@@ -7,13 +7,20 @@
 
 
 extension Creature {
-    /// Returns the uid used to reference this creature.
-    public var uid: String? {
-        guard let name, let source else {
-            return nil
-        }
+    /// Number of grid squares for this creature.
+    ///
+    /// Where the creature has multiple sizes, the smallest is returned.
+    public var gridSquares: Int {
+        guard let size = size?.sorted().first else { return 1 }
 
-        return "\(name.localizedLowercase)|\(source.localizedLowercase)"
+        switch size {
+        case .tiny:       return 1
+        case .small:      return 1
+        case .medium:     return 1
+        case .large:      return 2
+        case .huge:       return 3
+        case .gargantuan: return 4
+        }
     }
 
     /// Returns the expected token path.
@@ -35,6 +42,15 @@ extension Creature {
         )
 
         return "bestiary/tokens/\(source)/\(tokenName).webp"
+    }
+
+    /// Returns the uid used to reference this creature.
+    public var uid: String? {
+        guard let name, let source else {
+            return nil
+        }
+
+        return "\(name.localizedLowercase)|\(source.localizedLowercase)"
     }
 }
 

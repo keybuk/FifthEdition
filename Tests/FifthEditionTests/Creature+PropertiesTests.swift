@@ -8,31 +8,42 @@
 import Testing
 @testable import FifthEdition
 
-struct CreatureUidTests {
+struct CreatureGridSquaresTests {
 
-    @Test("UID")
-    func uid() throws {
+    @Test("Grid squares for single size", arguments: Size.allCases)
+    func gridSquares(_ size: Size) throws {
         let creature = Creature(
-            name: "Blink Dog",
-            source: "XMM"
+            name: "\(size.rawValue.uppercased()) Monster",
+            source: "XMM",
+            size: [size],
         )
-        #expect(creature.uid == "blink dog|xmm")
+        switch size {
+        case .tiny:       #expect(creature.gridSquares == 1)
+        case .small:      #expect(creature.gridSquares == 1)
+        case .medium:     #expect(creature.gridSquares == 1)
+        case .large:      #expect(creature.gridSquares == 2)
+        case .huge:       #expect(creature.gridSquares == 3)
+        case .gargantuan: #expect(creature.gridSquares == 4)
+        }
     }
 
-    @Test("No UID if no name")
-    func noName() throws {
+    @Test("Grid squares when no size given")
+    func gridSquaresWhenNoSize() throws {
         let creature = Creature(
+            name: "Sizeless Monster",
             source: "XMM"
         )
-        #expect(creature.uid == nil)
+        #expect(creature.gridSquares == 1)
     }
 
-    @Test("No UID if no source")
-    func noSource() throws {
+    @Test("Grid squares for multiple sizes")
+    func gridSquaresForMultiple() throws {
         let creature = Creature(
-            name: "Blink Dog",
+            name: "Growing Monster",
+            source: "XMM",
+            size: [.large, .huge, .gargantuan],
         )
-        #expect(creature.uid == nil)
+        #expect(creature.gridSquares == 2)
     }
 
 }
@@ -101,6 +112,35 @@ struct CreatureTokenPathTests {
             name: "Blink Dog",
         )
         #expect(creature.tokenPath == nil)
+    }
+
+}
+
+struct CreatureUidTests {
+
+    @Test("UID")
+    func uid() throws {
+        let creature = Creature(
+            name: "Blink Dog",
+            source: "XMM"
+        )
+        #expect(creature.uid == "blink dog|xmm")
+    }
+
+    @Test("No UID if no name")
+    func noName() throws {
+        let creature = Creature(
+            source: "XMM"
+        )
+        #expect(creature.uid == nil)
+    }
+
+    @Test("No UID if no source")
+    func noSource() throws {
+        let creature = Creature(
+            name: "Blink Dog",
+        )
+        #expect(creature.uid == nil)
     }
 
 }
