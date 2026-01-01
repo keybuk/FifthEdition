@@ -18,7 +18,8 @@ extension Creature {
 
     /// Returns the expected token path.
     public var tokenPath: String? {
-        guard let name = token?.name ?? name,
+        guard hasToken ?? false,
+              let name = token?.name ?? name,
               let source = token?.source ?? source else {
             return nil
         }
