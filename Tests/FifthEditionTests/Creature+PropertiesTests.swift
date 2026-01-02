@@ -54,7 +54,8 @@ struct CreatureTokenPathTests {
     func tokenPath() throws {
         let creature = Creature(
             name: "Blink Dog",
-            source: "XMM"
+            source: "XMM",
+            hasToken: true,
         )
         #expect(creature.tokenPath == "bestiary/tokens/XMM/Blink Dog.webp")
     }
@@ -63,7 +64,8 @@ struct CreatureTokenPathTests {
     func tokenPathWithoutDiacritics() throws {
         let creature = Creature(
             name: "Kupalué",
-            source: "ToA"
+            source: "ToA",
+            hasToken: true,
         )
         #expect(creature.tokenPath == "bestiary/tokens/ToA/Kupalue.webp")
     }
@@ -72,7 +74,8 @@ struct CreatureTokenPathTests {
     func tokenPathWithoutAeDipthong() throws {
         let creature = Creature(
             name: "Môrgæn",
-            source: "AI"
+            source: "AI",
+            hasToken: true,
         )
         #expect(creature.tokenPath == "bestiary/tokens/AI/Morgaen.webp")
     }
@@ -81,7 +84,8 @@ struct CreatureTokenPathTests {
     func tokenPathWithoutQuotes() throws {
         let creature = Creature(
             name: "\"The Demogorgon\"",
-            source: "IMR"
+            source: "IMR",
+            hasToken: true,
         )
         #expect(creature.tokenPath == "bestiary/tokens/IMR/The Demogorgon.webp")
     }
@@ -91,6 +95,7 @@ struct CreatureTokenPathTests {
         let creature = Creature(
             name: "Demilich",
             source: "WDMM",
+            hasToken: true,
             token: Token(
                 name: "Acererak",
                 source: "MM"),
@@ -102,6 +107,7 @@ struct CreatureTokenPathTests {
     func noName() throws {
         let creature = Creature(
             source: "XMM",
+            hasToken: true,
         )
         #expect(creature.tokenPath == nil)
     }
@@ -110,6 +116,7 @@ struct CreatureTokenPathTests {
     func noSource() throws {
         let creature = Creature(
             name: "Blink Dog",
+            hasToken: true,
         )
         #expect(creature.tokenPath == nil)
     }
