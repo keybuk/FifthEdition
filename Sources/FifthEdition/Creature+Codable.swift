@@ -120,16 +120,16 @@ extension Creature.AbilityScore: Codable {
             self = .score(value)
         } else {
             let container = try decoder.container(keyedBy: SpecialCodingKeys.self)
-            self = .special(try container.decode(String.self, forKey: .special))
+            self = try .special(container.decode(String.self, forKey: .special))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .score(let score):
+        case let .score(score):
             var container = encoder.singleValueContainer()
             try container.encode(score)
-        case .special(let special):
+        case let .special(special):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(special, forKey: .special)
         }
@@ -149,19 +149,19 @@ extension Creature.Alignment: Codable {
         } else {
             var array = try decoder.unkeyedContainer()
             let container = try array.nestedContainer(keyedBy: SpecialCodingKeys.self)
-            self = .special(try container.decode(String.self, forKey: .special))
+            self = try .special(container.decode(String.self, forKey: .special))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .alignment(let options):
+        case let .alignment(options):
             var container = encoder.singleValueContainer()
             try container.encode(options)
-        case .choice(let choices):
+        case let .choice(choices):
             var container = encoder.singleValueContainer()
             try container.encode(choices)
-        case .special(let special):
+        case let .special(special):
             var array = encoder.unkeyedContainer()
             var container = array.nestedContainer(keyedBy: SpecialCodingKeys.self)
             try container.encode(special, forKey: .special)
@@ -190,24 +190,24 @@ extension Creature.ArmorClass: Codable {
             self = .special(value)
         } else {
             let container = try decoder.container(keyedBy: ObtainedCodingKeys.self)
-            self = .obtained(
-                try container.decode(Int.self, forKey: .ac),
-                from: try container.decodeIfPresent([String].self, forKey: .from),
-                condition: try container.decodeIfPresent(String.self, forKey: .condition),
-                braces: try container.decodeIfPresent(Bool.self, forKey: .braces),
+            self = try .obtained(
+                container.decode(Int.self, forKey: .ac),
+                from: container.decodeIfPresent([String].self, forKey: .from),
+                condition: container.decodeIfPresent(String.self, forKey: .condition),
+                braces: container.decodeIfPresent(Bool.self, forKey: .braces),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .ac(let value):
+        case let .ac(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .special(let value):
+        case let .special(value):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(value, forKey: .special)
-        case .obtained(let ac, let from, let condition, let braces):
+        case let .obtained(ac, from, condition, braces):
             var container = encoder.container(keyedBy: ObtainedCodingKeys.self)
             try container.encode(ac, forKey: .ac)
             try container.encodeIfPresent(from, forKey: .from)
@@ -242,7 +242,7 @@ extension Creature.ChallengeRating: Codable {
     }
 
     public func encode(to encoder: any Encoder) throws {
-        if lair == nil && coven == nil && xp == nil && xpLair == nil {
+        if lair == nil, coven == nil, xp == nil, xpLair == nil {
             var container = encoder.singleValueContainer()
             try container.encode(cr)
         } else {
@@ -254,7 +254,6 @@ extension Creature.ChallengeRating: Codable {
             try container.encodeIfPresent(xpLair, forKey: .xpLair)
         }
     }
-
 }
 
 extension Creature.ConditionImmunity: Codable {
@@ -280,24 +279,24 @@ extension Creature.ConditionImmunity: Codable {
             self = .special(value)
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self = .conditional(
-                try container.decode(Set<Creature.ConditionImmunity>.self, forKey: .conditions),
-                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
-                note: try container.decodeIfPresent(String.self, forKey: .note),
-                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            self = try .conditional(
+                container.decode(Set<Creature.ConditionImmunity>.self, forKey: .conditions),
+                preNote: container.decodeIfPresent(String.self, forKey: .preNote),
+                note: container.decodeIfPresent(String.self, forKey: .note),
+                conditional: container.decodeIfPresent(Bool.self, forKey: .conditional),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .condition(let value):
+        case let .condition(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .special(let value):
+        case let .special(value):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(value, forKey: .special)
-        case .conditional(let conditions, let preNote, let note, let cond):
+        case let .conditional(conditions, preNote, note, cond):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(conditions, forKey: .conditions)
             try container.encodeIfPresent(preNote, forKey: .preNote)
@@ -305,7 +304,6 @@ extension Creature.ConditionImmunity: Codable {
             try container.encodeIfPresent(cond, forKey: .conditional)
         }
     }
-
 }
 
 extension Creature.CreatureType.Choice: Codable {
@@ -318,16 +316,16 @@ extension Creature.CreatureType.Choice: Codable {
             self = .type(value)
         } else {
             let values = try decoder.container(keyedBy: ChoiceCodingKeys.self)
-            self = .choice(try values.decode(Set<CreatureType>.self, forKey: .choose))
+            self = try .choice(values.decode(Set<CreatureType>.self, forKey: .choose))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .type(let value):
+        case let .type(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .choice(let value):
+        case let .choice(value):
             var values = encoder.container(keyedBy: ChoiceCodingKeys.self)
             try values.encode(value, forKey: .choose)
         }
@@ -361,8 +359,8 @@ extension Creature.CreatureType: Codable {
     }
 
     public func encode(to encoder: any Encoder) throws {
-        if case .type(let value) = type,
-           swarmSize == nil && tags == nil && sidekickType == nil && sidekickTags == nil && sidekickHidden == nil && note == nil
+        if case let .type(value) = type,
+           swarmSize == nil, tags == nil, sidekickType == nil, sidekickTags == nil, sidekickHidden == nil, note == nil
         {
             var container = encoder.singleValueContainer()
             try container.encode(value)
@@ -402,24 +400,24 @@ extension Creature.DamageImmunity: Codable {
             self = .special(value)
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self = .conditional(
-                try container.decode(Set<Creature.DamageImmunity>.self, forKey: .damageTypes),
-                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
-                note: try container.decodeIfPresent(String.self, forKey: .note),
-                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            self = try .conditional(
+                container.decode(Set<Creature.DamageImmunity>.self, forKey: .damageTypes),
+                preNote: container.decodeIfPresent(String.self, forKey: .preNote),
+                note: container.decodeIfPresent(String.self, forKey: .note),
+                conditional: container.decodeIfPresent(Bool.self, forKey: .conditional),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .damage(let value):
+        case let .damage(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .special(let value):
+        case let .special(value):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(value, forKey: .special)
-        case .conditional(let damageTypes, let preNote, let note, let cond):
+        case let .conditional(damageTypes, preNote, note, cond):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(damageTypes, forKey: .damageTypes)
             try container.encodeIfPresent(preNote, forKey: .preNote)
@@ -427,7 +425,6 @@ extension Creature.DamageImmunity: Codable {
             try container.encodeIfPresent(cond, forKey: .conditional)
         }
     }
-
 }
 
 extension Creature.DamageResistance: Codable {
@@ -453,24 +450,24 @@ extension Creature.DamageResistance: Codable {
             self = .special(value)
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self = .conditional(
-                try container.decode(Set<Creature.DamageResistance>.self, forKey: .damageTypes),
-                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
-                note: try container.decodeIfPresent(String.self, forKey: .note),
-                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            self = try .conditional(
+                container.decode(Set<Creature.DamageResistance>.self, forKey: .damageTypes),
+                preNote: container.decodeIfPresent(String.self, forKey: .preNote),
+                note: container.decodeIfPresent(String.self, forKey: .note),
+                conditional: container.decodeIfPresent(Bool.self, forKey: .conditional),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .damage(let value):
+        case let .damage(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .special(let value):
+        case let .special(value):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(value, forKey: .special)
-        case .conditional(let damageTypes, let preNote, let note, let cond):
+        case let .conditional(damageTypes, preNote, note, cond):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(damageTypes, forKey: .damageTypes)
             try container.encodeIfPresent(preNote, forKey: .preNote)
@@ -478,7 +475,6 @@ extension Creature.DamageResistance: Codable {
             try container.encodeIfPresent(cond, forKey: .conditional)
         }
     }
-
 }
 
 extension Creature.DamageVulnerability: Codable {
@@ -504,24 +500,24 @@ extension Creature.DamageVulnerability: Codable {
             self = .special(value)
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self = .conditional(
-                try container.decode(Set<Creature.DamageVulnerability>.self, forKey: .damageTypes),
-                preNote: try container.decodeIfPresent(String.self, forKey: .preNote),
-                note: try container.decodeIfPresent(String.self, forKey: .note),
-                conditional: try container.decodeIfPresent(Bool.self, forKey: .conditional)
+            self = try .conditional(
+                container.decode(Set<Creature.DamageVulnerability>.self, forKey: .damageTypes),
+                preNote: container.decodeIfPresent(String.self, forKey: .preNote),
+                note: container.decodeIfPresent(String.self, forKey: .note),
+                conditional: container.decodeIfPresent(Bool.self, forKey: .conditional),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .damage(let value):
+        case let .damage(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .special(let value):
+        case let .special(value):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(value, forKey: .special)
-        case .conditional(let damageTypes, let preNote, let note, let cond):
+        case let .conditional(damageTypes, preNote, note, cond):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(damageTypes, forKey: .damageTypes)
             try container.encodeIfPresent(preNote, forKey: .preNote)
@@ -561,7 +557,6 @@ extension Creature.Gear: Codable {
     }
 }
 
-
 extension Creature.HitPoints: Codable {
     enum CodingKeys: String, CodingKey {
         case average
@@ -596,15 +591,15 @@ extension Creature.HitPoints: Codable {
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .hp(let notation, let givenAverage):
+        case let .hp(notation, givenAverage):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(notation.stringValue, forKey: .formula)
             try container.encode(givenAverage ?? notation.average, forKey: .average)
-        case .unrollable(let formula, let average):
+        case let .unrollable(formula, average):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(formula, forKey: .formula)
             try container.encode(average, forKey: .average)
-        case .special(let special):
+        case let .special(special):
             var container = encoder.container(keyedBy: SpecialCodingKeys.self)
             try container.encode(special, forKey: .special)
         }
@@ -622,7 +617,8 @@ extension Creature.Initiative.Advantage: Codable {
         default:
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "Unknown value: \(value)")
+                debugDescription: "Unknown value: \(value)",
+            )
         }
     }
 
@@ -654,7 +650,7 @@ extension Creature.Initiative: Codable {
     }
 
     public func encode(to encoder: any Encoder) throws {
-        if let initiative, proficiency == nil && advantage == nil {
+        if let initiative, proficiency == nil, advantage == nil {
             var container = encoder.singleValueContainer()
             try container.encode(initiative)
         } else {
@@ -672,16 +668,16 @@ extension Creature.Passive: Codable {
         if let value = try? container.decode(String.self) {
             self = .special(value)
         } else {
-            self = .score(try container.decode(Int.self))
+            self = try .score(container.decode(Int.self))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-        case .score(let score):
+        case let .score(score):
             try container.encode(score)
-        case .special(let special):
+        case let .special(special):
             try container.encode(special)
         }
     }
@@ -693,14 +689,14 @@ extension Creature.ShortName: Codable {
         if let value = try? container.decode(Bool.self), value {
             self = .useName
         } else {
-            self = .name(try container.decode(String.self))
+            self = try .name(container.decode(String.self))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-        case .name(let value): try container.encode(value)
+        case let .name(value): try container.encode(value)
         case .useName: try container.encode(true)
         }
     }
@@ -724,21 +720,22 @@ extension Creature.SkillSet: Codable {
                 throw DecodingError.dataCorruptedError(
                     forKey: key,
                     in: container,
-                    debugDescription: "Unknown skill: \(key)")
+                    debugDescription: "Unknown skill: \(key)",
+                )
             }
             skills[value] = try container.decodeIfPresent(String.self, forKey: key)
         }
 
         if var array = try? container.nestedUnkeyedContainer(forKey: CodingKeys(stringValue: "other")) {
-            self.other = []
+            other = []
             while let nested = try? array.nestedContainer(keyedBy: OtherCodingKeys.self) {
                 // If we try and decode [Skill: String] here, it looks for Array<Any>.
                 let oneOf = try nested.nestedContainer(keyedBy: CodingKeys.self, forKey: .oneOf)
-                self.other?.append(
-                    try CodingKeys.allCases
+                try other?.append(
+                    CodingKeys.allCases
                         .reduce(into: [Skill: String]()) { result, key in
                             result[key.value!] = try oneOf.decodeIfPresent(String.self, forKey: key)
-                        }
+                        },
                 )
             }
         }
@@ -774,7 +771,8 @@ extension Creature.ToolSet: Codable {
                 throw DecodingError.dataCorruptedError(
                     forKey: key,
                     in: container,
-                    debugDescription: "Unknown tool: \(key)")
+                    debugDescription: "Unknown tool: \(key)",
+                )
             }
             tools[value] = try container.decodeIfPresent(String.self, forKey: key)
         }

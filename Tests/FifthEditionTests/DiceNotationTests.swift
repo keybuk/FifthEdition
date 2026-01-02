@@ -5,11 +5,10 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct DiceNotationTests {
-
     static let testStrings: [String] = [
         "4d1",
         "3d2",
@@ -23,40 +22,40 @@ struct DiceNotationTests {
         "1d100",
     ]
     static let testValues: [(Int, Die, Int)] = [
-        (4, .d1, 0),    // 4d1
-        (3, .d2, 0),    // 3d2
-        (1, .d3, 1),    // 1d3 + 1
-        (2, .d4, -1),   // 2d4 - 1
-        (1, .d6, 2),    // 1d6 + 2
-        (3, .d8, -1),   // 3d8 - 1
-        (4, .d10, 10),  // 4d10 + 10
-        (1, .d12, -2),  // 1d12-2
-        (2, .d20, -4),  // 2d20 - 4
-        (1, .d100, 0),  // 1d100
+        (4, .d1, 0), // 4d1
+        (3, .d2, 0), // 3d2
+        (1, .d3, 1), // 1d3 + 1
+        (2, .d4, -1), // 2d4 - 1
+        (1, .d6, 2), // 1d6 + 2
+        (3, .d8, -1), // 3d8 - 1
+        (4, .d10, 10), // 4d10 + 10
+        (1, .d12, -2), // 1d12-2
+        (2, .d20, -4), // 2d20 - 4
+        (1, .d100, 0), // 1d100
     ]
     static let testAverages: [Int] = [
-        4,              // 4d1
-        4,              // 3d2
-        3,              // 1d3 + 1
-        4,              // 2d4 - 1
-        5,              // 1d6 + 2
-        12,             // 3d8 - 1
-        32,             // 4d10 + 10
-        4,              // 1d12-2
-        17,             // 2d20 - 4
-        50,             // 1d100
+        4, // 4d1
+        4, // 3d2
+        3, // 1d3 + 1
+        4, // 2d4 - 1
+        5, // 1d6 + 2
+        12, // 3d8 - 1
+        32, // 4d10 + 10
+        4, // 1d12-2
+        17, // 2d20 - 4
+        50, // 1d100
     ]
     static let testRanges: [ClosedRange<Int>] = [
-        4...4,          // 4d1
-        3...6,          // 3d2
-        2...4,          // 1d3 + 1
-        1...7,          // 2d4 - 1
-        3...8,          // 1d6 + 2
-        2...23,         // 3d8 - 1
-        14...50,        // 4d10 + 10
-        -1...10,        // 1d12-2
-        -2...36,        // 2d20 - 4
-        1...100,        // 1d100
+        4 ... 4, // 4d1
+        3 ... 6, // 3d2
+        2 ... 4, // 1d3 + 1
+        1 ... 7, // 2d4 - 1
+        3 ... 8, // 1d6 + 2
+        2 ... 23, // 3d8 - 1
+        14 ... 50, // 4d10 + 10
+        -1 ... 10, // 1d12-2
+        -2 ... 36, // 2d20 - 4
+        1 ... 100, // 1d100
     ]
 
     @Test("Parsing", arguments: zip(testStrings, testValues))
@@ -97,14 +96,14 @@ struct DiceNotationTests {
     @Test("Roll", arguments: testValues)
     func roll(_ input: (count: Int, die: Die, modifier: Int)) {
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
-        for _ in 0..<100 {
+        for _ in 0 ..< 100 {
             #expect(dice.range.contains(dice.roll()))
         }
     }
 
     struct CheatingRandomNumberGenerator: RandomNumberGenerator {
         mutating func next() -> UInt64 {
-            return UInt64.max
+            UInt64.max
         }
     }
 
@@ -162,7 +161,6 @@ struct DiceNotationTests {
         #expect(dice.modifier == 3)
     }
 
-
     @Test("Parsing returns nil for empty string")
     func emptyString() throws {
         #expect(DiceNotation("") == nil)
@@ -187,5 +185,4 @@ struct DiceNotationTests {
     func missingSign() throws {
         #expect(DiceNotation("2d6 3") == nil)
     }
-
 }

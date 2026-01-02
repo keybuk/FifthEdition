@@ -14,19 +14,19 @@ extension Alignment: Codable {
         let container = try decoder.singleValueContainer()
         for value in try container.decode([String].self) {
             switch value {
-            case "L":  alignment.insert(.lawful)
-            case "C":  alignment.insert(.chaotic)
+            case "L": alignment.insert(.lawful)
+            case "C": alignment.insert(.chaotic)
             case "NX": alignment.insert(.neutralLawfulChaotic)
             case "NY": alignment.insert(.neutralGoodEvil)
-            case "N":  alignment.insert(.neutral)
-            case "G":  alignment.insert(.good)
-            case "E":  alignment.insert(.evil)
-            case "U":  alignment = .unaligned
-            case "A":  alignment = .any
+            case "N": alignment.insert(.neutral)
+            case "G": alignment.insert(.good)
+            case "E": alignment.insert(.evil)
+            case "U": alignment = .unaligned
+            case "A": alignment = .any
             default:
                 throw DecodingError.dataCorruptedError(
                     in: container,
-                    debugDescription: "Unexpected alignment '\(value)'"
+                    debugDescription: "Unexpected alignment '\(value)'",
                 )
             }
         }
@@ -84,15 +84,15 @@ extension Page: Codable {
         if let value = try? container.decode(Int.self) {
             self = .number(value)
         } else {
-            self = .numeral(try container.decode(String.self))
+            self = try .numeral(container.decode(String.self))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-        case .number(let value): try container.encode(value)
-        case .numeral(let value): try container.encode(value)
+        case let .number(value): try container.encode(value)
+        case let .numeral(value): try container.encode(value)
         }
     }
 }
@@ -108,7 +108,8 @@ extension Proficiency: Codable {
         default:
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "Unknown value: \(value)")
+                debugDescription: "Unknown value: \(value)",
+            )
         }
     }
 
@@ -142,7 +143,7 @@ extension Reprint: Codable {
     }
 
     public func encode(to encoder: any Encoder) throws {
-        if tag == nil && edition == nil {
+        if tag == nil, edition == nil {
             var container = encoder.singleValueContainer()
             try container.encode(uid)
         } else {
@@ -164,7 +165,8 @@ extension Speed.Alternate: Codable {
                 throw DecodingError.dataCorruptedError(
                     forKey: key,
                     in: container,
-                    debugDescription: "Unknown speed: \(key)")
+                    debugDescription: "Unknown speed: \(key)",
+                )
             }
             speeds[value] = try container.decodeIfPresent(Set<Speed.Value>.self, forKey: key)
         }
@@ -191,19 +193,19 @@ extension Speed.Value: Codable {
             self = .walkingSpeed
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self = .conditional(
-                try container.decode(Int.self, forKey: .number),
-                condition: try container.decode(String.self, forKey: .condition)
+            self = try .conditional(
+                container.decode(Int.self, forKey: .number),
+                condition: container.decode(String.self, forKey: .condition),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .speed(let value):
+        case let .speed(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .conditional(let number, let condition):
+        case let .conditional(number, condition):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(number, forKey: .number)
             try container.encode(condition, forKey: .condition)
@@ -276,15 +278,15 @@ extension SrdReference: Codable {
         if let value = try? container.decode(String.self) {
             self = .presentAs(value)
         } else {
-            self = .present(try container.decode(Bool.self))
+            self = try .present(container.decode(Bool.self))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-        case .present(let value): try container.encode(value)
-        case .presentAs(let value): try container.encode(value)
+        case let .present(value): try container.encode(value)
+        case let .presentAs(value): try container.encode(value)
         }
     }
 }
@@ -300,19 +302,19 @@ extension Tag: Codable {
             self = .tag(value)
         } else {
             let values = try decoder.container(keyedBy: CodingKeys.self)
-            self = .prefixed(
-                try values.decode(String.self, forKey: .tag),
-                prefix: try values.decode(String.self, forKey: .prefix),
+            self = try .prefixed(
+                values.decode(String.self, forKey: .tag),
+                prefix: values.decode(String.self, forKey: .prefix),
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .tag(let value):
+        case let .tag(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case .prefixed(let tag, let prefix):
+        case let .prefixed(tag, prefix):
             var values = encoder.container(keyedBy: CodingKeys.self)
             try values.encode(tag, forKey: .tag)
             try values.encode(prefix, forKey: .prefix)

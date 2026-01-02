@@ -8,8 +8,8 @@
 extension Creature.AbilityScore: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .score(let score): "\(score)"
-        case .special(let special): special
+        case let .score(score): "\(score)"
+        case let .special(special): special
         }
     }
 }
@@ -37,19 +37,19 @@ extension Creature.Alignment.Choice: CustomDebugStringConvertible {
 extension Creature.ArmorClass: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
-        case .ac(let ac):
+        case let .ac(ac):
             debugDescriptionOf(
                 ".ac",
                 names: "_",
                 values: ac,
             )
-        case .obtained(let ac, let from, let condition, let braces):
+        case let .obtained(ac, from, condition, braces):
             debugDescriptionOf(
                 ".obtained",
                 names: "_", "from", "condition", "braces",
                 values: ac, from, condition, braces,
             )
-        case .special(let special):
+        case let .special(special):
             debugDescriptionOf(
                 ".special",
                 names: "_",
@@ -72,19 +72,19 @@ extension Creature.ChallengeRating: CustomDebugStringConvertible {
 extension Creature.ConditionImmunity: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
-        case .condition(let condition):
+        case let .condition(condition):
             debugDescriptionOf(
                 ".condition",
                 names: "_",
                 values: condition,
             )
-        case .conditional(let conditions, let preNote, let note, let conditional):
+        case let .conditional(conditions, preNote, note, conditional):
             debugDescriptionOf(
                 ".conditional",
                 names: "_", "preNote", "note", "conditional",
                 values: conditions, preNote, note, conditional,
             )
-        case .special(let special):
+        case let .special(special):
             debugDescriptionOf(
                 ".special",
                 names: "_",
@@ -107,19 +107,19 @@ extension Creature.CreatureType: CustomDebugStringConvertible {
 extension Creature.DamageImmunity: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
-        case .damage(let damage):
+        case let .damage(damage):
             debugDescriptionOf(
                 ".damage",
                 names: "_",
                 values: damage,
             )
-        case .conditional(let damages, let preNote, let note, let conditional):
+        case let .conditional(damages, preNote, note, conditional):
             debugDescriptionOf(
                 ".conditional",
                 names: "_", "preNote", "note", "conditional",
                 values: damages, preNote, note, conditional,
             )
-        case .special(let special):
+        case let .special(special):
             debugDescriptionOf(
                 ".special",
                 names: "_",
@@ -132,19 +132,19 @@ extension Creature.DamageImmunity: CustomDebugStringConvertible {
 extension Creature.DamageResistance: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
-        case .damage(let damage):
+        case let .damage(damage):
             debugDescriptionOf(
                 ".damage",
                 names: "_",
                 values: damage,
             )
-        case .conditional(let damages, let preNote, let note, let conditional):
+        case let .conditional(damages, preNote, note, conditional):
             debugDescriptionOf(
                 ".conditional",
                 names: "_", "preNote", "note", "conditional",
                 values: damages, preNote, note, conditional,
             )
-        case .special(let special):
+        case let .special(special):
             debugDescriptionOf(
                 ".special",
                 names: "_",
@@ -157,19 +157,19 @@ extension Creature.DamageResistance: CustomDebugStringConvertible {
 extension Creature.DamageVulnerability: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
-        case .damage(let damage):
+        case let .damage(damage):
             debugDescriptionOf(
                 ".damage",
                 names: "_",
                 values: damage,
             )
-        case .conditional(let damages, let preNote, let note, let conditional):
+        case let .conditional(damages, preNote, note, conditional):
             debugDescriptionOf(
                 ".conditional",
                 names: "_", "preNote", "note", "conditional",
                 values: damages, preNote, note, conditional,
             )
-        case .special(let special):
+        case let .special(special):
             debugDescriptionOf(
                 ".special",
                 names: "_",
@@ -193,11 +193,11 @@ extension Creature.HitPoints: CustomStringConvertible {
     public var description: String {
         switch self {
         case .hp(let notation, nil): "\(notation)"
-        case .hp(let notation, let givenAverage):
+        case let .hp(notation, givenAverage):
             "\(givenAverage!) or \(notation.stringValue)"
-        case .unrollable(let formula, let average):
+        case let .unrollable(formula, average):
             "\(average) (\(formula))"
-        case .special(let special): special
+        case let .special(special): special
         }
     }
 }
@@ -205,8 +205,8 @@ extension Creature.HitPoints: CustomStringConvertible {
 extension Creature.Passive: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .score(let score): "\(score)"
-        case .special(let special): special
+        case let .score(score): "\(score)"
+        case let .special(special): special
         }
     }
 }
@@ -224,7 +224,7 @@ extension Creature.Save: CustomDebugStringConvertible {
 extension Creature.ShortName: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
-        case .name(let name):
+        case let .name(name):
             debugDescriptionOf(
                 ".name",
                 names: "_",
@@ -264,4 +264,3 @@ extension Creature.Trait: CustomDebugStringConvertible {
         )
     }
 }
-

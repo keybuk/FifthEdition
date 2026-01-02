@@ -1,5 +1,5 @@
 //
-//  GitHub+URL.swift
+//  GitHub+Downloading.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 12/24/25.
@@ -13,14 +13,14 @@ extension GitHubRelease {
     ///   - owner: Repository owner.
     ///   - name: Repository name.
     /// - Returns: GitHub releases API URL for the given parameters..
-    internal static func urlFor(owner: String, name: String) -> URL {
+    static func urlFor(owner: String, name: String) -> URL {
         URL(string: "https://api.github.com/repos/\(owner)/\(name)/releases")!
     }
 
     /// Fetch releases from GitHub API.
     /// - Parameter url: GitHub releases API URL.
     /// - Returns: Array of releases from the given API URL.
-    internal static func releasesFrom(url: URL) async throws -> [GitHubRelease] {
+    static func releasesFrom(url: URL) async throws -> [GitHubRelease] {
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         request.setValue(apiVersion, forHTTPHeaderField: "X-GitHub-Api-Version")
@@ -44,8 +44,8 @@ extension GitHubRelease {
     }
 }
 
-extension GitHubAsset {
-    public enum AssetError: Error {
+public extension GitHubAsset {
+    enum AssetError: Error {
         case digestMismatch
     }
 
@@ -55,7 +55,7 @@ extension GitHubAsset {
     /// The file is downloaded from the asset source URL into the target directory, with the same name as the asset itself. The directory must already exist before calling this function.
     ///
     /// If the file already exists, the digest is checked, and if the same, the download is skipped. If the downloaded file has the wrong asset, an error is thrown.
-    public func downloadInto(_ url: URL) async throws {
+    func downloadInto(_ url: URL) async throws {
         // If the target already exists, and the digest matches that in the asset, we can avoid downloading again.
         if let handle = try? FileHandle(forReadingFrom: url) {
             // TODO: Progress reporting

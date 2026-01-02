@@ -11,15 +11,15 @@ import Foundation
 ///
 /// Can represent those both in and out of jail.
 public enum Die: Int, Comparable, Equatable, Sendable {
-    case d1   = 1
-    case d2   = 2
-    case d3   = 3
-    case d4   = 4
-    case d6   = 6
-    case d8   = 8
-    case d10  = 10
-    case d12  = 12
-    case d20  = 20
+    case d1 = 1
+    case d2 = 2
+    case d3 = 3
+    case d4 = 4
+    case d6 = 6
+    case d8 = 8
+    case d10 = 10
+    case d12 = 12
+    case d20 = 20
     case d100 = 100
 
     public static func < (lhs: Die, rhs: Die) -> Bool {
@@ -47,7 +47,7 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
 
     /// The range of possible rolls this notation yields.
     public var range: ClosedRange<Int> {
-        (count + modifier)...(count * die.rawValue + modifier)
+        (count + modifier) ... (count * die.rawValue + modifier)
     }
 
     /// The dice notation expressed as a human readable string.
@@ -57,7 +57,7 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
         switch modifier {
         case 1...: return "\(rolledString) + \(modifier)"
         case ..<0: return "\(rolledString) - \(abs(modifier))"
-        default:   return rolledString
+        default: return rolledString
         }
     }
 
@@ -119,7 +119,7 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
     /// Returns a random roll of the dice notation, using the given generator as a source for randomness.
     /// - Parameter generator: The random number generator to use when creating the roll.
     /// - Returns: A random value within the range of the dice notation.
-    public func roll<G: RandomNumberGenerator>(using generator: inout G) -> Int {
+    public func roll(using generator: inout some RandomNumberGenerator) -> Int {
         .random(in: range, using: &generator)
     }
 }

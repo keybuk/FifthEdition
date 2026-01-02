@@ -5,12 +5,11 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
+@testable import FifthEdition
 import Foundation
 import Testing
-@testable import FifthEdition
 
 struct GitHubDownloadingTests {
-
     @Test("Construct API URL")
     func releasesURL() throws {
         let url = GitHubRelease.urlFor(owner: "octocat", name: "Hello-World")
@@ -65,15 +64,13 @@ struct GitHubDownloadingTests {
 
         #expect(release.assets[contentType: "image/png"] == nil)
     }
-
 }
 
 struct AssetDownloadTests {
-
     static var exampleZipURL: URL {
         get throws {
             try #require(Bundle.module.url(forResource: "example", withExtension: "zip"),
-                     "Missing test data")
+                         "Missing test data")
         }
     }
 
@@ -82,7 +79,7 @@ struct AssetDownloadTests {
     static var badExampleZipURL: URL {
         get throws {
             try #require(Bundle.module.url(forResource: "bad_example", withExtension: "zip"),
-                     "Missing test data")
+                         "Missing test data")
         }
     }
 
@@ -107,7 +104,8 @@ struct AssetDownloadTests {
             for: .itemReplacementDirectory,
             in: .userDomainMask,
             appropriateFor: FileManager.default.temporaryDirectory,
-            create: true)
+            create: true,
+        )
         defer { try? FileManager.default.removeItem(at: targetDirectory) }
 
         // Override download URL and digest to match test data since we're using the GitHub examples releases.json otherwise.
@@ -130,7 +128,8 @@ struct AssetDownloadTests {
             for: .itemReplacementDirectory,
             in: .userDomainMask,
             appropriateFor: FileManager.default.temporaryDirectory,
-            create: true)
+            create: true,
+        )
         defer { try? FileManager.default.removeItem(at: targetDirectory) }
 
         // Override download URL to give the wrong asset, but the right digest, this makes sure we skipped downloading.
@@ -140,7 +139,7 @@ struct AssetDownloadTests {
 
         // Copy the example.zip into the target directory first.
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
-        try FileManager.default.copyItem(at: try Self.exampleZipURL, to: targetURL)
+        try FileManager.default.copyItem(at: Self.exampleZipURL, to: targetURL)
 
         try await asset.downloadInto(targetURL)
 
@@ -154,7 +153,8 @@ struct AssetDownloadTests {
             for: .itemReplacementDirectory,
             in: .userDomainMask,
             appropriateFor: FileManager.default.temporaryDirectory,
-            create: true)
+            create: true,
+        )
         defer { try? FileManager.default.removeItem(at: targetDirectory) }
 
         // Override download URL with the correct asset and digest.
@@ -164,7 +164,7 @@ struct AssetDownloadTests {
 
         // Copy the bad example.zip into the target directory, but with the asset's name, this should get removed and overwritten.
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
-        try FileManager.default.copyItem(at: try Self.badExampleZipURL, to: targetURL)
+        try FileManager.default.copyItem(at: Self.badExampleZipURL, to: targetURL)
 
         try await asset.downloadInto(targetURL)
 
@@ -178,7 +178,8 @@ struct AssetDownloadTests {
             for: .itemReplacementDirectory,
             in: .userDomainMask,
             appropriateFor: FileManager.default.temporaryDirectory,
-            create: true)
+            create: true,
+        )
         defer { try? FileManager.default.removeItem(at: targetDirectory) }
 
         // Override download URL to match test data.
@@ -201,7 +202,8 @@ struct AssetDownloadTests {
             for: .itemReplacementDirectory,
             in: .userDomainMask,
             appropriateFor: FileManager.default.temporaryDirectory,
-            create: true)
+            create: true,
+        )
         defer { try? FileManager.default.removeItem(at: targetDirectory) }
 
         // Override download URL to match test data.
@@ -211,12 +213,11 @@ struct AssetDownloadTests {
 
         // Copy the bad example.zip into the target directory, but with the asset's name, this should get removed and overwritten.
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
-        try FileManager.default.copyItem(at: try Self.badExampleZipURL, to: targetURL)
+        try FileManager.default.copyItem(at: Self.badExampleZipURL, to: targetURL)
 
         try await asset.downloadInto(targetURL)
 
         // Verify the digest is correct, meaning the wrong file was replaced by the right one.
         #expect(try FileHandle(forReadingFrom: targetURL).sha256Digest() == Self.exampleZipDigest)
     }
-
 }

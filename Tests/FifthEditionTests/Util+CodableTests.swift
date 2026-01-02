@@ -5,11 +5,10 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct AlignmentCodableTests {
-
     static let testAlignments: [Alignment: [String]] = [
         [.lawful, .good]:
             ["L", "G"],
@@ -41,7 +40,7 @@ struct AlignmentCodableTests {
     func alignment(_ alignment: Alignment, strings: [String]) throws {
         try testCodable(
             json: "[\"" + strings.joined(separator: "\",\"") + "\"]",
-            value: alignment
+            value: alignment,
         )
     }
 
@@ -53,7 +52,7 @@ struct AlignmentCodableTests {
                 "U"
             ]
             """,
-            value: Alignment.unaligned
+            value: Alignment.unaligned,
         )
     }
 
@@ -65,14 +64,12 @@ struct AlignmentCodableTests {
                 "A"
             ]
             """,
-            value: Alignment.any
+            value: Alignment.any,
         )
     }
-
 }
 
 struct IndexFileCodableTests {
-
     @Test("Index file")
     func index() throws {
         try testCodable(
@@ -89,22 +86,19 @@ struct IndexFileCodableTests {
                     "XMM": "foo-xmm.json",
                     "XPHB": "foo-xphb.json",
                 ],
-            )
+            ),
         )
-
     }
-
 }
 
 struct PageCodableTests {
-
     @Test("Numeric page")
     func number() throws {
         try testCodable(
             json: """
             42
             """,
-            value: Page.number(42)
+            value: Page.number(42),
         )
     }
 
@@ -114,21 +108,19 @@ struct PageCodableTests {
             json: """
             "xxxxii"
             """,
-            value: Page.numeral("xxxxii")
+            value: Page.numeral("xxxxii"),
         )
     }
-
 }
 
 struct ProficiencyCodableTests {
-
     @Test("Proficient")
     func proficient() throws {
         try testCodable(
             json: """
             1
             """,
-            value: Proficiency.proficient
+            value: Proficiency.proficient,
         )
     }
 
@@ -138,21 +130,19 @@ struct ProficiencyCodableTests {
             json: """
             2
             """,
-            value: Proficiency.expertise
+            value: Proficiency.expertise,
         )
     }
-
 }
 
 struct ReprintCodableTests {
-
     @Test("Reprint")
     func reprint() throws {
         try testCodable(
             json: """
             "Adult Black Dragon|XMM"
             """,
-            value: Reprint(uid: "Adult Black Dragon|XMM")
+            value: Reprint(uid: "Adult Black Dragon|XMM"),
         )
     }
 
@@ -168,7 +158,7 @@ struct ReprintCodableTests {
             value: Reprint(
                 uid: "Net|XPHB",
                 tag: "item",
-            )
+            ),
         )
     }
 
@@ -184,14 +174,12 @@ struct ReprintCodableTests {
             value: Reprint(
                 uid: "Amethyst|XDMG",
                 edition: .one,
-            )
+            ),
         )
     }
-
 }
 
 struct SourceCodableTests {
-
     @Test("Source")
     func source() throws {
         try testCodable(
@@ -200,7 +188,7 @@ struct SourceCodableTests {
                 "source": "XMM"
             }
             """,
-            value: Source(source: "XMM")
+            value: Source(source: "XMM"),
         )
     }
 
@@ -215,14 +203,13 @@ struct SourceCodableTests {
             """,
             value: Source(
                 source: "XPHB",
-                page: .number(346)
-            )
+                page: .number(346),
+            ),
         )
     }
 }
 
 struct SpeedCodableTests {
-
     @Test("Walk speed")
     func walk() throws {
         try testCodable(
@@ -246,7 +233,7 @@ struct SpeedCodableTests {
             }
             """,
             value: Speed([
-                .burrow: .speed(30)
+                .burrow: .speed(30),
             ]),
         )
     }
@@ -260,7 +247,7 @@ struct SpeedCodableTests {
             }
             """,
             value: Speed([
-                .climb: .speed(30)
+                .climb: .speed(30),
             ]),
         )
     }
@@ -288,7 +275,7 @@ struct SpeedCodableTests {
             }
             """,
             value: Speed([
-                .swim: .speed(30)
+                .swim: .speed(30),
             ]),
         )
     }
@@ -334,13 +321,13 @@ struct SpeedCodableTests {
             """,
             value: Speed(
                 [
-                    .walk: .speed(20)
+                    .walk: .speed(20),
                 ],
                 choose: .init(
                     from: [.climb, .fly],
                     amount: 20,
-                    note: "(DM's choice)"
-                )
+                    note: "(DM's choice)",
+                ),
             ),
         )
     }
@@ -369,7 +356,7 @@ struct SpeedCodableTests {
             """,
             value: Speed(
                 [
-                    .walk: .speed(30)
+                    .walk: .speed(30),
                 ],
                 alternate: .init([
                     .walk: [.conditional(50, condition: "in serpent form")],
@@ -427,18 +414,16 @@ struct SpeedCodableTests {
             value: Speed.varies,
         )
     }
-
 }
 
 struct SrdReferenceCodableTests {
-
     @Test("In SRD")
     func srd() throws {
         try testCodable(
             json: """
             true
             """,
-            value: SrdReference.present(true)
+            value: SrdReference.present(true),
         )
     }
 
@@ -448,21 +433,19 @@ struct SrdReferenceCodableTests {
             json: """
             "Generic Monster"
             """,
-            value: SrdReference.presentAs("Generic Monster")
+            value: SrdReference.presentAs("Generic Monster"),
         )
     }
-
 }
 
 struct TagCodableTests {
-
     @Test("Tag")
     func tag() throws {
         try testCodable(
             json: """
             "tag"
             """,
-            value: Tag.tag("tag")
+            value: Tag.tag("tag"),
         )
     }
 
@@ -475,9 +458,7 @@ struct TagCodableTests {
                 "prefix": "prefix"
             }
             """,
-            value: Tag.prefixed("tag", prefix: "prefix")
+            value: Tag.prefixed("tag", prefix: "prefix"),
         )
     }
-
 }
-

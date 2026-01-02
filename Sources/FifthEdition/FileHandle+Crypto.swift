@@ -8,8 +8,8 @@
 import CryptoKit
 import Foundation
 
-extension FileHandle {
-    public func sha256Digest() throws -> String {
+public extension FileHandle {
+    func sha256Digest() throws -> String {
         var hasher = SHA256()
         while let chunk = try read(upToCount: SHA256.blockByteCount) {
             hasher.update(data: chunk)

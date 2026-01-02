@@ -17,9 +17,8 @@ extension GitHubRelease {
 
     public var zipPartAssets: [GitHubAsset] {
         assets.filter { asset in
-            ((asset.contentType == Self.zipContentType || asset.contentType == Self.zipPartContentType) &&
-             asset.state == .uploaded)
+            (asset.contentType == Self.zipContentType || asset.contentType == Self.zipPartContentType) &&
+                asset.state == .uploaded
         }
     }
 }
-

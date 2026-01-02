@@ -5,29 +5,29 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-
-extension Creature {
+public extension Creature {
     /// Number of grid squares for this creature.
     ///
     /// Where the creature has multiple sizes, the smallest is returned.
-    public var gridSquares: Int {
+    var gridSquares: Int {
         guard let size = size?.sorted().first else { return 1 }
 
         switch size {
-        case .tiny:       return 1
-        case .small:      return 1
-        case .medium:     return 1
-        case .large:      return 2
-        case .huge:       return 3
+        case .tiny: return 1
+        case .small: return 1
+        case .medium: return 1
+        case .large: return 2
+        case .huge: return 3
         case .gargantuan: return 4
         }
     }
 
     /// Returns the expected token path.
-    public var tokenPath: String? {
+    var tokenPath: String? {
         guard hasToken ?? false,
               let name = token?.name ?? name,
-              let source = token?.source ?? source else {
+              let source = token?.source ?? source
+        else {
             return nil
         }
 
@@ -38,14 +38,14 @@ extension Creature {
                 .replacingOccurrences(of: "\"", with: "")
                 .decomposedStringWithCanonicalMapping
                 .unicodeScalars
-                .filter { $0.isASCII }
+                .filter(\.isASCII),
         )
 
         return "bestiary/tokens/\(source)/\(tokenName).webp"
     }
 
     /// Returns the uid used to reference this creature.
-    public var uid: String? {
+    var uid: String? {
         guard let name, let source else {
             return nil
         }
@@ -54,15 +54,15 @@ extension Creature {
     }
 }
 
-extension Creature.SkillSet {
-    public subscript(_ skill: Skill) -> String? {
+public extension Creature.SkillSet {
+    subscript(_ skill: Skill) -> String? {
         get { skills[skill] }
         set { skills[skill] = newValue }
     }
 }
 
-extension Creature.ToolSet {
-    public subscript(_ tool: Tool) -> String? {
+public extension Creature.ToolSet {
+    subscript(_ tool: Tool) -> String? {
         get { tools[tool] }
         set { tools[tool] = newValue }
     }

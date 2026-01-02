@@ -5,12 +5,11 @@
 //  Created by Scott James Remnant on 12/26/25.
 //
 
+@testable import FifthEdition
 import Foundation
 import Testing
-@testable import FifthEdition
 
 struct DynamicCodingKeyTests {
-
     struct Hobbit: Equatable, Codable {
         var frodo: Int
         var bilbo: Int
@@ -47,14 +46,12 @@ struct DynamicCodingKeyTests {
             value: Hobbit(
                 frodo: 33,
                 bilbo: 111,
-            )
+            ),
         )
     }
-
 }
 
 struct EnumCodingKeyTests {
-
     struct Wizard: Equatable, Codable {
         enum Name: String, CaseIterable {
             case gandalf
@@ -121,16 +118,14 @@ struct EnumCodingKeyTests {
                 ],
                 others: [
                     "alatar": "blue",
-                    "pallando": "blue"
+                    "pallando": "blue",
                 ],
-            )
+            ),
         )
     }
-
 }
 
 struct TagSetCodableTests {
-
     enum Species: String, TagCoding {
         case human
         case dwarf
@@ -138,9 +133,9 @@ struct TagSetCodableTests {
         case hobbit
 
         static let tags: [(Species, String)] = [
-            (.human,  "H"),
-            (.dwarf,  "D"),
-            (.elf,    "E"),
+            (.human, "H"),
+            (.dwarf, "D"),
+            (.elf, "E"),
             (.hobbit, "O"),
         ]
     }
@@ -154,7 +149,7 @@ struct TagSetCodableTests {
                 "O"
             ]
             """,
-            value: TagSet<Species>([.human, .hobbit])
+            value: TagSet<Species>([.human, .hobbit]),
         )
     }
 
@@ -165,7 +160,7 @@ struct TagSetCodableTests {
             [
             ]
             """,
-            value: TagSet<Species>()
+            value: TagSet<Species>(),
         )
     }
 
@@ -178,15 +173,13 @@ struct TagSetCodableTests {
                     "X"
                 ]
                 """,
-                value: TagSet<Species>()
+                value: TagSet<Species>(),
             )
         }
     }
-
 }
 
 struct TaggedCodableTests {
-
     enum Species: String, TagCoding {
         case human
         case dwarf
@@ -194,9 +187,9 @@ struct TaggedCodableTests {
         case hobbit
 
         static let tags: [(Species, String)] = [
-            (.human,  "H"),
-            (.dwarf,  "D"),
-            (.elf,    "E"),
+            (.human, "H"),
+            (.dwarf, "D"),
+            (.elf, "E"),
             (.hobbit, "O"),
         ]
     }
@@ -219,7 +212,7 @@ struct TaggedCodableTests {
             json: """
             "H"
             """,
-            value: Tagged<Species>(.human)
+            value: Tagged<Species>(.human),
         )
     }
 
@@ -229,7 +222,7 @@ struct TaggedCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(species)
+            value: Tagged(species),
         )
     }
 
@@ -240,9 +233,8 @@ struct TaggedCodableTests {
                 json: """
                 "X"
                 """,
-                value: Tagged<Species>(.human)
+                value: Tagged<Species>(.human),
             )
         }
     }
-
 }

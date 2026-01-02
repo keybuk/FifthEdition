@@ -17,15 +17,15 @@ public struct ArtItem: Codable, Equatable, Sendable {
 
     public var name: String
     public var source: String
-    public var page: Page? = nil
-    public var tokenCredit: String? = nil
-    public var isTokenCustom: Bool? = nil
-    public var tokenTags: Set<TokenTag>? = nil
+    @Init(default: nil) public var page: Page?
+    @Init(default: nil) public var tokenCredit: String?
+    @Init(default: nil) public var isTokenCustom: Bool?
+    @Init(default: nil) public var tokenTags: Set<TokenTag>?
 }
 
 @MemberwiseInit(.public)
 public struct Token: Codable, Equatable, Sendable {
     public var name: String
     public var source: String
-    public var page: Page? = nil
+    @Init(default: nil) public var page: Page?
 }

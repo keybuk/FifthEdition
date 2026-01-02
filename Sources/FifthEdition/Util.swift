@@ -29,7 +29,7 @@ extension Alignment: Hashable {
 
 @MemberwiseInit(.public)
 public struct IndexFile: Equatable, Sendable {
-    public var entries: [String: String] = [:]
+    public var entries: [String: String]
 }
 
 public enum Page: Equatable, Hashable, Sendable {
@@ -45,29 +45,28 @@ public enum Proficiency: Equatable, Sendable {
 @MemberwiseInit(.public)
 public struct Reprint: Equatable, Hashable, Sendable {
     public var uid: String
-    public var tag: String? = nil
-    public var edition: Edition? = nil
+    @Init(default: nil) public var tag: String?
+    @Init(default: nil) public var edition: Edition?
 }
 
 @MemberwiseInit(.public)
 public struct Source: Codable, Equatable, Hashable, Sendable {
     public var source: String
-    public var page: Page? = nil
+    @Init(default: nil) public var page: Page?
 }
 
 @MemberwiseInit(.public)
 public struct Speed: Equatable, Sendable {
     @MemberwiseInit(.public)
     public struct Alternate: Equatable, Sendable {
-        @Init(label: "_")
-        public var speeds: [Mode: Set<Value>] = [:]
+        @Init(label: "_") public var speeds: [Mode: Set<Value>] = [:]
     }
 
     @MemberwiseInit(.public)
     public struct Choice: Equatable, Codable, Sendable {
         public var from: Set<Mode>
         public var amount: Int
-        public var note: String? = nil
+        @Init(default: nil) public var note: String?
     }
 
     public enum Mode: String, CaseIterable, Codable, Sendable {
@@ -84,14 +83,13 @@ public struct Speed: Equatable, Sendable {
         case walkingSpeed
     }
 
-    @Init(label: "_")
-    public var speeds: [Mode: Value] = [:]
+    @Init(label: "_") public var speeds: [Mode: Value] = [:]
 
-    public var canHover: Bool? = nil
+    @Init(default: nil) public var canHover: Bool?
 
-    public var choose: Choice? = nil
-    public var alternate: Alternate? = nil
-    public var hidden: Set<Mode>? = nil
+    @Init(default: nil) public var choose: Choice?
+    @Init(default: nil) public var alternate: Alternate?
+    @Init(default: nil) public var hidden: Set<Mode>?
 
     public static var varies: Speed { Speed() }
 }

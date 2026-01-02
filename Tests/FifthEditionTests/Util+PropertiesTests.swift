@@ -5,11 +5,10 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct SpeedSubscriptTests {
-
     @Test("Get speed by subscript")
     func getSubscript() {
         let speed = Speed([
@@ -66,7 +65,7 @@ struct SpeedSubscriptTests {
             ],
             alternate: .init([
                 .climb: [.speed(60), .speed(90)],
-            ])
+            ]),
         )
         #expect(speed.alternate?[.climb] == [.speed(60), .speed(90)])
     }
@@ -81,7 +80,7 @@ struct SpeedSubscriptTests {
             ],
             alternate: .init([
                 .climb: [.speed(60), .speed(90)],
-            ])
+            ]),
         )
         #expect(speed.alternate?[.burrow] == nil)
     }
@@ -96,7 +95,7 @@ struct SpeedSubscriptTests {
             ],
             alternate: .init([
                 .climb: [.speed(60), .speed(90)],
-            ])
+            ]),
         )
         speed.alternate?[.burrow] = [.speed(10), .speed(20)]
 
@@ -115,7 +114,7 @@ struct SpeedSubscriptTests {
             ],
             alternate: .init([
                 .climb: [.speed(60), .speed(90)],
-            ])
+            ]),
         )
         speed.alternate?[.climb] = [.speed(60), .speed(120)]
 
@@ -123,5 +122,4 @@ struct SpeedSubscriptTests {
             .climb: [.speed(60), .speed(120)],
         ])
     }
-
 }

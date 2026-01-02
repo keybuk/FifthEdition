@@ -1,5 +1,5 @@
 //
-//  GitHub+Decodable.swift
+//  GitHub+Codable.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 12/24/25.
@@ -49,7 +49,7 @@ extension GitHubAsset {
         case url
         case browserDownloadURL = "browser_download_url"
 
-        case id = "id"
+        case id
         case nodeID = "node_id"
         case name
         case label

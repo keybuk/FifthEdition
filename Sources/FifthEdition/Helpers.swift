@@ -14,8 +14,8 @@
 public func debugDescriptionOf(
     _ prefix: String? = nil,
     names: String...,
-    values: Any?...) -> String
-{
+    values: Any?...,
+) -> String {
     [
         prefix,
         "(",
@@ -24,9 +24,8 @@ public func debugDescriptionOf(
                 arg.map { (name != "_" ? name + ": " : "") + String(describing: $0) }
             }
             .joined(separator: ", "),
-        ")"
+        ")",
     ]
     .compactMap(\.self)
     .joined()
 }
-

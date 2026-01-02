@@ -12,7 +12,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "FifthEdition",
-            targets: ["FifthEdition"]
+            targets: ["FifthEdition"],
         ),
     ],
     dependencies: [
@@ -38,5 +38,5 @@ let package = Package(
                 .copy("Resources/bad_example.zip"),
             ],
         ),
-    ]
+    ],
 )

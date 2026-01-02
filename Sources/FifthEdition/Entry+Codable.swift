@@ -21,17 +21,17 @@ extension MediaHref: Codable {
         if let url = try? container.decode(URL.self, forKey: .url) {
             self = .url(url)
         } else {
-            self = .path(try container.decode(String.self, forKey: .path))
+            self = try .path(container.decode(String.self, forKey: .path))
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
-        case .url(let url):
+        case let .url(url):
             try container.encode("external", forKey: .type)
             try container.encode(url, forKey: .url)
-        case .path(let path):
+        case let .path(path):
             try container.encode("internal", forKey: .type)
             try container.encode(path, forKey: .path)
         }

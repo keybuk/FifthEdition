@@ -10,11 +10,11 @@
 import Foundation
 
 public struct Entry: Codable, Equatable, Sendable {
-    // TODO
+    // TODO:
 }
 
 public struct Spellcasting: Codable, Equatable, Sendable {
-    // TODO
+    // TODO:
 }
 
 public enum MediaHref: Equatable, Sendable {

@@ -5,11 +5,10 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct CreatureCodableTests {
-
     @Test("Minimal creature")
     func minimal() throws {
         try testCodable(
@@ -28,7 +27,7 @@ struct CreatureCodableTests {
                 source: "XDMG",
                 size: [.small],
                 type: .init(.type(.monstrosity)),
-            )
+            ),
         )
     }
 
@@ -210,17 +209,17 @@ struct CreatureCodableTests {
                         ],
                         note: "from nonmagical attacks",
                         conditional: true,
-                    )
+                    ),
                 ],
                 conditionImmunity: [
                     .condition(.charmed),
                     .condition(.frightened),
                 ],
                 conditionInflict: [
-                    .frightened
+                    .frightened,
                 ],
                 savingThrowForced: [
-                    .wisdom
+                    .wisdom,
                 ],
                 damageDealt: [
                     .bludgeoning,
@@ -230,7 +229,7 @@ struct CreatureCodableTests {
                 ],
                 environment: [
                     .underdark,
-                    .planarLower
+                    .planarLower,
                 ],
                 gear: [
                     .init("dagger|xphb", quantity: 6),
@@ -261,7 +260,7 @@ struct CreatureCodableTests {
                 hasToken: true,
                 hasFluff: true,
                 hasFluffImages: true,
-            )
+            ),
         )
     }
 
@@ -388,7 +387,7 @@ struct CreatureCodableTests {
                 token: .init(name: "The Stig", source: "TG"),
                 tokenCredit: "BBC",
                 isTokenCustom: true,
-            )
+            ),
         )
     }
 
@@ -441,14 +440,12 @@ struct CreatureCodableTests {
                 summonedScaleByPlayerLevel: true,
                 isNamedCreature: true,
                 isNPC: true,
-            )
+            ),
         )
     }
-
 }
 
 struct CreatureAbilityScoreCodableTests {
-
     @Test("Ability score")
     func score() throws {
         try testCodable(
@@ -471,11 +468,9 @@ struct CreatureAbilityScoreCodableTests {
             value: Creature.AbilityScore.special("same as player"),
         )
     }
-
 }
 
 struct CreatureAlignmentCodableTests {
-
     @Test("Simple alignment")
     func common() throws {
         try testCodable(
@@ -485,7 +480,7 @@ struct CreatureAlignmentCodableTests {
                 "G"
             ]
             """,
-            value: Creature.Alignment.alignment([.chaotic, .good])
+            value: Creature.Alignment.alignment([.chaotic, .good]),
         )
     }
 
@@ -525,7 +520,7 @@ struct CreatureAlignmentCodableTests {
             value: Creature.Alignment.choice([
                 .init(
                     alignment: [.chaotic, .good],
-                    note: "chaotic evil when hungry"
+                    note: "chaotic evil when hungry",
                 ),
             ]),
         )
@@ -598,11 +593,9 @@ struct CreatureAlignmentCodableTests {
             value: Creature.Alignment.special("player's alignment"),
         )
     }
-
 }
 
 struct CreatureArmorClassCodableTests {
-
     @Test("Armor class")
     func object() throws {
         try testCodable(
@@ -612,7 +605,7 @@ struct CreatureArmorClassCodableTests {
             ]
             """,
             value: [
-                Creature.ArmorClass.ac(15)
+                Creature.ArmorClass.ac(15),
             ],
         )
     }
@@ -633,8 +626,8 @@ struct CreatureArmorClassCodableTests {
             value: [
                 Creature.ArmorClass.obtained(
                     16,
-                    from: ["natural armor"]
-                )
+                    from: ["natural armor"],
+                ),
             ],
         )
     }
@@ -657,8 +650,8 @@ struct CreatureArmorClassCodableTests {
                 Creature.ArmorClass.obtained(
                     17,
                     condition: "with {@spell mage armor}",
-                    braces: true
-                )
+                    braces: true,
+                ),
             ],
         )
     }
@@ -674,15 +667,13 @@ struct CreatureArmorClassCodableTests {
             ]
             """,
             value: [
-                Creature.ArmorClass.special("12 + your Intelligence modifier")
+                Creature.ArmorClass.special("12 + your Intelligence modifier"),
             ],
         )
     }
-
 }
 
 struct CreatureChallengeRatingCodableTests {
-
     @Test("Challenge rating")
     func cr() throws {
         try testCodable(
@@ -704,7 +695,7 @@ struct CreatureChallengeRatingCodableTests {
             """,
             value: Creature.ChallengeRating(
                 "1",
-                xp: 100
+                xp: 100,
             ),
         )
     }
@@ -756,11 +747,9 @@ struct CreatureChallengeRatingCodableTests {
             ),
         )
     }
-
 }
 
 struct CreatureConditionImmunityCodableTests {
-
     @Test("Condition immunity")
     func conditionImmunity() throws {
         try testCodable(
@@ -866,11 +855,9 @@ struct CreatureConditionImmunityCodableTests {
             ),
         )
     }
-
 }
 
 struct CreatureCreatureTypeCodableTests {
-
     @Test("Creature type")
     func type() throws {
         try testCodable(
@@ -908,8 +895,8 @@ struct CreatureCreatureTypeCodableTests {
             }
             """,
             value: Creature.CreatureType(
-                .choice([.celestial, .fiend])
-            )
+                .choice([.celestial, .fiend]),
+            ),
         )
     }
 
@@ -932,9 +919,9 @@ struct CreatureCreatureTypeCodableTests {
                 .type(.undead),
                 tags: [
                     .tag("wizard"),
-                    .prefixed("elf", prefix: "Dusk")
-                ]
-            )
+                    .prefixed("elf", prefix: "Dusk"),
+                ],
+            ),
         )
     }
 
@@ -949,8 +936,8 @@ struct CreatureCreatureTypeCodableTests {
             """,
             value: Creature.CreatureType(
                 .type(.aberration),
-                swarmSize: .tiny
-            )
+                swarmSize: .tiny,
+            ),
         )
     }
 
@@ -975,8 +962,8 @@ struct CreatureCreatureTypeCodableTests {
                 tags: [.tag("dwarf")],
                 sidekickType: .spellcaster,
                 sidekickTags: [.tag("attacker")],
-                sidekickHidden: true
-            )
+                sidekickHidden: true,
+            ),
         )
     }
 
@@ -992,15 +979,13 @@ struct CreatureCreatureTypeCodableTests {
             """,
             value: Creature.CreatureType(
                 .type(.fiend),
-                note: "only when hungry"
-            )
+                note: "only when hungry",
+            ),
         )
     }
-
 }
 
 struct CreatureDamageImmunityCodableTests {
-
     @Test("Damage immunity")
     func damageImmunity() throws {
         try testCodable(
@@ -1102,11 +1087,9 @@ struct CreatureDamageImmunityCodableTests {
             ),
         )
     }
-
 }
 
 struct CreatureDamageResistanceCodableTests {
-
     @Test("Damage resistance")
     func damageResistance() throws {
         try testCodable(
@@ -1208,11 +1191,9 @@ struct CreatureDamageResistanceCodableTests {
             ),
         )
     }
-
 }
 
 struct CreatureDamageVulnerabilityCodableTests {
-
     @Test("Damage vulnerability")
     func damageVulnerability() throws {
         try testCodable(
@@ -1272,7 +1253,7 @@ struct CreatureDamageVulnerabilityCodableTests {
                 [
                     .damage(.cold),
                 ],
-                preNote: "While not wearing pants:"
+                preNote: "While not wearing pants:",
             ),
         )
     }
@@ -1304,7 +1285,7 @@ struct CreatureDamageVulnerabilityCodableTests {
                             .damage(.psychic),
                         ],
                         note: "while charmed by the attacker",
-                        conditional: true
+                        conditional: true,
                     ),
                 ],
                 note: "from magic weapons wielded by good creatures",
@@ -1312,11 +1293,9 @@ struct CreatureDamageVulnerabilityCodableTests {
             ),
         )
     }
-
 }
 
 struct CreatureGearCodableTests {
-
     @Test("Gear")
     func gear() throws {
         try testCodable(
@@ -1339,11 +1318,9 @@ struct CreatureGearCodableTests {
             value: Creature.Gear("dagger|xphb", quantity: 4),
         )
     }
-
 }
 
 struct CreatureHitPointsCodableTests {
-
     @Test("Hit points")
     func hitPoints() throws {
         try testCodable(
@@ -1368,7 +1345,7 @@ struct CreatureHitPointsCodableTests {
             """,
             value: Creature.HitPoints.hp(
                 DiceNotation(.d8, count: 2, modifier: 3),
-                givenAverage: 14
+                givenAverage: 14,
             ),
         )
     }
@@ -1397,11 +1374,9 @@ struct CreatureHitPointsCodableTests {
             value: Creature.HitPoints.special("as summoner"),
         )
     }
-
 }
 
 struct CreatureInitiativeCodableTests {
-
     @Test("Initiative value")
     func initiative() throws {
         try testCodable(
@@ -1470,11 +1445,9 @@ struct CreatureInitiativeCodableTests {
             ),
         )
     }
-
 }
 
 class CreaturePassiveCodableTests {
-
     @Test("Passive score")
     func score() throws {
         try testCodable(
@@ -1495,11 +1468,9 @@ class CreaturePassiveCodableTests {
             value: Creature.Passive.special("can't see"),
         )
     }
-
 }
 
 struct CreatureSaveCodableTests {
-
     @Test("Saving throws")
     func save() throws {
         try testCodable(
@@ -1515,18 +1486,16 @@ struct CreatureSaveCodableTests {
             ),
         )
     }
-
 }
 
 struct CreatureShortNameCodableTests {
-
     @Test("Name")
     func name() throws {
         try testCodable(
             json: """
             "name"
             """,
-            value: Creature.ShortName.name("name")
+            value: Creature.ShortName.name("name"),
         )
     }
 
@@ -1536,14 +1505,12 @@ struct CreatureShortNameCodableTests {
             json: """
             true
             """,
-            value: Creature.ShortName.useName
+            value: Creature.ShortName.useName,
         )
     }
-
 }
 
 struct CreatureSkillSetCodableTests {
-
     @Test("Skill set")
     func skill() throws {
         try testCodable(
@@ -1592,16 +1559,14 @@ struct CreatureSkillSetCodableTests {
                         .history: "+7",
                         .nature: "+7",
                         .religion: "+7",
-                    ]
+                    ],
                 ],
-            )
+            ),
         )
     }
-
 }
 
 struct CreatureToolSetTests {
-
     @Test("Tool set")
     func tool() throws {
         try testCodable(
@@ -1617,5 +1582,4 @@ struct CreatureToolSetTests {
             ]),
         )
     }
-
 }

@@ -5,11 +5,10 @@
 //  Created by Scott James Remnant on 12/28/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct ArtItemCodableTests {
-
     @Test("Art item")
     func artItem() throws {
         try testCodable(
@@ -83,11 +82,9 @@ struct ArtItemCodableTests {
             ),
         )
     }
-
 }
 
 struct TokenCodableTests {
-
     @Test("Token")
     func token() throws {
         try testCodable(
@@ -122,5 +119,4 @@ struct TokenCodableTests {
             ),
         )
     }
-
 }

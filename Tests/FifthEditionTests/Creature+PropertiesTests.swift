@@ -5,11 +5,10 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct CreatureGridSquaresTests {
-
     @Test("Grid squares for single size", arguments: Size.allCases)
     func gridSquares(_ size: Size) throws {
         let creature = Creature(
@@ -18,11 +17,11 @@ struct CreatureGridSquaresTests {
             size: [size],
         )
         switch size {
-        case .tiny:       #expect(creature.gridSquares == 1)
-        case .small:      #expect(creature.gridSquares == 1)
-        case .medium:     #expect(creature.gridSquares == 1)
-        case .large:      #expect(creature.gridSquares == 2)
-        case .huge:       #expect(creature.gridSquares == 3)
+        case .tiny: #expect(creature.gridSquares == 1)
+        case .small: #expect(creature.gridSquares == 1)
+        case .medium: #expect(creature.gridSquares == 1)
+        case .large: #expect(creature.gridSquares == 2)
+        case .huge: #expect(creature.gridSquares == 3)
         case .gargantuan: #expect(creature.gridSquares == 4)
         }
     }
@@ -31,7 +30,7 @@ struct CreatureGridSquaresTests {
     func gridSquaresWhenNoSize() throws {
         let creature = Creature(
             name: "Sizeless Monster",
-            source: "XMM"
+            source: "XMM",
         )
         #expect(creature.gridSquares == 1)
     }
@@ -45,11 +44,9 @@ struct CreatureGridSquaresTests {
         )
         #expect(creature.gridSquares == 2)
     }
-
 }
 
 struct CreatureTokenPathTests {
-
     @Test("Token path")
     func tokenPath() throws {
         let creature = Creature(
@@ -98,7 +95,8 @@ struct CreatureTokenPathTests {
             hasToken: true,
             token: Token(
                 name: "Acererak",
-                source: "MM"),
+                source: "MM",
+            ),
         )
         #expect(creature.tokenPath == "bestiary/tokens/MM/Acererak.webp")
     }
@@ -120,16 +118,14 @@ struct CreatureTokenPathTests {
         )
         #expect(creature.tokenPath == nil)
     }
-
 }
 
 struct CreatureUidTests {
-
     @Test("UID")
     func uid() throws {
         let creature = Creature(
             name: "Blink Dog",
-            source: "XMM"
+            source: "XMM",
         )
         #expect(creature.uid == "blink dog|xmm")
     }
@@ -137,7 +133,7 @@ struct CreatureUidTests {
     @Test("No UID if no name")
     func noName() throws {
         let creature = Creature(
-            source: "XMM"
+            source: "XMM",
         )
         #expect(creature.uid == nil)
     }
@@ -149,11 +145,9 @@ struct CreatureUidTests {
         )
         #expect(creature.uid == nil)
     }
-
 }
 
 struct CreatureSkillSetSubscriptTests {
-
     @Test("Get skill by subscript")
     func getSubscript() {
         let skill = Creature.SkillSet([
@@ -200,11 +194,9 @@ struct CreatureSkillSetSubscriptTests {
             .perception: "+2",
         ])
     }
-
 }
 
 struct CreatureToolSetSubscriptTests {
-
     @Test("Get tool by subscript")
     func getSubscript() {
         let tool = Creature.ToolSet([
@@ -251,5 +243,4 @@ struct CreatureToolSetSubscriptTests {
             .smithsTools: "+3",
         ])
     }
-
 }

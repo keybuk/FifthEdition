@@ -8,8 +8,8 @@
 extension MediaHref: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .url(let url): url.absoluteString
-        case .path(let path): path
+        case let .url(url): url.absoluteString
+        case let .path(path): path
         }
     }
 }

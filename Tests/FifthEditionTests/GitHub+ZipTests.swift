@@ -5,12 +5,11 @@
 //  Created by Scott James Remnant on 1/1/26.
 //
 
+@testable import FifthEdition
 import Foundation
 import Testing
-@testable import FifthEdition
 
 struct GitHubZipTests {
-
     @Test("Obtain ZIP asset from release")
     func zipAssetFrom() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
@@ -45,5 +44,4 @@ struct GitHubZipTests {
         #expect(assets[1].name == "example.z01")
         #expect(assets[1].contentType == "application/octet-stream")
     }
-
 }

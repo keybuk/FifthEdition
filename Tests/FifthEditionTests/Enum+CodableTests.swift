@@ -5,60 +5,53 @@
 //  Created by Scott James Remnant on 12/29/25.
 //
 
-import Testing
 @testable import FifthEdition
+import Testing
 
 struct ActionTagCodableTests {
-
     @Test("Action tags", arguments: ActionTag.allCases)
     func actionTag(_ actionTag: ActionTag) throws {
         try testCodable(
             json: """
             "\(actionTag.rawValue)"
             """,
-            value: actionTag
+            value: actionTag,
         )
     }
-
 }
 
 struct ConditionCodableTests {
-
     @Test("Conditions", arguments: Condition.allCases)
     func condition(_ condition: Condition) throws {
         try testCodable(
             json: """
             "\(condition.rawValue)"
             """,
-            value: condition
+            value: condition,
         )
     }
-
 }
 
 struct CreatureTypeCodableTests {
-
     @Test("Creature types", arguments: CreatureType.allCases)
     func creatureType(_ creatureType: CreatureType) throws {
         try testCodable(
             json: """
             "\(creatureType.rawValue)"
             """,
-            value: creatureType
+            value: creatureType,
         )
     }
-
 }
 
 struct DamageTypeCodableTests {
-
     @Test("Damage types", arguments: DamageType.allCases)
     func damageType(_ damageType: DamageType) throws {
         try testCodable(
             json: """
             "\(damageType.rawValue)"
             """,
-            value: damageType
+            value: damageType,
         )
     }
 
@@ -68,7 +61,7 @@ struct DamageTypeCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(damageType)
+            value: Tagged(damageType),
         )
     }
 
@@ -87,74 +80,64 @@ struct DamageTypeCodableTests {
             ]),
         )
     }
-
 }
 
 struct DragonAgeCodableTests {
-
     @Test("Dragon ages", arguments: DragonAge.allCases)
     func dragonAge(_ dragonAge: DragonAge) throws {
         try testCodable(
             json: """
             "\(dragonAge.rawValue)"
             """,
-            value: dragonAge
+            value: dragonAge,
         )
     }
-
 }
 
 struct DragonColorCodableTests {
-
     @Test("Dragon colors", arguments: DragonColor.allCases)
     func dragonColor(_ dragonColor: DragonColor) throws {
         try testCodable(
             json: """
             "\(dragonColor.rawValue)"
             """,
-            value: dragonColor
+            value: dragonColor,
         )
     }
-
 }
 
 struct EditionCodableTests {
-
     @Test("Editions", arguments: Edition.allCases)
     func editon(_ edition: Edition) throws {
         try testCodable(
             json: """
             "\(edition.rawValue)"
             """,
-            value: edition
+            value: edition,
         )
     }
-
 }
 
 struct EnvironmentTypeCodableTests {
-
     @Test("Environment types", arguments: EnvironmentType.allCases)
     func environmentType(_ environmentType: EnvironmentType) throws {
         try testCodable(
             json: """
             "\(environmentType.rawValue)"
             """,
-            value: environmentType
+            value: environmentType,
         )
     }
-
 }
 
 struct LanguageTagCodableTests {
-
     @Test("Language tag", arguments: LanguageTag.allCases)
     func languageTag(_ languageTag: LanguageTag) throws {
         try testCodable(
             json: """
             "\(languageTag.rawValue)"
             """,
-            value: languageTag
+            value: languageTag,
         )
     }
 
@@ -164,7 +147,7 @@ struct LanguageTagCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(languageTag)
+            value: Tagged(languageTag),
         )
     }
 
@@ -183,18 +166,16 @@ struct LanguageTagCodableTests {
             ]),
         )
     }
-
 }
 
 struct MiscTagCodableTests {
-
     @Test("Misc tag", arguments: MiscTag.allCases)
     func miscTag(_ miscTag: MiscTag) throws {
         try testCodable(
             json: """
             "\(miscTag.rawValue)"
             """,
-            value: miscTag
+            value: miscTag,
         )
     }
 
@@ -204,7 +185,7 @@ struct MiscTagCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(miscTag)
+            value: Tagged(miscTag),
         )
     }
 
@@ -223,32 +204,28 @@ struct MiscTagCodableTests {
             ]),
         )
     }
-
 }
 
 struct SavingThrowCodableTests {
-
     @Test("Saving throws", arguments: SavingThrow.allCases)
     func savingThrow(_ savingThrow: SavingThrow) throws {
         try testCodable(
             json: """
             "\(savingThrow.rawValue)"
             """,
-            value: savingThrow
+            value: savingThrow,
         )
     }
-
 }
 
 struct SenseCodableTests {
-
     @Test("Senses", arguments: Sense.allCases)
     func sense(_ sense: Sense) throws {
         try testCodable(
             json: """
             "\(sense.rawValue)"
             """,
-            value: sense
+            value: sense,
         )
     }
 
@@ -258,7 +235,7 @@ struct SenseCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(sense)
+            value: Tagged(sense),
         )
     }
 
@@ -277,33 +254,28 @@ struct SenseCodableTests {
             ]),
         )
     }
-
 }
 
-
 struct SidekickTypeCodableTests {
-
     @Test("Sidekick types", arguments: SidekickType.allCases)
     func sidekickType(_ sidekickType: SidekickType) throws {
         try testCodable(
             json: """
             "\(sidekickType.rawValue)"
             """,
-            value: sidekickType
+            value: sidekickType,
         )
     }
-
 }
 
 struct SizeCodableTests {
-
     @Test("Sizes", arguments: Size.allCases)
     func size(_ size: Size) throws {
         try testCodable(
             json: """
             "\(size.rawValue)"
             """,
-            value: size
+            value: size,
         )
     }
 
@@ -313,7 +285,7 @@ struct SizeCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(size)
+            value: Tagged(size),
         )
     }
 
@@ -329,11 +301,9 @@ struct SizeCodableTests {
             value: TagSet<Size>([.tiny, .small]),
         )
     }
-
 }
 
 struct SizeComparableTests {
-
     static let testValues: [Bool] = [
         Size.tiny < Size.large,
         Size.medium < Size.huge,
@@ -349,28 +319,25 @@ struct SizeComparableTests {
 }
 
 struct SkillCodableTests {
-
     @Test("Skills", arguments: Skill.allCases)
     func skill(_ skill: Skill) throws {
         try testCodable(
             json: """
             "\(skill.rawValue)"
             """,
-            value: skill
+            value: skill,
         )
     }
-
 }
 
 struct SpellcastingTypeCodableTests {
-
     @Test("Spellcasting types", arguments: SpellcastingType.allCases)
     func spellcastingType(_ spellcastingType: SpellcastingType) throws {
         try testCodable(
             json: """
             "\(spellcastingType.rawValue)"
             """,
-            value: spellcastingType
+            value: spellcastingType,
         )
     }
 
@@ -380,7 +347,7 @@ struct SpellcastingTypeCodableTests {
             json: """
             "\(tag)"
             """,
-            value: Tagged(spellcastingType)
+            value: Tagged(spellcastingType),
         )
     }
 
@@ -399,47 +366,40 @@ struct SpellcastingTypeCodableTests {
             ]),
         )
     }
-
 }
 
 struct ToolCodableTests {
-
     @Test("Tools", arguments: Tool.allCases)
     func tool(_ tool: Tool) throws {
         try testCodable(
             json: """
             "\(tool.rawValue)"
             """,
-            value: tool
+            value: tool,
         )
     }
-
 }
 
 struct TreasureCodableTests {
-
     @Test("Treasure", arguments: Treasure.allCases)
     func treasure(_ treasure: Treasure) throws {
         try testCodable(
             json: """
             "\(treasure.rawValue)"
             """,
-            value: treasure
+            value: treasure,
         )
     }
-
 }
 
 struct TraitTagCodableTests {
-
     @Test("Trait tags", arguments: TraitTag.allCases)
     func traitTag(_ traitTag: TraitTag) throws {
         try testCodable(
             json: """
             "\(traitTag.rawValue)"
             """,
-            value: traitTag
+            value: traitTag,
         )
     }
-
 }
