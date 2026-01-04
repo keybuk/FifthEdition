@@ -5,9 +5,9 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
-@testable import FifthEdition
 import Foundation
 import Testing
+@testable import FifthEdition
 
 struct GitHubCodableTests {
     @Test("GitHubRelease is Decodable")
@@ -37,8 +37,11 @@ struct GitHubCodableTests {
 
         let expectedValue = try decoder.decode([GitHubRelease].self, from: Data(contentsOf: url))
 
-        let encodedJson = try String(data: JSONEncoder().encode(expectedValue), encoding: .utf8)!
-        let decodedValue = try JSONDecoder().decode([GitHubRelease].self, from: encodedJson.data(using: .utf8)!)
+        let encodedJson = try #require(String(data: JSONEncoder().encode(expectedValue), encoding: .utf8))
+        let decodedValue = try JSONDecoder().decode(
+            [GitHubRelease].self,
+            from: #require(encodedJson.data(using: .utf8)),
+        )
         #expect(decodedValue == expectedValue)
     }
 }

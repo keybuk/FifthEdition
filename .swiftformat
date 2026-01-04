@@ -1,0 +1,36 @@
+--indent 4
+--max-width 120
+
+--import-grouping testable-last
+
+--complex-attributes prev-line
+--computed-var-attributes prev-line
+--func-attributes prev-line
+--stored-var-attributes same-line
+--type-attributes prev-line
+
+--wrap-collections before-first
+--wrap-conditions after-first
+--wrap-effects if-multiline
+--wrap-enum-cases always
+--wrap-parameters after-first
+--wrap-return-type if-multiline
+--wrap-ternary before-operators
+--wrap-type-aliases after-first
+
+--enable blockComments
+--enable environmentEntry
+--enable isEmpty
+--enable noForceTryInTests
+--enable noForceUnwrapInTests
+--enable noGuardInTests
+--enable preferSwiftTesting
+--enable privateStateVariables
+--enable redundantAsync
+--enable redundantEquatable
+--enable redundantMemberwiseInit
+--enable redundantProperty
+--enable redundantThrows
+--enable singlePropertyPerLine
+--enable sortSwitchCases
+--enable urlMacro

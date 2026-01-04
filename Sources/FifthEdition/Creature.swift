@@ -9,7 +9,7 @@
 
 import MemberwiseInit
 
-@MemberwiseInit(.public)
+@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Creature: Codable, Equatable, Sendable {
     public enum AbilityScore: Equatable, Sendable {
         case score(Int)
@@ -18,16 +18,17 @@ public struct Creature: Codable, Equatable, Sendable {
 
     @MemberwiseInit(.public)
     public struct Action: Codable, Equatable, Sendable {
-        @Init(label: "_") public var name: String
+        @Init(label: "_")
+        public var name: String
         public var entries: [Entry]
     }
 
     public enum Alignment: Equatable, Sendable {
-        @MemberwiseInit(.public)
+        @MemberwiseInit(.public, _optionalsDefaultNil: true)
         public struct Choice: Equatable, Codable, Sendable {
             public var alignment: FifthEdition.Alignment
-            @Init(default: nil) public var chance: Int?
-            @Init(default: nil) public var note: String?
+            public var chance: Int?
+            public var note: String?
         }
 
         case alignment(FifthEdition.Alignment)
@@ -41,14 +42,15 @@ public struct Creature: Codable, Equatable, Sendable {
         case special(String)
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct ChallengeRating: Equatable, Sendable {
-        @Init(label: "_") public var cr: String
+        @Init(label: "_")
+        public var cr: String
 
-        @Init(default: nil) public var lair: String?
-        @Init(default: nil) public var coven: String?
-        @Init(default: nil) public var xp: Int?
-        @Init(default: nil) public var xpLair: Int?
+        public var lair: String?
+        public var coven: String?
+        public var xp: Int?
+        public var xpLair: Int?
     }
 
     public enum ConditionImmunity: Equatable, Hashable, Sendable {
@@ -57,21 +59,22 @@ public struct Creature: Codable, Equatable, Sendable {
         case special(String)
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct CreatureType: Equatable, Sendable {
         public enum Choice: Equatable, Sendable {
             case type(FifthEdition.CreatureType)
             case choice(Set<FifthEdition.CreatureType>)
         }
 
-        @Init(label: "_") public var type: Choice
+        @Init(label: "_")
+        public var type: Choice
 
-        @Init(default: nil) public var swarmSize: Size?
-        @Init(default: nil) public var tags: Set<Tag>?
-        @Init(default: nil) public var sidekickType: SidekickType?
-        @Init(default: nil) public var sidekickTags: Set<Tag>?
-        @Init(default: nil) public var sidekickHidden: Bool?
-        @Init(default: nil) public var note: String?
+        public var swarmSize: Size?
+        public var tags: Set<Tag>?
+        public var sidekickType: SidekickType?
+        public var sidekickTags: Set<Tag>?
+        public var sidekickHidden: Bool?
+        public var note: String?
     }
 
     public enum DamageImmunity: Equatable, Hashable, Sendable {
@@ -88,15 +91,21 @@ public struct Creature: Codable, Equatable, Sendable {
 
     public enum DamageVulnerability: Equatable, Hashable, Sendable {
         case damage(DamageType)
-        case conditional(Set<DamageVulnerability>, preNote: String? = nil, note: String? = nil, conditional: Bool? = nil)
+        case conditional(
+            Set<DamageVulnerability>,
+            preNote: String? = nil,
+            note: String? = nil,
+            conditional: Bool? = nil,
+        )
         case special(String)
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct Gear: Equatable, Sendable {
-        @Init(label: "_") public var item: String
+        @Init(label: "_")
+        public var item: String
 
-        @Init(default: nil) public var quantity: Int?
+        public var quantity: Int?
     }
 
     public enum HitPoints: Equatable, Sendable {
@@ -105,16 +114,16 @@ public struct Creature: Codable, Equatable, Sendable {
         case special(String)
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct Initiative: Equatable, Sendable {
         public enum Advantage: Equatable, Sendable {
             case advantage
             case disadvantage
         }
 
-        @Init(default: nil) public var initiative: Int?
-        @Init(default: nil) public var proficiency: Proficiency?
-        @Init(default: nil) public var advantage: Advantage?
+        public var initiative: Int?
+        public var proficiency: Proficiency?
+        public var advantage: Advantage?
     }
 
     @MemberwiseInit(.public)
@@ -128,15 +137,15 @@ public struct Creature: Codable, Equatable, Sendable {
         case special(String)
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct Save: Codable, Equatable, Sendable {
         // FIXME: Convert this into a SavingThrow-indexed dictionary like skills.
-        @Init(default: nil) public var str: String?
-        @Init(default: nil) public var dex: String?
-        @Init(default: nil) public var con: String?
-        @Init(default: nil) public var int: String?
-        @Init(default: nil) public var wis: String?
-        @Init(default: nil) public var cha: String?
+        public var str: String?
+        public var dex: String?
+        public var con: String?
+        public var int: String?
+        public var wis: String?
+        public var cha: String?
     }
 
     public enum ShortName: Equatable, Sendable {
@@ -144,159 +153,162 @@ public struct Creature: Codable, Equatable, Sendable {
         case useName
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct SkillSet: Equatable, Sendable {
-        @Init(label: "_") public var skills: [Skill: String] = [:]
+        @Init(label: "_")
+        public var skills: [Skill: String] = [:]
 
-        @Init(default: nil) public var other: [[Skill: String]]?
+        public var other: [[Skill: String]]?
     }
 
     @MemberwiseInit(.public)
     public struct ToolSet: Equatable, Sendable {
-        @Init(label: "_") public var tools: [Tool: String] = [:]
+        @Init(label: "_")
+        public var tools: [Tool: String] = [:]
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct Trait: Codable, Equatable, Sendable {
         public enum TraitType: String, Codable, Equatable, Sendable {
             case entries
             case inset
         }
 
-        @Init(label: "_") public var name: String
+        @Init(label: "_")
+        public var name: String
         public var entries: [Entry]
 
-        @Init(default: nil) public var type: TraitType?
-        @Init(default: nil) public var sort: Int?
+        public var type: TraitType?
+        public var sort: Int?
     }
 
-    @Init(default: nil) public var name: String?
-    @Init(default: nil) public var shortName: ShortName?
-    @Init(default: nil) public var alias: [String]?
-    @Init(default: nil) public var group: [String]?
+    public var name: String?
+    public var shortName: ShortName?
+    public var alias: [String]?
+    public var group: [String]?
 
-    @Init(default: nil) public var source: String?
-    @Init(default: nil) public var sourceNote: String?
-    @Init(default: nil) public var page: Page?
-    @Init(default: nil) public var otherSources: Set<Source>?
-    @Init(default: nil) public var additionalSources: Set<Source>?
-    @Init(default: nil) public var inSrd: SrdReference?
-    @Init(default: nil) public var inSrd52: SrdReference?
-    @Init(default: nil) public var inBasicRules: Bool?
-    @Init(default: nil) public var inBasicRules2024: Bool?
-    @Init(default: nil) public var isLegacy: Bool?
+    public var source: String?
+    public var sourceNote: String?
+    public var page: Page?
+    public var otherSources: Set<Source>?
+    public var additionalSources: Set<Source>?
+    public var inSrd: SrdReference?
+    public var inSrd52: SrdReference?
+    public var inBasicRules: Bool?
+    public var inBasicRules2024: Bool?
+    public var isLegacy: Bool?
 
-    @Init(default: nil) public var reprintedAs: Set<Reprint>?
-    @Init(default: nil) public var isReprinted: Bool?
+    public var reprintedAs: Set<Reprint>?
+    public var isReprinted: Bool?
 
-    @Init(default: nil) public var level: Int?
+    public var level: Int?
 
-    @Init(default: nil) public var size: TagSet<Size>?
-    @Init(default: nil) public var sizeNote: String?
+    public var size: TagSet<Size>?
+    public var sizeNote: String?
 
-    @Init(default: nil) public var type: CreatureType?
+    public var type: CreatureType?
 
-    @Init(default: nil) public var alignment: Alignment?
-    @Init(default: nil) public var alignmentPrefix: String?
+    public var alignment: Alignment?
+    public var alignmentPrefix: String?
 
-    @Init(default: nil) public var armorClass: [ArmorClass]?
-    @Init(default: nil) public var hitPoints: HitPoints?
-    @Init(default: nil) public var speed: Speed?
-    @Init(default: nil) public var initiative: Initiative?
+    public var armorClass: [ArmorClass]?
+    public var hitPoints: HitPoints?
+    public var speed: Speed?
+    public var initiative: Initiative?
 
-    @Init(default: nil) public var str: AbilityScore?
-    @Init(default: nil) public var dex: AbilityScore?
-    @Init(default: nil) public var con: AbilityScore?
-    @Init(default: nil) public var int: AbilityScore?
-    @Init(default: nil) public var wis: AbilityScore?
-    @Init(default: nil) public var cha: AbilityScore?
+    public var str: AbilityScore?
+    public var dex: AbilityScore?
+    public var con: AbilityScore?
+    public var int: AbilityScore?
+    public var wis: AbilityScore?
+    public var cha: AbilityScore?
 
-    @Init(default: nil) public var save: Save?
-    @Init(default: nil) public var skill: SkillSet?
-    @Init(default: nil) public var tool: ToolSet?
-    @Init(default: nil) public var senses: [String]?
-    @Init(default: nil) public var passive: Passive?
-    @Init(default: nil) public var languages: Set<String>?
-    @Init(default: nil) public var proficiencyBonus: String?
-    @Init(default: nil) public var challengeRating: ChallengeRating?
+    public var save: Save?
+    public var skill: SkillSet?
+    public var tool: ToolSet?
+    public var senses: [String]?
+    public var passive: Passive?
+    public var languages: Set<String>?
+    public var proficiencyBonus: String?
+    public var challengeRating: ChallengeRating?
 
-    @Init(default: nil) public var damageVulnerability: Set<DamageVulnerability>?
-    @Init(default: nil) public var damageResistance: Set<DamageResistance>?
-    @Init(default: nil) public var damageImmunity: Set<DamageImmunity>?
-    @Init(default: nil) public var conditionImmunity: Set<ConditionImmunity>?
+    public var damageVulnerability: Set<DamageVulnerability>?
+    public var damageResistance: Set<DamageResistance>?
+    public var damageImmunity: Set<DamageImmunity>?
+    public var conditionImmunity: Set<ConditionImmunity>?
 
-    @Init(default: nil) public var conditionInflict: Set<Condition>?
-    @Init(default: nil) public var conditionInflictLegendary: Set<Condition>?
-    @Init(default: nil) public var conditionInflictSpell: Set<Condition>?
+    public var conditionInflict: Set<Condition>?
+    public var conditionInflictLegendary: Set<Condition>?
+    public var conditionInflictSpell: Set<Condition>?
 
-    @Init(default: nil) public var savingThrowForced: Set<SavingThrow>?
-    @Init(default: nil) public var savingThrowForcedLegendary: Set<SavingThrow>?
-    @Init(default: nil) public var savingThrowForcedSpell: Set<SavingThrow>?
+    public var savingThrowForced: Set<SavingThrow>?
+    public var savingThrowForcedLegendary: Set<SavingThrow>?
+    public var savingThrowForcedSpell: Set<SavingThrow>?
 
-    @Init(default: nil) public var damageDealt: TagSet<DamageType>?
-    @Init(default: nil) public var damageDealtLegendary: TagSet<DamageType>?
-    @Init(default: nil) public var damageDealtSpell: TagSet<DamageType>?
+    public var damageDealt: TagSet<DamageType>?
+    public var damageDealtLegendary: TagSet<DamageType>?
+    public var damageDealtSpell: TagSet<DamageType>?
 
-    @Init(default: nil) public var environment: Set<EnvironmentType>?
+    public var environment: Set<EnvironmentType>?
 
-    @Init(default: nil) public var spellcasting: [Spellcasting]?
-    @Init(default: nil) public var trait: [Trait]?
+    public var spellcasting: [Spellcasting]?
+    public var trait: [Trait]?
 
-    @Init(default: nil) public var actionNote: String?
-    @Init(default: nil) public var actionHeader: [Entry]?
-    @Init(default: nil) public var action: [Action]?
+    public var actionNote: String?
+    public var actionHeader: [Entry]?
+    public var action: [Action]?
 
-    @Init(default: nil) public var bonusNote: String?
-    @Init(default: nil) public var bonusHeader: [Entry]?
-    @Init(default: nil) public var bonus: [Action]?
+    public var bonusNote: String?
+    public var bonusHeader: [Entry]?
+    public var bonus: [Action]?
 
-    @Init(default: nil) public var reactionNote: String?
-    @Init(default: nil) public var reactionHeader: [Entry]?
-    @Init(default: nil) public var reaction: [Action]?
+    public var reactionNote: String?
+    public var reactionHeader: [Entry]?
+    public var reaction: [Action]?
 
-    @Init(default: nil) public var legendaryGroup: LegendaryGroup?
-    @Init(default: nil) public var legendaryActions: Int?
-    @Init(default: nil) public var legendaryActionsLair: Int?
-    @Init(default: nil) public var legendaryHeader: [Entry]?
-    @Init(default: nil) public var legendary: [Action]?
+    public var legendaryGroup: LegendaryGroup?
+    public var legendaryActions: Int?
+    public var legendaryActionsLair: Int?
+    public var legendaryHeader: [Entry]?
+    public var legendary: [Action]?
 
-    @Init(default: nil) public var mythicHeader: [Entry]?
-    @Init(default: nil) public var mythic: [Action]?
+    public var mythicHeader: [Entry]?
+    public var mythic: [Action]?
 
-    @Init(default: nil) public var footer: [Entry]?
+    public var footer: [Entry]?
 
-    @Init(default: nil) public var attachedItems: Set<String>?
-    @Init(default: nil) public var gear: [Gear]?
-    @Init(default: nil) public var treasure: Set<Treasure>?
+    public var attachedItems: Set<String>?
+    public var gear: [Gear]?
+    public var treasure: Set<Treasure>?
 
-    @Init(default: nil) public var actionTags: Set<ActionTag>?
-    @Init(default: nil) public var languageTags: TagSet<LanguageTag>?
-    @Init(default: nil) public var miscTags: TagSet<MiscTag>?
-    @Init(default: nil) public var senseTags: TagSet<Sense>?
-    @Init(default: nil) public var spellcastingTags: TagSet<SpellcastingType>?
-    @Init(default: nil) public var traitTags: Set<TraitTag>?
+    public var actionTags: Set<ActionTag>?
+    public var languageTags: TagSet<LanguageTag>?
+    public var miscTags: TagSet<MiscTag>?
+    public var senseTags: TagSet<Sense>?
+    public var spellcastingTags: TagSet<SpellcastingType>?
+    public var traitTags: Set<TraitTag>?
 
-    @Init(default: nil) public var dragonCastingColor: DragonColor?
-    @Init(default: nil) public var dragonAge: DragonAge?
+    public var dragonCastingColor: DragonColor?
+    public var dragonAge: DragonAge?
 
-    @Init(default: nil) public var summonedBySpell: String?
-    @Init(default: nil) public var summonedBySpellLevel: Int?
-    @Init(default: nil) public var summonedByClass: String?
-    @Init(default: nil) public var summonedScaleByPlayerLevel: Bool?
+    public var summonedBySpell: String?
+    public var summonedBySpellLevel: Int?
+    public var summonedByClass: String?
+    public var summonedScaleByPlayerLevel: Bool?
 
-    @Init(default: nil) public var canBeFamiliar: Bool?
-    @Init(default: nil) public var isNamedCreature: Bool?
-    @Init(default: nil) public var isNPC: Bool?
+    public var canBeFamiliar: Bool?
+    public var isNamedCreature: Bool?
+    public var isNPC: Bool?
 
-    @Init(default: nil) public var hasToken: Bool?
-    @Init(default: nil) public var token: Token?
-    @Init(default: nil) public var tokenCredit: String?
-    @Init(default: nil) public var isTokenCustom: Bool?
-    @Init(default: nil) public var foundryTokenScale: Float?
-    @Init(default: nil) public var hasFluff: Bool?
-    @Init(default: nil) public var hasFluffImages: Bool?
-    @Init(default: nil) public var art: [ArtItem]?
-    @Init(default: nil) public var soundClip: MediaHref?
+    public var hasToken: Bool?
+    public var token: Token?
+    public var tokenCredit: String?
+    public var isTokenCustom: Bool?
+    public var foundryTokenScale: Float?
+    public var hasFluff: Bool?
+    public var hasFluffImages: Bool?
+    public var art: [ArtItem]?
+    public var soundClip: MediaHref?
 
     // TODO: variant, ? defs/entryVariantBestiary
     // TODO: _versions, array /creatureVersion

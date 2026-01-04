@@ -5,9 +5,9 @@
 //  Created by Scott James Remnant on 12/26/25.
 //
 
-@testable import FifthEdition
 import Foundation
 import Testing
+@testable import FifthEdition
 
 struct DynamicCodingKeyTests {
     struct Hobbit: Equatable, Codable {
@@ -195,13 +195,13 @@ struct TaggedCodableTests {
     }
 
     @Test("Tagged holds its initialized value")
-    func value() throws {
+    func value() {
         let value: Species = .human
         #expect(Tagged(value).value == value)
     }
 
     @Test("Tagged is nil when initialized with nil")
-    func nilValue() throws {
+    func nilValue() {
         let value: Species? = nil
         #expect(Tagged(value) == nil)
     }

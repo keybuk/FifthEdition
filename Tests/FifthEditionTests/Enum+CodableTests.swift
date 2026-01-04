@@ -5,8 +5,8 @@
 //  Created by Scott James Remnant on 12/29/25.
 //
 
-@testable import FifthEdition
 import Testing
+@testable import FifthEdition
 
 struct ActionTagCodableTests {
     @Test("Action tags", arguments: ActionTag.allCases)

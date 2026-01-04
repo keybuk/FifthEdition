@@ -5,8 +5,8 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-@testable import FifthEdition
 import Testing
+@testable import FifthEdition
 
 struct DiceNotationTests {
     static let testStrings: [String] = [
@@ -162,27 +162,27 @@ struct DiceNotationTests {
     }
 
     @Test("Parsing returns nil for empty string")
-    func emptyString() throws {
+    func emptyString() {
         #expect(DiceNotation("") == nil)
     }
 
     @Test("Parsing returns nil for invalid string")
-    func invalidString() throws {
+    func invalidString() {
         #expect(DiceNotation("invalid") == nil)
     }
 
     @Test("Parsing returns nil for solitary number")
-    func numberOnly() throws {
+    func numberOnly() {
         #expect(DiceNotation("20") == nil)
     }
 
     @Test("Parsing returns nil for unknown die")
-    func unknownDie() throws {
+    func unknownDie() {
         #expect(DiceNotation("d11") == nil)
     }
 
     @Test("Parsing returns nil for missing sign")
-    func missingSign() throws {
+    func missingSign() {
         #expect(DiceNotation("2d6 3") == nil)
     }
 }

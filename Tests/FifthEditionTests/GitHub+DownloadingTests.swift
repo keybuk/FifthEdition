@@ -5,13 +5,13 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
-@testable import FifthEdition
 import Foundation
 import Testing
+@testable import FifthEdition
 
 struct GitHubDownloadingTests {
     @Test("Construct API URL")
-    func releasesURL() throws {
+    func releasesURL() {
         let url = GitHubRelease.urlFor(owner: "octocat", name: "Hello-World")
         #expect(url == URL(string: "https://api.github.com/repos/octocat/Hello-World/releases")!)
     }
@@ -108,7 +108,8 @@ struct AssetDownloadTests {
         )
         defer { try? FileManager.default.removeItem(at: targetDirectory) }
 
-        // Override download URL and digest to match test data since we're using the GitHub examples releases.json otherwise.
+        // Override download URL and digest to match test data since we're using the GitHub examples releases.json
+        // otherwise.
         var asset = try await Self.exampleAsset
         asset.browserDownloadURL = try Self.exampleZipURL
         asset.digest = Self.exampleZipDigest
@@ -162,7 +163,8 @@ struct AssetDownloadTests {
         asset.browserDownloadURL = try Self.exampleZipURL
         asset.digest = Self.exampleZipDigest
 
-        // Copy the bad example.zip into the target directory, but with the asset's name, this should get removed and overwritten.
+        // Copy the bad example.zip into the target directory, but with the asset's name, this should get removed and
+        // overwritten.
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
         try FileManager.default.copyItem(at: Self.badExampleZipURL, to: targetURL)
 
@@ -211,7 +213,8 @@ struct AssetDownloadTests {
         asset.browserDownloadURL = try Self.exampleZipURL
         asset.digest = nil
 
-        // Copy the bad example.zip into the target directory, but with the asset's name, this should get removed and overwritten.
+        // Copy the bad example.zip into the target directory, but with the asset's name, this should get removed and
+        // overwritten.
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
         try FileManager.default.copyItem(at: Self.badExampleZipURL, to: targetURL)
 

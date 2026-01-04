@@ -42,31 +42,32 @@ public enum Proficiency: Equatable, Sendable {
     case expertise
 }
 
-@MemberwiseInit(.public)
+@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Reprint: Equatable, Hashable, Sendable {
     public var uid: String
-    @Init(default: nil) public var tag: String?
-    @Init(default: nil) public var edition: Edition?
+    public var tag: String?
+    public var edition: Edition?
 }
 
-@MemberwiseInit(.public)
+@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Source: Codable, Equatable, Hashable, Sendable {
     public var source: String
-    @Init(default: nil) public var page: Page?
+    public var page: Page?
 }
 
-@MemberwiseInit(.public)
+@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Speed: Equatable, Sendable {
     @MemberwiseInit(.public)
     public struct Alternate: Equatable, Sendable {
-        @Init(label: "_") public var speeds: [Mode: Set<Value>] = [:]
+        @Init(label: "_")
+        public var speeds: [Mode: Set<Value>] = [:]
     }
 
-    @MemberwiseInit(.public)
+    @MemberwiseInit(.public, _optionalsDefaultNil: true)
     public struct Choice: Equatable, Codable, Sendable {
         public var from: Set<Mode>
         public var amount: Int
-        @Init(default: nil) public var note: String?
+        public var note: String?
     }
 
     public enum Mode: String, CaseIterable, Codable, Sendable {
@@ -83,13 +84,14 @@ public struct Speed: Equatable, Sendable {
         case walkingSpeed
     }
 
-    @Init(label: "_") public var speeds: [Mode: Value] = [:]
+    @Init(label: "_")
+    public var speeds: [Mode: Value] = [:]
 
-    @Init(default: nil) public var canHover: Bool?
+    public var canHover: Bool?
 
-    @Init(default: nil) public var choose: Choice?
-    @Init(default: nil) public var alternate: Alternate?
-    @Init(default: nil) public var hidden: Set<Mode>?
+    public var choose: Choice?
+    public var alternate: Alternate?
+    public var hidden: Set<Mode>?
 
     public static var varies: Speed { Speed() }
 }

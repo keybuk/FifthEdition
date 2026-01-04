@@ -5,8 +5,8 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-@testable import FifthEdition
 import Testing
+@testable import FifthEdition
 
 struct CreatureCodableTests {
     @Test("Minimal creature")

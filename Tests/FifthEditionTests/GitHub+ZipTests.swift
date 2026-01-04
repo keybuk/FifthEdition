@@ -5,9 +5,9 @@
 //  Created by Scott James Remnant on 1/1/26.
 //
 
-@testable import FifthEdition
 import Foundation
 import Testing
+@testable import FifthEdition
 
 struct GitHubZipTests {
     @Test("Obtain ZIP asset from release")

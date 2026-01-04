@@ -5,8 +5,8 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
-@testable import FifthEdition
 import Testing
+@testable import FifthEdition
 
 struct AlignmentCodableTests {
     static let testAlignments: [Alignment: [String]] = [
@@ -393,7 +393,8 @@ struct SpeedCodableTests {
 
     @Test("Constant speed")
     func constant() throws {
-        // This doesn't appear anywhere in the bestiary, so we'll decode it as a walk speed and not worry about encoding identically.
+        // This doesn't appear anywhere in the bestiary, so we'll decode it as a walk speed and not worry about encoding
+        // identically.
         try testCodable(
             json: """
             100

@@ -9,7 +9,7 @@
 
 import MemberwiseInit
 
-@MemberwiseInit(.public)
+@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct ArtItem: Codable, Equatable, Sendable {
     public enum TokenTag: String, Codable, Equatable, Sendable {
         case topDown
@@ -17,15 +17,15 @@ public struct ArtItem: Codable, Equatable, Sendable {
 
     public var name: String
     public var source: String
-    @Init(default: nil) public var page: Page?
-    @Init(default: nil) public var tokenCredit: String?
-    @Init(default: nil) public var isTokenCustom: Bool?
-    @Init(default: nil) public var tokenTags: Set<TokenTag>?
+    public var page: Page?
+    public var tokenCredit: String?
+    public var isTokenCustom: Bool?
+    public var tokenTags: Set<TokenTag>?
 }
 
-@MemberwiseInit(.public)
+@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Token: Codable, Equatable, Sendable {
     public var name: String
     public var source: String
-    @Init(default: nil) public var page: Page?
+    public var page: Page?
 }

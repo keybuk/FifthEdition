@@ -11,11 +11,11 @@
 ///   - names: Names of arguments, `"_"` may be used to omit an argument name,.
 ///   - values: Values of arguments.
 /// - Returns: Debug description in an init-call style.
-public func debugDescriptionOf(
-    _ prefix: String? = nil,
-    names: String...,
-    values: Any?...,
-) -> String {
+public func debugDescriptionOf(_ prefix: String? = nil,
+                               names: String...,
+                               values: Any?...)
+    -> String
+{
     [
         prefix,
         "(",

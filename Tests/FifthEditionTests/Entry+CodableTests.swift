@@ -5,9 +5,9 @@
 //  Created by Scott James Remnant on 12/28/25.
 //
 
-@testable import FifthEdition
 import Foundation
 import Testing
+@testable import FifthEdition
 
 struct MediaHrefCodableTests {
     @Test("Internal path")
@@ -45,7 +45,7 @@ struct MediaHrefCodableTests {
             }
             """,
             value: MediaHref.url(
-                URL(string: "https://5e.tools/bestiary/aboleth.mp3")!,
+                #require(URL(string: "https://5e.tools/bestiary/aboleth.mp3")),
             ),
         )
     }
@@ -59,7 +59,7 @@ struct MediaHrefCodableTests {
             }
             """,
             value: MediaHref.url(
-                URL(string: "https://5e.tools/bestiary/aboleth.mp3")!,
+                #require(URL(string: "https://5e.tools/bestiary/aboleth.mp3")),
             ),
         )
     }

@@ -5,12 +5,12 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-@testable import FifthEdition
 import Testing
+@testable import FifthEdition
 
 struct CreatureGridSquaresTests {
     @Test("Grid squares for single size", arguments: Size.allCases)
-    func gridSquares(_ size: Size) throws {
+    func gridSquares(_ size: Size) {
         let creature = Creature(
             name: "\(size.rawValue.uppercased()) Monster",
             source: "XMM",
@@ -27,7 +27,7 @@ struct CreatureGridSquaresTests {
     }
 
     @Test("Grid squares when no size given")
-    func gridSquaresWhenNoSize() throws {
+    func gridSquaresWhenNoSize() {
         let creature = Creature(
             name: "Sizeless Monster",
             source: "XMM",
@@ -36,7 +36,7 @@ struct CreatureGridSquaresTests {
     }
 
     @Test("Grid squares for multiple sizes")
-    func gridSquaresForMultiple() throws {
+    func gridSquaresForMultiple() {
         let creature = Creature(
             name: "Growing Monster",
             source: "XMM",
@@ -48,7 +48,7 @@ struct CreatureGridSquaresTests {
 
 struct CreatureTokenPathTests {
     @Test("Token path")
-    func tokenPath() throws {
+    func tokenPath() {
         let creature = Creature(
             name: "Blink Dog",
             source: "XMM",
@@ -58,7 +58,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test("Token path has diacritics removed")
-    func tokenPathWithoutDiacritics() throws {
+    func tokenPathWithoutDiacritics() {
         let creature = Creature(
             name: "Kupalué",
             source: "ToA",
@@ -68,7 +68,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test("Token path has æ dipthong replaced")
-    func tokenPathWithoutAeDipthong() throws {
+    func tokenPathWithoutAeDipthong() {
         let creature = Creature(
             name: "Môrgæn",
             source: "AI",
@@ -78,7 +78,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test("Token path has quotes removed")
-    func tokenPathWithoutQuotes() throws {
+    func tokenPathWithoutQuotes() {
         let creature = Creature(
             name: "\"The Demogorgon\"",
             source: "IMR",
@@ -88,7 +88,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test("Token path from token")
-    func tokenPathFromToken() throws {
+    func tokenPathFromToken() {
         let creature = Creature(
             name: "Demilich",
             source: "WDMM",
@@ -102,7 +102,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test("No token if no name")
-    func noName() throws {
+    func noName() {
         let creature = Creature(
             source: "XMM",
             hasToken: true,
@@ -111,7 +111,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test("No token if no source")
-    func noSource() throws {
+    func noSource() {
         let creature = Creature(
             name: "Blink Dog",
             hasToken: true,
@@ -122,7 +122,7 @@ struct CreatureTokenPathTests {
 
 struct CreatureUidTests {
     @Test("UID")
-    func uid() throws {
+    func uid() {
         let creature = Creature(
             name: "Blink Dog",
             source: "XMM",
@@ -131,7 +131,7 @@ struct CreatureUidTests {
     }
 
     @Test("No UID if no name")
-    func noName() throws {
+    func noName() {
         let creature = Creature(
             source: "XMM",
         )
@@ -139,7 +139,7 @@ struct CreatureUidTests {
     }
 
     @Test("No UID if no source")
-    func noSource() throws {
+    func noSource() {
         let creature = Creature(
             name: "Blink Dog",
         )
