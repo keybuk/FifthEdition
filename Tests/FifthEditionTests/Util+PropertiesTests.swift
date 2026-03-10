@@ -9,8 +9,8 @@ import Testing
 @testable import FifthEdition
 
 struct SpeedSubscriptTests {
-    @Test("Get speed by subscript")
-    func getSubscript() {
+    @Test
+    func `Get speed by subscript`() {
         let speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -18,8 +18,8 @@ struct SpeedSubscriptTests {
         #expect(speed[.walk] == .speed(30))
     }
 
-    @Test("Get unset speed by subscript")
-    func getSubscriptUnset() {
+    @Test
+    func `Get unset speed by subscript`() {
         let speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -27,8 +27,8 @@ struct SpeedSubscriptTests {
         #expect(speed[.burrow] == nil)
     }
 
-    @Test("Set speed by subscript")
-    func setSubscript() {
+    @Test
+    func `Set speed by subscript`() {
         var speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -42,8 +42,8 @@ struct SpeedSubscriptTests {
         ])
     }
 
-    @Test("Change speed by subscript")
-    func changeSubscript() {
+    @Test
+    func `Change speed by subscript`() {
         var speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -56,8 +56,8 @@ struct SpeedSubscriptTests {
         ])
     }
 
-    @Test("Get alternate speed by subscript")
-    func getAlternateSubscript() {
+    @Test
+    func `Get alternate speed by subscript`() {
         let speed = Speed(
             [
                 .walk: .speed(30),
@@ -70,8 +70,8 @@ struct SpeedSubscriptTests {
         #expect(speed.alternate?[.climb] == [.speed(60), .speed(90)])
     }
 
-    @Test("Get unset alternate speed by subscript")
-    func getAlternateSubscriptUnset() {
+    @Test
+    func `Get unset alternate speed by subscript`() {
         let speed = Speed(
             [
                 .walk: .speed(30),
@@ -85,8 +85,8 @@ struct SpeedSubscriptTests {
         #expect(speed.alternate?[.burrow] == nil)
     }
 
-    @Test("Set alternate speed by subscript")
-    func setAlternateSubscript() {
+    @Test
+    func `Set alternate speed by subscript`() {
         var speed = Speed(
             [
                 .walk: .speed(30),
@@ -105,8 +105,8 @@ struct SpeedSubscriptTests {
         ])
     }
 
-    @Test("Change alternate speed by subscript")
-    func changeAlternateSubscript() {
+    @Test
+    func `Change alternate speed by subscript`() {
         var speed = Speed(
             [
                 .walk: .speed(30),

@@ -93,7 +93,9 @@ public struct Speed: Equatable, Sendable {
     public var alternate: Alternate?
     public var hidden: Set<Mode>?
 
-    public static var varies: Speed { Speed() }
+    public static var varies: Speed {
+        Speed()
+    }
 }
 
 public enum SrdReference: Equatable, Hashable, Sendable {

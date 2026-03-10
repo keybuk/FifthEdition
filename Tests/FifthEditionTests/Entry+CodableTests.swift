@@ -10,8 +10,8 @@ import Testing
 @testable import FifthEdition
 
 struct MediaHrefCodableTests {
-    @Test("Internal path")
-    func internalPath() throws {
+    @Test
+    func `Internal path`() throws {
         try testCodable(
             json: """
             {
@@ -23,8 +23,8 @@ struct MediaHrefCodableTests {
         )
     }
 
-    @Test("Internal path without type")
-    func internalPathOnly() throws {
+    @Test
+    func `Internal path without type`() throws {
         try testCodable(
             json: """
             {
@@ -35,8 +35,8 @@ struct MediaHrefCodableTests {
         )
     }
 
-    @Test("External URL")
-    func externalURL() throws {
+    @Test
+    func `External URL`() throws {
         try testCodable(
             json: """
             {
@@ -50,8 +50,8 @@ struct MediaHrefCodableTests {
         )
     }
 
-    @Test("External URL without type")
-    func externalURLOnly() throws {
+    @Test
+    func `External URL without type`() throws {
         try testCodable(
             json: """
             {

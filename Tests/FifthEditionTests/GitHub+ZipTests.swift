@@ -10,8 +10,8 @@ import Testing
 @testable import FifthEdition
 
 struct GitHubZipTests {
-    @Test("Obtain ZIP asset from release")
-    func zipAssetFrom() async throws {
+    @Test
+    func `Obtain ZIP asset from release`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -22,8 +22,8 @@ struct GitHubZipTests {
         #expect(asset.name == "example.zip")
     }
 
-    @Test("Obtain ZIP part assets from release")
-    func zipPartAssetsFrom() async throws {
+    @Test
+    func `Obtain ZIP part assets from release`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 

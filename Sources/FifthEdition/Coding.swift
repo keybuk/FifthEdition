@@ -30,7 +30,9 @@
 /// ```
 struct DynamicCodingKey: CodingKey {
     var stringValue: String
-    var intValue: Int? { nil }
+    var intValue: Int? {
+        nil
+    }
 
     init(stringValue: String) {
         self.stringValue = stringValue
@@ -42,7 +44,9 @@ struct DynamicCodingKey: CodingKey {
         self.stringValue = stringValue
     }
 
-    init?(intValue _: Int) { nil }
+    init?(intValue _: Int) {
+        nil
+    }
 }
 
 /// A type that can be used as a key for encoding and decoding a container with some keys from another enum.
@@ -75,13 +79,15 @@ struct DynamicCodingKey: CodingKey {
 /// try container.encode(value, forKey: CodingKeys(.someCase))
 /// try container.encode(unknown, forKey: CodingKeys(stringValue: "unknown key"))
 /// ```
-struct EnumCodingKey<Value>: CodingKey
-    where Value: RawRepresentable, Value.RawValue == String
+struct EnumCodingKey<Value: RawRepresentable>: CodingKey
+    where Value.RawValue == String
 {
     /// The equivalent enumeration value, if valid, otherwise `nil`.
     var value: Value?
     var stringValue: String
-    var intValue: Int? { nil }
+    var intValue: Int? {
+        nil
+    }
 
     init(stringValue: String) {
         value = Value(rawValue: stringValue)
@@ -95,7 +101,9 @@ struct EnumCodingKey<Value>: CodingKey
         stringValue = value.rawValue
     }
 
-    init?(intValue _: Int) { nil }
+    init?(intValue _: Int) {
+        nil
+    }
 }
 
 extension EnumCodingKey: Sendable
@@ -111,9 +119,7 @@ extension EnumCodingKey: CaseIterable
 }
 
 /// Wrapper around Set<Element> in order to provide an alternate Codable implementation.
-public struct TagSet<Element>: Collection, ExpressibleByArrayLiteral, Hashable, Sequence, SetAlgebra
-    where Element: Hashable
-{
+public struct TagSet<Element: Hashable>: Collection, ExpressibleByArrayLiteral, Hashable, Sequence, SetAlgebra {
     private var wrappedSet: Set<Element>
 
     public init<S>(_ sequence: S) where S: Sequence, Element == S.Element {
@@ -131,15 +137,21 @@ public struct TagSet<Element>: Collection, ExpressibleByArrayLiteral, Hashable, 
     public typealias Element = Element
     public typealias Index = Set<Element>.Index
 
-    public var startIndex: Index { wrappedSet.startIndex }
+    public var startIndex: Index {
+        wrappedSet.startIndex
+    }
 
-    public var endIndex: Index { wrappedSet.endIndex }
+    public var endIndex: Index {
+        wrappedSet.endIndex
+    }
 
     public func index(after i: Index) -> Index {
         wrappedSet.index(after: i)
     }
 
-    public subscript(i: Index) -> Element { wrappedSet[i] }
+    public subscript(i: Index) -> Element {
+        wrappedSet[i]
+    }
 
     // Sequence
 
@@ -155,7 +167,9 @@ public struct TagSet<Element>: Collection, ExpressibleByArrayLiteral, Hashable, 
         wrappedSet = []
     }
 
-    public var isEmpty: Bool { wrappedSet.isEmpty }
+    public var isEmpty: Bool {
+        wrappedSet.isEmpty
+    }
 
     public func contains(_ member: Element) -> Bool {
         wrappedSet.contains(member)
@@ -207,13 +221,17 @@ extension TagSet: Sendable where Element: Sendable {}
 extension TagSet: CustomStringConvertible
     where Set<Element>: CustomStringConvertible
 {
-    public var description: String { wrappedSet.description }
+    public var description: String {
+        wrappedSet.description
+    }
 }
 
 extension TagSet: CustomDebugStringConvertible
     where Set<Element>: CustomDebugStringConvertible
 {
-    public var debugDescription: String { wrappedSet.debugDescription }
+    public var debugDescription: String {
+        wrappedSet.debugDescription
+    }
 }
 
 /// Maps a value of itself to a tag.
@@ -292,9 +310,7 @@ extension TagSet: Encodable
 }
 
 /// Wrapper around Value in order to provide an alternate Codable implementation.
-public struct Tagged<Value>
-    where Value: TagCoding
-{
+public struct Tagged<Value: TagCoding> {
     public var value: Value
 
     public init(_ value: Value) {
@@ -315,13 +331,17 @@ extension Tagged: Sendable where Value: Sendable {}
 extension Tagged: CustomStringConvertible
     where Value: CustomStringConvertible
 {
-    public var description: String { value.description }
+    public var description: String {
+        value.description
+    }
 }
 
 extension Tagged: CustomDebugStringConvertible
     where Value: CustomDebugStringConvertible
 {
-    public var debugDescription: String { value.debugDescription }
+    public var debugDescription: String {
+        value.debugDescription
+    }
 }
 
 extension Tagged: Decodable

@@ -34,8 +34,8 @@ struct DynamicCodingKeyTests {
         }
     }
 
-    @Test("Implement Codable with DynamicCodingKey")
-    func dynamicCodingKey() throws {
+    @Test
+    func `Implement Codable with DynamicCodingKey`() throws {
         try testCodable(
             json: """
             {
@@ -98,8 +98,8 @@ struct EnumCodingKeyTests {
         }
     }
 
-    @Test("Implement Codable with EnumCodingKey")
-    func enumCodingKey() throws {
+    @Test
+    func `Implement Codable with EnumCodingKey`() throws {
         try testCodable(
             json: """
             {
@@ -140,8 +140,8 @@ struct TagSetCodableTests {
         ]
     }
 
-    @Test("Implement Codable with TagSet")
-    func tagSet() throws {
+    @Test
+    func `Implement Codable with TagSet`() throws {
         try testCodable(
             json: """
             [
@@ -153,8 +153,8 @@ struct TagSetCodableTests {
         )
     }
 
-    @Test("Empty TagSet")
-    func tagEmpty() throws {
+    @Test
+    func `Empty TagSet`() throws {
         try testCodable(
             json: """
             [
@@ -164,8 +164,8 @@ struct TagSetCodableTests {
         )
     }
 
-    @Test("Unknown tag in set")
-    func unknownTag() throws {
+    @Test
+    func `Unknown tag in set`() throws {
         #expect(throws: DecodingError.self) {
             try testDecodable(
                 json: """
@@ -194,20 +194,20 @@ struct TaggedCodableTests {
         ]
     }
 
-    @Test("Tagged holds its initialized value")
-    func value() {
+    @Test
+    func `Tagged holds its initialized value`() {
         let value: Species = .human
         #expect(Tagged(value).value == value)
     }
 
-    @Test("Tagged is nil when initialized with nil")
-    func nilValue() {
+    @Test
+    func `Tagged is nil when initialized with nil`() {
         let value: Species? = nil
         #expect(Tagged(value) == nil)
     }
 
-    @Test("Implement Codable with Tagged")
-    func tagged() throws {
+    @Test
+    func `Implement Codable with Tagged`() throws {
         try testCodable(
             json: """
             "H"
@@ -216,8 +216,8 @@ struct TaggedCodableTests {
         )
     }
 
-    @Test("Tagged enumeration values", arguments: Species.tags)
-    func taggedValue(species: Species, tag: String) throws {
+    @Test(arguments: Species.tags)
+    func `Tagged enumeration values`(species: Species, tag: String) throws {
         try testCodable(
             json: """
             "\(tag)"
@@ -226,8 +226,8 @@ struct TaggedCodableTests {
         )
     }
 
-    @Test("Unknown tag")
-    func unknownTag() throws {
+    @Test
+    func `Unknown tag`() throws {
         #expect(throws: DecodingError.self) {
             try testDecodable(
                 json: """

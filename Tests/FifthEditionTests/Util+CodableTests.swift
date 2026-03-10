@@ -36,7 +36,7 @@ struct AlignmentCodableTests {
             ["NX", "NY", "N"],
     ]
 
-    @Test("Alignment", arguments: testAlignments)
+    @Test(arguments: testAlignments)
     func alignment(_ alignment: Alignment, strings: [String]) throws {
         try testCodable(
             json: "[\"" + strings.joined(separator: "\",\"") + "\"]",
@@ -44,8 +44,8 @@ struct AlignmentCodableTests {
         )
     }
 
-    @Test("Unaligned")
-    func unaligned() throws {
+    @Test
+    func Unaligned() throws {
         try testCodable(
             json: """
             [
@@ -56,7 +56,7 @@ struct AlignmentCodableTests {
         )
     }
 
-    @Test("Any")
+    @Test
     func any() throws {
         try testCodable(
             json: """
@@ -70,8 +70,8 @@ struct AlignmentCodableTests {
 }
 
 struct IndexFileCodableTests {
-    @Test("Index file")
-    func index() throws {
+    @Test
+    func `Index file`() throws {
         try testCodable(
             json: """
             {
@@ -92,8 +92,8 @@ struct IndexFileCodableTests {
 }
 
 struct PageCodableTests {
-    @Test("Numeric page")
-    func number() throws {
+    @Test
+    func `Numeric page`() throws {
         try testCodable(
             json: """
             42
@@ -102,8 +102,8 @@ struct PageCodableTests {
         )
     }
 
-    @Test("Roman numeral page")
-    func numeral() throws {
+    @Test
+    func `Roman numeral page`() throws {
         try testCodable(
             json: """
             "xxxxii"
@@ -114,8 +114,8 @@ struct PageCodableTests {
 }
 
 struct ProficiencyCodableTests {
-    @Test("Proficient")
-    func proficient() throws {
+    @Test
+    func Proficient() throws {
         try testCodable(
             json: """
             1
@@ -124,8 +124,8 @@ struct ProficiencyCodableTests {
         )
     }
 
-    @Test("Expertise")
-    func expertise() throws {
+    @Test
+    func Expertise() throws {
         try testCodable(
             json: """
             2
@@ -136,7 +136,7 @@ struct ProficiencyCodableTests {
 }
 
 struct ReprintCodableTests {
-    @Test("Reprint")
+    @Test
     func reprint() throws {
         try testCodable(
             json: """
@@ -146,8 +146,8 @@ struct ReprintCodableTests {
         )
     }
 
-    @Test("Reprint with tag")
-    func reprintWithTag() throws {
+    @Test
+    func `Reprint with tag`() throws {
         try testCodable(
             json: """
             {
@@ -162,8 +162,8 @@ struct ReprintCodableTests {
         )
     }
 
-    @Test("Reprint with edition")
-    func reprintWithEdition() throws {
+    @Test
+    func `Reprint with edition`() throws {
         try testCodable(
             json: """
             {
@@ -180,7 +180,7 @@ struct ReprintCodableTests {
 }
 
 struct SourceCodableTests {
-    @Test("Source")
+    @Test
     func source() throws {
         try testCodable(
             json: """
@@ -192,8 +192,8 @@ struct SourceCodableTests {
         )
     }
 
-    @Test("Source with page")
-    func sourceWithPage() throws {
+    @Test
+    func `Source with page`() throws {
         try testCodable(
             json: """
             {
@@ -210,8 +210,8 @@ struct SourceCodableTests {
 }
 
 struct SpeedCodableTests {
-    @Test("Walk speed")
-    func walk() throws {
+    @Test
+    func `Walk speed`() throws {
         try testCodable(
             json: """
             {
@@ -224,8 +224,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Burrow speed")
-    func burrow() throws {
+    @Test
+    func `Burrow speed`() throws {
         try testCodable(
             json: """
             {
@@ -238,8 +238,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Climb speed")
-    func climb() throws {
+    @Test
+    func `Climb speed`() throws {
         try testCodable(
             json: """
             {
@@ -252,8 +252,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Fly speed")
-    func fly() throws {
+    @Test
+    func `Fly speed`() throws {
         try testCodable(
             json: """
             {
@@ -266,8 +266,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Swim speed")
-    func swim() throws {
+    @Test
+    func `Swim speed`() throws {
         try testCodable(
             json: """
             {
@@ -280,8 +280,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Conditional speed")
-    func conditional() throws {
+    @Test
+    func `Conditional speed`() throws {
         try testCodable(
             json: """
             {
@@ -303,8 +303,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Choice of speed")
-    func choice() throws {
+    @Test
+    func `Choice of speed`() throws {
         try testCodable(
             json: """
             {
@@ -332,8 +332,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Alternate speed")
-    func alternate() throws {
+    @Test
+    func `Alternate speed`() throws {
         try testCodable(
             json: """
             {
@@ -366,8 +366,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Hidden speed")
-    func hidden() throws {
+    @Test
+    func `Hidden speed`() throws {
         try testCodable(
             json: """
             {
@@ -391,8 +391,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Constant speed")
-    func constant() throws {
+    @Test
+    func `Constant speed`() throws {
         // This doesn't appear anywhere in the bestiary, so we'll decode it as a walk speed and not worry about encoding
         // identically.
         try testCodable(
@@ -405,8 +405,8 @@ struct SpeedCodableTests {
         )
     }
 
-    @Test("Speed varies")
-    func varies() throws {
+    @Test
+    func `Speed varies`() throws {
         // This doesn't appear anywhere in the bestiary, so we'll use an object with all-empty properties.
         try testCodable(
             json: """
@@ -418,8 +418,8 @@ struct SpeedCodableTests {
 }
 
 struct SrdReferenceCodableTests {
-    @Test("In SRD")
-    func srd() throws {
+    @Test
+    func `In SRD`() throws {
         try testCodable(
             json: """
             true
@@ -428,8 +428,8 @@ struct SrdReferenceCodableTests {
         )
     }
 
-    @Test("In SRD with alternate name")
-    func srdAlteranteName() throws {
+    @Test
+    func `In SRD with alternate name`() throws {
         try testCodable(
             json: """
             "Generic Monster"
@@ -440,7 +440,7 @@ struct SrdReferenceCodableTests {
 }
 
 struct TagCodableTests {
-    @Test("Tag")
+    @Test
     func tag() throws {
         try testCodable(
             json: """
@@ -450,8 +450,8 @@ struct TagCodableTests {
         )
     }
 
-    @Test("Prefixed tag")
-    func prefixed() throws {
+    @Test
+    func `Prefixed tag`() throws {
         try testCodable(
             json: """
             {

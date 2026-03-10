@@ -58,8 +58,8 @@ struct DiceNotationTests {
         1 ... 100, // 1d100
     ]
 
-    @Test("Parsing", arguments: zip(testStrings, testValues))
-    func initFromString(_ string: String, expected: (count: Int, die: Die, modifier: Int)) throws {
+    @Test(arguments: zip(testStrings, testValues))
+    func parsing(_ string: String, expected: (count: Int, die: Die, modifier: Int)) throws {
         let dice = try #require(DiceNotation(string),
                                 "Failed to parse expression: \(string)")
         #expect(dice.count == expected.count)
@@ -67,34 +67,34 @@ struct DiceNotationTests {
         #expect(dice.modifier == expected.modifier)
     }
 
-    @Test("Direct initialization", arguments: testValues)
-    func average(_ input: (count: Int, die: Die, modifier: Int)) {
+    @Test(arguments: testValues)
+    func `Direct initialization`(_ input: (count: Int, die: Die, modifier: Int)) {
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
         #expect(dice.count == input.count)
         #expect(dice.die == input.die)
         #expect(dice.modifier == input.modifier)
     }
 
-    @Test("Average", arguments: zip(testValues, testAverages))
-    func average(_ input: (count: Int, die: Die, modifier: Int), expected: Int) {
+    @Test(arguments: zip(testValues, testAverages))
+    func Average(_ input: (count: Int, die: Die, modifier: Int), expected: Int) {
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
         #expect(dice.average == expected)
     }
 
-    @Test("Range", arguments: zip(testValues, testRanges))
-    func range(_ input: (count: Int, die: Die, modifier: Int), expected: ClosedRange<Int>) {
+    @Test(arguments: zip(testValues, testRanges))
+    func Range(_ input: (count: Int, die: Die, modifier: Int), expected: ClosedRange<Int>) {
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
         #expect(dice.range == expected)
     }
 
-    @Test("String value", arguments: zip(testValues, testStrings))
-    func stringValues(_ input: (count: Int, die: Die, modifier: Int), expected: String) {
+    @Test(arguments: zip(testValues, testStrings))
+    func `String value`(_ input: (count: Int, die: Die, modifier: Int), expected: String) {
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
         #expect(dice.stringValue == expected)
     }
 
-    @Test("Roll", arguments: testValues)
-    func roll(_ input: (count: Int, die: Die, modifier: Int)) {
+    @Test(arguments: testValues)
+    func Roll(_ input: (count: Int, die: Die, modifier: Int)) {
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
         for _ in 0 ..< 100 {
             #expect(dice.range.contains(dice.roll()))
@@ -107,8 +107,8 @@ struct DiceNotationTests {
         }
     }
 
-    @Test("Roll using a given generator", arguments: testValues)
-    func rollUsing(_ input: (count: Int, die: Die, modifier: Int)) {
+    @Test(arguments: testValues)
+    func `Roll using a given generator`(_ input: (count: Int, die: Die, modifier: Int)) {
         var generator = CheatingRandomNumberGenerator()
 
         let dice = DiceNotation(count: input.count, die: input.die, modifier: input.modifier)
@@ -116,8 +116,8 @@ struct DiceNotationTests {
         #expect(roll == dice.range.upperBound)
     }
 
-    @Test("Parsing allows missing count")
-    func stringWithoutCount() throws {
+    @Test
+    func `Parsing allows missing count`() throws {
         let dice = try #require(DiceNotation("d6 + 3"),
                                 "Failed to parse expression")
         #expect(dice.count == 1)
@@ -125,8 +125,8 @@ struct DiceNotationTests {
         #expect(dice.modifier == 3)
     }
 
-    @Test("Parsing allows missing modifier")
-    func stringWithoutModifier() throws {
+    @Test
+    func `Parsing allows missing modifier`() throws {
         let dice = try #require(DiceNotation("2d6 + 3"),
                                 "Failed to parse expression")
         #expect(dice.count == 2)
@@ -134,8 +134,8 @@ struct DiceNotationTests {
         #expect(dice.modifier == 3)
     }
 
-    @Test("Parsing allows missing spaces before modifier")
-    func stringMissingSpaceBeforeModifier() throws {
+    @Test
+    func `Parsing allows missing spaces before modifier`() throws {
         let dice = try #require(DiceNotation("2d6+ 3"),
                                 "Failed to parse expression")
         #expect(dice.count == 2)
@@ -143,8 +143,8 @@ struct DiceNotationTests {
         #expect(dice.modifier == 3)
     }
 
-    @Test("Parsing allows missing spaces after modifier")
-    func stringMissingSpaceAfterModifier() throws {
+    @Test
+    func `Parsing allows missing spaces after modifier`() throws {
         let dice = try #require(DiceNotation("2d6 +3"),
                                 "Failed to parse expression")
         #expect(dice.count == 2)
@@ -152,8 +152,8 @@ struct DiceNotationTests {
         #expect(dice.modifier == 3)
     }
 
-    @Test("Parsing allows missing spaces around modifier")
-    func stringMissingSpaceAroundModifier() throws {
+    @Test
+    func `Parsing allows missing spaces around modifier`() throws {
         let dice = try #require(DiceNotation("2d6+3"),
                                 "Failed to parse expression")
         #expect(dice.count == 2)
@@ -161,28 +161,28 @@ struct DiceNotationTests {
         #expect(dice.modifier == 3)
     }
 
-    @Test("Parsing returns nil for empty string")
-    func emptyString() {
+    @Test
+    func `Parsing returns nil for empty string`() {
         #expect(DiceNotation("") == nil)
     }
 
-    @Test("Parsing returns nil for invalid string")
-    func invalidString() {
+    @Test
+    func `Parsing returns nil for invalid string`() {
         #expect(DiceNotation("invalid") == nil)
     }
 
-    @Test("Parsing returns nil for solitary number")
-    func numberOnly() {
+    @Test
+    func `Parsing returns nil for solitary number`() {
         #expect(DiceNotation("20") == nil)
     }
 
-    @Test("Parsing returns nil for unknown die")
-    func unknownDie() {
+    @Test
+    func `Parsing returns nil for unknown die`() {
         #expect(DiceNotation("d11") == nil)
     }
 
-    @Test("Parsing returns nil for missing sign")
-    func missingSign() {
+    @Test
+    func `Parsing returns nil for missing sign`() {
         #expect(DiceNotation("2d6 3") == nil)
     }
 }

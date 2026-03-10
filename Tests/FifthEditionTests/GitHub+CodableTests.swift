@@ -10,8 +10,8 @@ import Testing
 @testable import FifthEdition
 
 struct GitHubCodableTests {
-    @Test("GitHubRelease is Decodable")
-    func decodable() throws {
+    @Test
+    func `GitHubRelease is Decodable`() throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -26,8 +26,8 @@ struct GitHubCodableTests {
         #expect(asset.name == "example.zip")
     }
 
-    @Test("GitHubRelease is Codable")
-    func codable() throws {
+    @Test
+    func `GitHubRelease is Codable`() throws {
         // Test this separately since we won't care how Date is encoded internally.
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")

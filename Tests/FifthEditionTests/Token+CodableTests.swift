@@ -9,8 +9,8 @@ import Testing
 @testable import FifthEdition
 
 struct ArtItemCodableTests {
-    @Test("Art item")
-    func artItem() throws {
+    @Test
+    func `Art item`() throws {
         try testCodable(
             json: """
             {
@@ -25,8 +25,8 @@ struct ArtItemCodableTests {
         )
     }
 
-    @Test("Art item with page")
-    func artItemWithPage() throws {
+    @Test
+    func `Art item with page`() throws {
         try testCodable(
             json: """
             {
@@ -43,8 +43,8 @@ struct ArtItemCodableTests {
         )
     }
 
-    @Test("Art item with custom token and credit")
-    func artItemWithCustom() throws {
+    @Test
+    func `Art item with custom token and credit`() throws {
         try testCodable(
             json: """
             {
@@ -63,8 +63,8 @@ struct ArtItemCodableTests {
         )
     }
 
-    @Test("Art item with tag")
-    func artItemWithTag() throws {
+    @Test
+    func `Art item with tag`() throws {
         try testCodable(
             json: """
             {
@@ -85,7 +85,7 @@ struct ArtItemCodableTests {
 }
 
 struct TokenCodableTests {
-    @Test("Token")
+    @Test
     func token() throws {
         try testCodable(
             json: """
@@ -101,8 +101,8 @@ struct TokenCodableTests {
         )
     }
 
-    @Test("Token with page")
-    func tokenWithPage() throws {
+    @Test
+    func `Token with page`() throws {
         try testCodable(
             // While not in the schema, the sole use of this in the bestiary has a page reference.
             json: """

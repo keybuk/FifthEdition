@@ -9,8 +9,8 @@ import Testing
 @testable import FifthEdition
 
 struct CreatureCodableTests {
-    @Test("Minimal creature")
-    func minimal() throws {
+    @Test
+    func `Minimal creature`() throws {
         try testCodable(
             json: """
             {
@@ -31,8 +31,8 @@ struct CreatureCodableTests {
         )
     }
 
-    @Test("Typical creature")
-    func typical() throws {
+    @Test
+    func `Typical creature`() throws {
         try testCodable(
             json: """
             {
@@ -264,8 +264,8 @@ struct CreatureCodableTests {
         )
     }
 
-    @Test("Sidekick")
-    func sidekick() throws {
+    @Test
+    func Sidekick() throws {
         try testCodable(
             // Test unusual combinations of properties.
             json: """
@@ -391,8 +391,8 @@ struct CreatureCodableTests {
         )
     }
 
-    @Test("Summoned creature")
-    func summoned() throws {
+    @Test
+    func `Summoned creature`() throws {
         try testCodable(
             json: """
             {
@@ -446,8 +446,8 @@ struct CreatureCodableTests {
 }
 
 struct CreatureAbilityScoreCodableTests {
-    @Test("Ability score")
-    func score() throws {
+    @Test
+    func `Ability score`() throws {
         try testCodable(
             json: """
             16
@@ -456,8 +456,8 @@ struct CreatureAbilityScoreCodableTests {
         )
     }
 
-    @Test("Special ability score")
-    func special() throws {
+    @Test
+    func `Special ability score`() throws {
         // This doesn't appear anywhere in the bestiary, but is valid in the schema.
         try testCodable(
             json: """
@@ -471,8 +471,8 @@ struct CreatureAbilityScoreCodableTests {
 }
 
 struct CreatureAlignmentCodableTests {
-    @Test("Simple alignment")
-    func common() throws {
+    @Test
+    func `Simple alignment`() throws {
         try testCodable(
             json: """
             [
@@ -484,8 +484,8 @@ struct CreatureAlignmentCodableTests {
         )
     }
 
-    @Test("Alignment in object")
-    func object() throws {
+    @Test
+    func `Alignment in object`() throws {
         try testCodable(
             json: """
             [
@@ -503,8 +503,8 @@ struct CreatureAlignmentCodableTests {
         )
     }
 
-    @Test("Alignment with note")
-    func note() throws {
+    @Test
+    func `Alignment with note`() throws {
         try testCodable(
             json: """
             [
@@ -526,8 +526,8 @@ struct CreatureAlignmentCodableTests {
         )
     }
 
-    @Test("Choice of alignment")
-    func choice() throws {
+    @Test
+    func `Choice of alignment`() throws {
         try testCodable(
             json: """
             [
@@ -552,8 +552,8 @@ struct CreatureAlignmentCodableTests {
         )
     }
 
-    @Test("Alignments with random chance")
-    func chance() throws {
+    @Test
+    func `Alignments with random chance`() throws {
         try testCodable(
             json: """
             [
@@ -580,8 +580,8 @@ struct CreatureAlignmentCodableTests {
         )
     }
 
-    @Test("Special alignment")
-    func special() throws {
+    @Test
+    func `Special alignment`() throws {
         try testCodable(
             json: """
             [
@@ -596,8 +596,8 @@ struct CreatureAlignmentCodableTests {
 }
 
 struct CreatureArmorClassCodableTests {
-    @Test("Armor class")
-    func object() throws {
+    @Test
+    func `Armor class`() throws {
         try testCodable(
             json: """
             [
@@ -610,8 +610,8 @@ struct CreatureArmorClassCodableTests {
         )
     }
 
-    @Test("Obtained armor class")
-    func obtained() throws {
+    @Test
+    func `Obtained armor class`() throws {
         try testCodable(
             json: """
             [
@@ -632,8 +632,8 @@ struct CreatureArmorClassCodableTests {
         )
     }
 
-    @Test("Conditional armor class")
-    func conditional() throws {
+    @Test
+    func `Conditional armor class`() throws {
         try testCodable(
             json: """
             [
@@ -656,8 +656,8 @@ struct CreatureArmorClassCodableTests {
         )
     }
 
-    @Test("Special armor class")
-    func special() throws {
+    @Test
+    func `Special armor class`() throws {
         try testCodable(
             json: """
             [
@@ -674,8 +674,8 @@ struct CreatureArmorClassCodableTests {
 }
 
 struct CreatureChallengeRatingCodableTests {
-    @Test("Challenge rating")
-    func cr() throws {
+    @Test
+    func `Challenge rating`() throws {
         try testCodable(
             json: """
             "17"
@@ -684,8 +684,8 @@ struct CreatureChallengeRatingCodableTests {
         )
     }
 
-    @Test("Challenge rating with XP")
-    func xp() throws {
+    @Test
+    func `Challenge rating with XP`() throws {
         try testCodable(
             json: """
             {
@@ -700,8 +700,8 @@ struct CreatureChallengeRatingCodableTests {
         )
     }
 
-    @Test("Challenge rating with lair")
-    func lair() throws {
+    @Test
+    func `Challenge rating with lair`() throws {
         try testCodable(
             json: """
             {
@@ -716,8 +716,8 @@ struct CreatureChallengeRatingCodableTests {
         )
     }
 
-    @Test("Challenge rating with lair XP")
-    func lairXP() throws {
+    @Test
+    func `Challenge rating with lair XP`() throws {
         try testCodable(
             json: """
             {
@@ -732,8 +732,8 @@ struct CreatureChallengeRatingCodableTests {
         )
     }
 
-    @Test("Challenge rating with coven")
-    func coven() throws {
+    @Test
+    func `Challenge rating with coven`() throws {
         try testCodable(
             json: """
             {
@@ -750,8 +750,8 @@ struct CreatureChallengeRatingCodableTests {
 }
 
 struct CreatureConditionImmunityCodableTests {
-    @Test("Condition immunity")
-    func conditionImmunity() throws {
+    @Test
+    func `Condition immunity`() throws {
         try testCodable(
             json: """
             "blinded"
@@ -760,8 +760,8 @@ struct CreatureConditionImmunityCodableTests {
         )
     }
 
-    @Test("Special condition immunity")
-    func specialConditionImmunity() throws {
+    @Test
+    func `Special condition immunity`() throws {
         try testCodable(
             json: """
             {
@@ -772,8 +772,8 @@ struct CreatureConditionImmunityCodableTests {
         )
     }
 
-    @Test("Conditional immunity")
-    func conditionalImmunity() throws {
+    @Test
+    func `Conditional immunity`() throws {
         try testCodable(
             json: """
             {
@@ -796,8 +796,8 @@ struct CreatureConditionImmunityCodableTests {
         )
     }
 
-    @Test("Conditional immunity with pre-note")
-    func conditionalImmunityPreNote() throws {
+    @Test
+    func `Conditional immunity with pre-note`() throws {
         try testCodable(
             json: """
             {
@@ -818,8 +818,8 @@ struct CreatureConditionImmunityCodableTests {
         )
     }
 
-    @Test("Recursive conditional immunity")
-    func recursiveConditionalImmunity() throws {
+    @Test
+    func `Recursive conditional immunity`() throws {
         try testCodable(
             json: """
             {
@@ -858,8 +858,8 @@ struct CreatureConditionImmunityCodableTests {
 }
 
 struct CreatureCreatureTypeCodableTests {
-    @Test("Creature type")
-    func type() throws {
+    @Test
+    func `Creature type`() throws {
         try testCodable(
             json: """
             "undead"
@@ -868,8 +868,8 @@ struct CreatureCreatureTypeCodableTests {
         )
     }
 
-    @Test("Creature type in object")
-    func object() throws {
+    @Test
+    func `Creature type in object`() throws {
         // This doesn't appear anywhere in the bestiary, but is valid in the schema.
         try testCodable(
             json: """
@@ -881,8 +881,8 @@ struct CreatureCreatureTypeCodableTests {
         )
     }
 
-    @Test("Choice of creature type")
-    func choice() throws {
+    @Test
+    func `Choice of creature type`() throws {
         try testCodable(
             json: """
             {
@@ -900,8 +900,8 @@ struct CreatureCreatureTypeCodableTests {
         )
     }
 
-    @Test("Tagged creature type")
-    func tagged() throws {
+    @Test
+    func `Tagged creature type`() throws {
         try testCodable(
             json: """
             {
@@ -925,8 +925,8 @@ struct CreatureCreatureTypeCodableTests {
         )
     }
 
-    @Test("Creature with swarm size")
-    func swarm() throws {
+    @Test
+    func `Creature with swarm size`() throws {
         try testCodable(
             json: """
             {
@@ -941,7 +941,7 @@ struct CreatureCreatureTypeCodableTests {
         )
     }
 
-    @Test("Sidekick")
+    @Test
     func sidekick() throws {
         try testCodable(
             json: """
@@ -967,8 +967,8 @@ struct CreatureCreatureTypeCodableTests {
         )
     }
 
-    @Test("Creature type with note")
-    func note() throws {
+    @Test
+    func `Creature type with note`() throws {
         // Doesn't appear in the bestiary, but implement/test anyway.
         try testCodable(
             json: """
@@ -986,8 +986,8 @@ struct CreatureCreatureTypeCodableTests {
 }
 
 struct CreatureDamageImmunityCodableTests {
-    @Test("Damage immunity")
-    func damageImmunity() throws {
+    @Test
+    func `Damage immunity`() throws {
         try testCodable(
             json: """
             "necrotic"
@@ -996,8 +996,8 @@ struct CreatureDamageImmunityCodableTests {
         )
     }
 
-    @Test("Special damage immunity")
-    func specialDamageImmunity() throws {
+    @Test
+    func `Special damage immunity`() throws {
         try testCodable(
             json: """
             {
@@ -1008,8 +1008,8 @@ struct CreatureDamageImmunityCodableTests {
         )
     }
 
-    @Test("Conditional immunity")
-    func conditionalImmunity() throws {
+    @Test
+    func `conditional immunity`() throws {
         try testCodable(
             json: """
             {
@@ -1034,8 +1034,8 @@ struct CreatureDamageImmunityCodableTests {
         )
     }
 
-    @Test("Conditional immunity with pre-note")
-    func conditionalImmunityPreNote() throws {
+    @Test
+    func `conditional immunity pre note`() throws {
         try testCodable(
             json: """
             {
@@ -1054,8 +1054,8 @@ struct CreatureDamageImmunityCodableTests {
         )
     }
 
-    @Test("Recursive conditional immunity")
-    func recursiveConditionalImmunity() throws {
+    @Test
+    func `recursive conditional immunity`() throws {
         try testCodable(
             json: """
             {
@@ -1090,8 +1090,8 @@ struct CreatureDamageImmunityCodableTests {
 }
 
 struct CreatureDamageResistanceCodableTests {
-    @Test("Damage resistance")
-    func damageResistance() throws {
+    @Test
+    func `Damage resistance`() throws {
         try testCodable(
             json: """
             "necrotic"
@@ -1100,8 +1100,8 @@ struct CreatureDamageResistanceCodableTests {
         )
     }
 
-    @Test("Special damage resistance")
-    func specialDamageResistance() throws {
+    @Test
+    func `Special damage resistance`() throws {
         try testCodable(
             json: """
             {
@@ -1112,8 +1112,8 @@ struct CreatureDamageResistanceCodableTests {
         )
     }
 
-    @Test("Conditional resistance")
-    func conditionalResistance() throws {
+    @Test
+    func `Conditional resistance`() throws {
         try testCodable(
             json: """
             {
@@ -1138,8 +1138,8 @@ struct CreatureDamageResistanceCodableTests {
         )
     }
 
-    @Test("Conditional resistance with pre-note")
-    func conditionalResistancePreNote() throws {
+    @Test
+    func `Conditional resistance with pre-note`() throws {
         try testCodable(
             json: """
             {
@@ -1158,8 +1158,8 @@ struct CreatureDamageResistanceCodableTests {
         )
     }
 
-    @Test("Recursive conditional resistance")
-    func recursiveConditionalResistance() throws {
+    @Test
+    func `Recursive conditional resistance`() throws {
         try testCodable(
             json: """
             {
@@ -1194,8 +1194,8 @@ struct CreatureDamageResistanceCodableTests {
 }
 
 struct CreatureDamageVulnerabilityCodableTests {
-    @Test("Damage vulnerability")
-    func damageVulnerability() throws {
+    @Test
+    func `Damage vulnerability`() throws {
         try testCodable(
             json: """
             "necrotic"
@@ -1204,8 +1204,8 @@ struct CreatureDamageVulnerabilityCodableTests {
         )
     }
 
-    @Test("Special damage vulnerability")
-    func specialDamageVulnerability() throws {
+    @Test
+    func `Special damage vulnerability`() throws {
         try testCodable(
             json: """
             {
@@ -1216,8 +1216,8 @@ struct CreatureDamageVulnerabilityCodableTests {
         )
     }
 
-    @Test("Conditional vulnerability")
-    func conditionalVulnerability() throws {
+    @Test
+    func `Conditional vulnerability`() throws {
         try testCodable(
             json: """
             {
@@ -1238,8 +1238,8 @@ struct CreatureDamageVulnerabilityCodableTests {
         )
     }
 
-    @Test("Conditional vulnerability with pre-note")
-    func conditionalVulnerabilityPreNote() throws {
+    @Test
+    func `Conditional vulnerability with pre-note`() throws {
         try testCodable(
             json: """
             {
@@ -1258,8 +1258,8 @@ struct CreatureDamageVulnerabilityCodableTests {
         )
     }
 
-    @Test("Recursive conditional vulnerability")
-    func recursiveConditionalVulnerability() throws {
+    @Test
+    func `Recursive conditional vulnerability`() throws {
         try testCodable(
             json: """
             {
@@ -1296,7 +1296,7 @@ struct CreatureDamageVulnerabilityCodableTests {
 }
 
 struct CreatureGearCodableTests {
-    @Test("Gear")
+    @Test
     func gear() throws {
         try testCodable(
             json: """
@@ -1306,8 +1306,8 @@ struct CreatureGearCodableTests {
         )
     }
 
-    @Test("Gear with quantity")
-    func gearWithQuantity() throws {
+    @Test
+    func `Gear with quantity`() throws {
         try testCodable(
             json: """
             {
@@ -1321,8 +1321,8 @@ struct CreatureGearCodableTests {
 }
 
 struct CreatureHitPointsCodableTests {
-    @Test("Hit points")
-    func hitPoints() throws {
+    @Test
+    func `Hit points`() throws {
         try testCodable(
             json: """
             {
@@ -1334,8 +1334,8 @@ struct CreatureHitPointsCodableTests {
         )
     }
 
-    @Test("Hit points with wrong average")
-    func wrongAverage() throws {
+    @Test
+    func `Hit points with wrong average`() throws {
         try testCodable(
             json: """
             {
@@ -1350,8 +1350,8 @@ struct CreatureHitPointsCodableTests {
         )
     }
 
-    @Test("Hit points with unparseable formula")
-    func invalidFormula() throws {
+    @Test
+    func `Hit points with unparseable formula`() throws {
         try testCodable(
             json: """
             {
@@ -1363,8 +1363,8 @@ struct CreatureHitPointsCodableTests {
         )
     }
 
-    @Test("Special")
-    func special() throws {
+    @Test
+    func Special() throws {
         try testCodable(
             json: """
             {
@@ -1377,8 +1377,8 @@ struct CreatureHitPointsCodableTests {
 }
 
 struct CreatureInitiativeCodableTests {
-    @Test("Initiative value")
-    func initiative() throws {
+    @Test
+    func `Initiative value`() throws {
         try testCodable(
             json: """
             {
@@ -1391,8 +1391,8 @@ struct CreatureInitiativeCodableTests {
         )
     }
 
-    @Test("Proficiency value")
-    func proficient() throws {
+    @Test
+    func `Proficiency value`() throws {
         try testCodable(
             json: """
             {
@@ -1405,8 +1405,8 @@ struct CreatureInitiativeCodableTests {
         )
     }
 
-    @Test("Advantage")
-    func advantage() throws {
+    @Test
+    func Advantage() throws {
         try testCodable(
             json: """
             {
@@ -1419,8 +1419,8 @@ struct CreatureInitiativeCodableTests {
         )
     }
 
-    @Test("Disadvantage")
-    func disadvantage() throws {
+    @Test
+    func Disadvantage() throws {
         try testCodable(
             json: """
             {
@@ -1433,8 +1433,8 @@ struct CreatureInitiativeCodableTests {
         )
     }
 
-    @Test("Raw value")
-    func rawInitiative() throws {
+    @Test
+    func `Raw value`() throws {
         // This doesn't appear anywhere in the bestiary, but is valid in the schema.
         try testCodable(
             json: """
@@ -1448,8 +1448,8 @@ struct CreatureInitiativeCodableTests {
 }
 
 class CreaturePassiveCodableTests {
-    @Test("Passive score")
-    func score() throws {
+    @Test
+    func `Passive score`() throws {
         try testCodable(
             json: """
             16
@@ -1458,8 +1458,8 @@ class CreaturePassiveCodableTests {
         )
     }
 
-    @Test("Special passive score")
-    func special() throws {
+    @Test
+    func `Special passive score`() throws {
         // Unlike other specials, this is just a string instead of an integer.
         try testCodable(
             json: """
@@ -1471,8 +1471,8 @@ class CreaturePassiveCodableTests {
 }
 
 struct CreatureSaveCodableTests {
-    @Test("Saving throws")
-    func save() throws {
+    @Test
+    func `Saving throws`() throws {
         try testCodable(
             json: """
             {
@@ -1489,8 +1489,8 @@ struct CreatureSaveCodableTests {
 }
 
 struct CreatureShortNameCodableTests {
-    @Test("Name")
-    func name() throws {
+    @Test
+    func Name() throws {
         try testCodable(
             json: """
             "name"
@@ -1499,8 +1499,8 @@ struct CreatureShortNameCodableTests {
         )
     }
 
-    @Test("Use (full) name")
-    func useName() throws {
+    @Test
+    func `Use (full) name`() throws {
         try testCodable(
             json: """
             true
@@ -1511,8 +1511,8 @@ struct CreatureShortNameCodableTests {
 }
 
 struct CreatureSkillSetCodableTests {
-    @Test("Skill set")
-    func skill() throws {
+    @Test
+    func `Skill set`() throws {
         try testCodable(
             json: """
             {
@@ -1529,8 +1529,8 @@ struct CreatureSkillSetCodableTests {
         )
     }
 
-    @Test("Skill set with choices")
-    func otherOneOf() throws {
+    @Test
+    func `Skill set with choices`() throws {
         try testCodable(
             json: """
             {
@@ -1567,8 +1567,8 @@ struct CreatureSkillSetCodableTests {
 }
 
 struct CreatureToolSetTests {
-    @Test("Tool set")
-    func tool() throws {
+    @Test
+    func `Tool set`() throws {
         try testCodable(
             json: """
             {

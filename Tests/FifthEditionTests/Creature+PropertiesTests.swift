@@ -9,8 +9,8 @@ import Testing
 @testable import FifthEdition
 
 struct CreatureGridSquaresTests {
-    @Test("Grid squares for single size", arguments: Size.allCases)
-    func gridSquares(_ size: Size) {
+    @Test(arguments: Size.allCases)
+    func `Grid squares for single size`(_ size: Size) {
         let creature = Creature(
             name: "\(size.rawValue.uppercased()) Monster",
             source: "XMM",
@@ -26,8 +26,8 @@ struct CreatureGridSquaresTests {
         }
     }
 
-    @Test("Grid squares when no size given")
-    func gridSquaresWhenNoSize() {
+    @Test
+    func `Grid squares when no size given`() {
         let creature = Creature(
             name: "Sizeless Monster",
             source: "XMM",
@@ -35,8 +35,8 @@ struct CreatureGridSquaresTests {
         #expect(creature.gridSquares == 1)
     }
 
-    @Test("Grid squares for multiple sizes")
-    func gridSquaresForMultiple() {
+    @Test
+    func `Grid squares for multiple sizes`() {
         let creature = Creature(
             name: "Growing Monster",
             source: "XMM",
@@ -47,8 +47,8 @@ struct CreatureGridSquaresTests {
 }
 
 struct CreatureTokenPathTests {
-    @Test("Token path")
-    func tokenPath() {
+    @Test
+    func `Token path`() {
         let creature = Creature(
             name: "Blink Dog",
             source: "XMM",
@@ -57,8 +57,8 @@ struct CreatureTokenPathTests {
         #expect(creature.tokenPath == "bestiary/tokens/XMM/Blink Dog.webp")
     }
 
-    @Test("Token path has diacritics removed")
-    func tokenPathWithoutDiacritics() {
+    @Test
+    func `Token path has diacritics removed`() {
         let creature = Creature(
             name: "Kupalué",
             source: "ToA",
@@ -67,8 +67,8 @@ struct CreatureTokenPathTests {
         #expect(creature.tokenPath == "bestiary/tokens/ToA/Kupalue.webp")
     }
 
-    @Test("Token path has æ dipthong replaced")
-    func tokenPathWithoutAeDipthong() {
+    @Test
+    func `Token path has æ dipthong replaced`() {
         let creature = Creature(
             name: "Môrgæn",
             source: "AI",
@@ -77,8 +77,8 @@ struct CreatureTokenPathTests {
         #expect(creature.tokenPath == "bestiary/tokens/AI/Morgaen.webp")
     }
 
-    @Test("Token path has quotes removed")
-    func tokenPathWithoutQuotes() {
+    @Test
+    func `Token path has quotes removed`() {
         let creature = Creature(
             name: "\"The Demogorgon\"",
             source: "IMR",
@@ -87,8 +87,8 @@ struct CreatureTokenPathTests {
         #expect(creature.tokenPath == "bestiary/tokens/IMR/The Demogorgon.webp")
     }
 
-    @Test("Token path from token")
-    func tokenPathFromToken() {
+    @Test
+    func `Token path from token`() {
         let creature = Creature(
             name: "Demilich",
             source: "WDMM",
@@ -101,8 +101,8 @@ struct CreatureTokenPathTests {
         #expect(creature.tokenPath == "bestiary/tokens/MM/Acererak.webp")
     }
 
-    @Test("No token if no name")
-    func noName() {
+    @Test
+    func `No token if no name`() {
         let creature = Creature(
             source: "XMM",
             hasToken: true,
@@ -110,8 +110,8 @@ struct CreatureTokenPathTests {
         #expect(creature.tokenPath == nil)
     }
 
-    @Test("No token if no source")
-    func noSource() {
+    @Test
+    func `No token if no source`() {
         let creature = Creature(
             name: "Blink Dog",
             hasToken: true,
@@ -121,8 +121,8 @@ struct CreatureTokenPathTests {
 }
 
 struct CreatureUidTests {
-    @Test("UID")
-    func uid() {
+    @Test
+    func UID() {
         let creature = Creature(
             name: "Blink Dog",
             source: "XMM",
@@ -130,16 +130,16 @@ struct CreatureUidTests {
         #expect(creature.uid == "blink dog|xmm")
     }
 
-    @Test("No UID if no name")
-    func noName() {
+    @Test
+    func `No UID if no name`() {
         let creature = Creature(
             source: "XMM",
         )
         #expect(creature.uid == nil)
     }
 
-    @Test("No UID if no source")
-    func noSource() {
+    @Test
+    func `No UID if no source`() {
         let creature = Creature(
             name: "Blink Dog",
         )
@@ -148,8 +148,8 @@ struct CreatureUidTests {
 }
 
 struct CreatureSkillSetSubscriptTests {
-    @Test("Get skill by subscript")
-    func getSubscript() {
+    @Test
+    func `Get skill by subscript`() {
         let skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -157,8 +157,8 @@ struct CreatureSkillSetSubscriptTests {
         #expect(skill[.deception] == "+5")
     }
 
-    @Test("Get unset skill by subscript")
-    func getSubscriptUnset() {
+    @Test
+    func `Get unset skill by subscript`() {
         let skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -166,8 +166,8 @@ struct CreatureSkillSetSubscriptTests {
         #expect(skill[.nature] == nil)
     }
 
-    @Test("Set skill by subscript")
-    func setSubscript() {
+    @Test
+    func `Set skill by subscript`() {
         var skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -181,8 +181,8 @@ struct CreatureSkillSetSubscriptTests {
         ])
     }
 
-    @Test("Change skill by subscript")
-    func changeSubscript() {
+    @Test
+    func `Change skill by subscript`() {
         var skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -197,8 +197,8 @@ struct CreatureSkillSetSubscriptTests {
 }
 
 struct CreatureToolSetSubscriptTests {
-    @Test("Get tool by subscript")
-    func getSubscript() {
+    @Test
+    func `Get tool by subscript`() {
         let tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
@@ -206,8 +206,8 @@ struct CreatureToolSetSubscriptTests {
         #expect(tool[.smithsTools] == "+2")
     }
 
-    @Test("Get unset tool by subscript")
-    func getSubscriptUnset() {
+    @Test
+    func `Get unset tool by subscript`() {
         let tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
@@ -215,8 +215,8 @@ struct CreatureToolSetSubscriptTests {
         #expect(tool[.brewersSupplies] == nil)
     }
 
-    @Test("Set tool by subscript")
-    func setSubscript() {
+    @Test
+    func `Set tool by subscript`() {
         var tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
@@ -230,8 +230,8 @@ struct CreatureToolSetSubscriptTests {
         ])
     }
 
-    @Test("Change tool by subscript")
-    func changeSubscript() {
+    @Test
+    func `Change tool by subscript`() {
         var tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
