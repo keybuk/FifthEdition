@@ -25,4 +25,6 @@
 --enable privateStateVariables
 --enable singlePropertyPerLine
 --enable sortSwitchCases
+--enable testSuiteAccessControl
 --enable urlMacro
+--enable validateTestCases
