@@ -7,7 +7,6 @@
 
 import Foundation
 import Testing
-@testable import FifthEdition
 
 func testDecodable<Value: Equatable & Decodable>(json: String, value expectedValue: Value,
                                                  sourceLocation: SourceLocation = #_sourceLocation)
