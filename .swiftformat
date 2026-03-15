@@ -1,6 +1,8 @@
 --indent 4
 --max-width 120
 
+--import-grouping access-control
+--import-grouping alpha
 --import-grouping testable-last
 
 --complex-attributes prev-line
