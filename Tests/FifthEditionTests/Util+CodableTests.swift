@@ -462,4 +462,18 @@ struct TagCodableTests {
             value: Tag.prefixed("tag", prefix: "prefix"),
         )
     }
+
+    @Test
+    func `Tag with hidden prefix`() throws {
+        try testCodable(
+            json: """
+            {
+                "tag": "tag",
+                "prefix": "prefix",
+                "prefixHidden": true,
+            }
+            """,
+            value: Tag.prefixed("tag", prefix: "prefix", prefixHidden: true),
+        )
+    }
 }

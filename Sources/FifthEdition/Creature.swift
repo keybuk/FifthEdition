@@ -5,7 +5,7 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 //  Derived from schema/site/bestiary/bestiary.json
-//  Version: 1.21.56
+//  Version: 1.21.58
 
 import MemberwiseInit
 

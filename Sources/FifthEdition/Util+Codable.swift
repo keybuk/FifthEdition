@@ -295,6 +295,7 @@ extension Tag: Codable {
     enum CodingKeys: String, CodingKey {
         case tag
         case prefix
+        case prefixHidden
     }
 
     public init(from decoder: any Decoder) throws {
@@ -305,6 +306,7 @@ extension Tag: Codable {
             self = try .prefixed(
                 values.decode(String.self, forKey: .tag),
                 prefix: values.decode(String.self, forKey: .prefix),
+                prefixHidden: values.decodeIfPresent(Bool.self, forKey: .prefixHidden),
             )
         }
     }
@@ -314,10 +316,11 @@ extension Tag: Codable {
         case let .tag(value):
             var container = encoder.singleValueContainer()
             try container.encode(value)
-        case let .prefixed(tag, prefix):
+        case let .prefixed(tag, prefix, prefixHidden):
             var values = encoder.container(keyedBy: CodingKeys.self)
             try values.encode(tag, forKey: .tag)
             try values.encode(prefix, forKey: .prefix)
+            try values.encodeIfPresent(prefixHidden, forKey: .prefixHidden)
         }
     }
 }

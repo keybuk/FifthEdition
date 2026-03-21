@@ -105,5 +105,5 @@ public enum SrdReference: Equatable, Hashable, Sendable {
 
 public enum Tag: Equatable, Hashable, Sendable {
     case tag(String)
-    case prefixed(String, prefix: String)
+    case prefixed(String, prefix: String, prefixHidden: Bool? = nil)
 }
