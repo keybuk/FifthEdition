@@ -4,8 +4,8 @@
 //
 //  Created by Scott James Remnant on 12/28/25.
 //
-//  Derived from schema/site/entry.json
-//  Version: 1.9.16
+//  Derived from schema-template/entry.json
+//  Version: 1.9.17
 
 import Foundation
 
