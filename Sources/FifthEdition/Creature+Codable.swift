@@ -15,6 +15,7 @@ extension Creature {
         case sourceNote = "sourceSub"
         case page
         case otherSources
+        case referenceSources
         case additionalSources
         case reprintedAs
         case isReprinted

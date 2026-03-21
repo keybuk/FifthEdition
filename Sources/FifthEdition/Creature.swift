@@ -4,8 +4,8 @@
 //
 //  Created by Scott James Remnant on 12/25/25.
 //
-//  Derived from schema/site/bestiary/bestiary.json
-//  Version: 1.21.59
+//  Derived from schema-template/bestiary/bestiary.json
+//  Version: 1.21.60
 
 import MemberwiseInit
 
@@ -192,6 +192,7 @@ public struct Creature: Codable, Equatable, Sendable {
     public var sourceNote: String?
     public var page: Page?
     public var otherSources: Set<Source>?
+    public var referenceSources: Set<Source>?
     public var additionalSources: Set<Source>?
     public var inSrd: SrdReference?
     public var inSrd52: SrdReference?

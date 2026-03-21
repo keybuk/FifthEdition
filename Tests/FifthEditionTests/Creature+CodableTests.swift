@@ -45,6 +45,12 @@ struct CreatureCodableTests {
                         "page": 38
                     }
                 ],
+                "referenceSources": [
+                    {
+                        "source": "XMM",
+                        "page": 42
+                    }
+                ],
                 "size": [
                     "H"
                 ],
@@ -169,6 +175,7 @@ struct CreatureCodableTests {
                 source: "XMM",
                 page: .number(42),
                 otherSources: [.init(source: "MM", page: .number(38))],
+                referenceSources: [.init(source: "XMM", page: .number(42))],
                 size: [.huge],
                 type: .init(.type(.undead)),
                 alignment: .alignment([.chaotic, .evil]),
