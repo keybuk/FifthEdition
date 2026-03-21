@@ -46,9 +46,74 @@ struct CreatureGridSquaresTests {
     }
 }
 
+struct CreatureTokenNameTests {
+    @Test
+    func `token name`() {
+        let creature = Creature(
+            name: "Blink Dog",
+            source: "XMM",
+            hasToken: true,
+        )
+        #expect(creature.tokenName == "Blink Dog")
+    }
+
+    @Test
+    func `tokenName has diacritics removed`() {
+        let creature = Creature(
+            name: "Kupalué",
+            source: "ToA",
+            hasToken: true,
+        )
+        #expect(creature.tokenName == "Kupalue")
+    }
+
+    @Test
+    func `tokenName has æ dipthong replaced`() {
+        let creature = Creature(
+            name: "Môrgæn",
+            source: "AI",
+            hasToken: true,
+        )
+        #expect(creature.tokenName == "Morgaen")
+    }
+
+    @Test
+    func `tokenName has quotes removed`() {
+        let creature = Creature(
+            name: "\"The Demogorgon\"",
+            source: "IMR",
+            hasToken: true,
+        )
+        #expect(creature.tokenName == "The Demogorgon")
+    }
+
+    @Test
+    func `tokenName uses name from token`() {
+        let creature = Creature(
+            name: "Demilich",
+            source: "WDMM",
+            hasToken: true,
+            token: Token(
+                name: "Acererak",
+                source: "MM",
+            ),
+        )
+        #expect(creature.tokenName == "Acererak")
+    }
+
+    @Test
+    func `tokenName is nil if no name`() {
+        let creature = Creature(
+            source: "XMM",
+            hasToken: true,
+        )
+        #expect(creature.tokenName == nil)
+    }
+}
+
 struct CreatureTokenPathTests {
     @Test
-    func `Token path`() {
+    func `token path`() {
         let creature = Creature(
             name: "Blink Dog",
             source: "XMM",
@@ -58,7 +123,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test
-    func `Token path has diacritics removed`() {
+    func `tokenPath uses tokenName`() {
         let creature = Creature(
             name: "Kupalué",
             source: "ToA",
@@ -68,27 +133,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test
-    func `Token path has æ dipthong replaced`() {
-        let creature = Creature(
-            name: "Môrgæn",
-            source: "AI",
-            hasToken: true,
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/AI/Morgaen.webp")
-    }
-
-    @Test
-    func `Token path has quotes removed`() {
-        let creature = Creature(
-            name: "\"The Demogorgon\"",
-            source: "IMR",
-            hasToken: true,
-        )
-        #expect(creature.tokenPath == "bestiary/tokens/IMR/The Demogorgon.webp")
-    }
-
-    @Test
-    func `Token path from token`() {
+    func `tokenPath uses tokenName from token`() {
         let creature = Creature(
             name: "Demilich",
             source: "WDMM",
@@ -102,7 +147,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test
-    func `No token if no name`() {
+    func `tokenPath is nil if no name`() {
         let creature = Creature(
             source: "XMM",
             hasToken: true,
@@ -111,7 +156,7 @@ struct CreatureTokenPathTests {
     }
 
     @Test
-    func `No token if no source`() {
+    func `tokenPath is nil if no source`() {
         let creature = Creature(
             name: "Blink Dog",
             hasToken: true,

@@ -22,16 +22,11 @@ public extension Creature {
         }
     }
 
-    /// Returns the expected token path.
-    var tokenPath: String? {
-        guard hasToken ?? false,
-              let name = token?.name ?? name,
-              let source = token?.source ?? source
-        else {
-            return nil
-        }
+    /// Returns the expected token name.
+    var tokenName: String? {
+        guard let name = token?.name ?? name else { return nil }
 
-        let tokenName = String(
+        return String(
             name
                 .replacingOccurrences(of: "Æ", with: "AE")
                 .replacingOccurrences(of: "æ", with: "ae")
@@ -40,6 +35,16 @@ public extension Creature {
                 .unicodeScalars
                 .filter(\.isASCII),
         )
+    }
+
+    /// Returns the expected token path.
+    var tokenPath: String? {
+        guard hasToken ?? false,
+              let tokenName,
+              let source = token?.source ?? source
+        else {
+            return nil
+        }
 
         return "bestiary/tokens/\(source)/\(tokenName).webp"
     }
