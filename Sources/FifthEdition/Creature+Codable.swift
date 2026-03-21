@@ -531,6 +531,7 @@ extension Creature.Gear: Codable {
     enum CodingKeys: String, CodingKey {
         case item
         case quantity
+        case displayName
     }
 
     public init(from decoder: any Decoder) throws {
@@ -541,18 +542,20 @@ extension Creature.Gear: Codable {
         } else {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             item = try container.decode(String.self, forKey: .item)
-            quantity = try container.decode(Int.self, forKey: .quantity)
+            quantity = try container.decodeIfPresent(Int.self, forKey: .quantity)
+            displayName = try container.decodeIfPresent(String.self, forKey: .displayName)
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
-        if quantity == nil {
+        if quantity == nil, displayName == nil {
             var container = encoder.singleValueContainer()
             try container.encode(item)
         } else {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(item, forKey: .item)
             try container.encodeIfPresent(quantity, forKey: .quantity)
+            try container.encodeIfPresent(displayName, forKey: .displayName)
         }
     }
 }

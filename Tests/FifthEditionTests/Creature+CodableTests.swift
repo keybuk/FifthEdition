@@ -1297,7 +1297,7 @@ struct CreatureDamageVulnerabilityCodableTests {
 
 struct CreatureGearCodableTests {
     @Test
-    func gear() throws {
+    func Gear() throws {
         try testCodable(
             json: """
             "chain mail|xphb"
@@ -1316,6 +1316,19 @@ struct CreatureGearCodableTests {
             }
             """,
             value: Creature.Gear("dagger|xphb", quantity: 4),
+        )
+    }
+
+    @Test
+    func `Gear with displayName`() throws {
+        try testCodable(
+            json: """
+            {
+                "item": "dagger|xphb",
+                "displayName": "Unsilvered Dagger"
+            }
+            """,
+            value: Creature.Gear("dagger|xphb", displayName: "Unsilvered Dagger"),
         )
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 //  Derived from schema/site/bestiary/bestiary.json
-//  Version: 1.21.58
+//  Version: 1.21.59
 
 import MemberwiseInit
 
@@ -106,6 +106,7 @@ public struct Creature: Codable, Equatable, Sendable {
         public var item: String
 
         public var quantity: Int?
+        public var displayName: String?
     }
 
     public enum HitPoints: Equatable, Sendable {
