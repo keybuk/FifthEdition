@@ -11,6 +11,8 @@
 --stored-var-attributes same-line
 --type-attributes prev-line
 
+--ifdef noindent
+
 --wrap-collections before-first
 --wrap-conditions after-first
 --wrap-effects if-multiline
