@@ -93,7 +93,7 @@ struct CreatureTokenNameTests {
             name: "Demilich",
             source: "WDMM",
             hasToken: true,
-            token: Token(
+            token: .init(
                 name: "Acererak",
                 source: "MM",
             ),
@@ -138,7 +138,7 @@ struct CreatureTokenPathTests {
             name: "Demilich",
             source: "WDMM",
             hasToken: true,
-            token: Token(
+            token: .init(
                 name: "Acererak",
                 source: "MM",
             ),

@@ -24,7 +24,7 @@ public struct ArtItem: Codable, Equatable, Sendable {
 }
 
 @MemberwiseInit(.public, _optionalsDefaultNil: true)
-public struct Token: Codable, Equatable, Sendable {
+public struct CreatureToken: Codable, Equatable, Sendable {
     public var name: String
     public var source: String
     public var page: Page?

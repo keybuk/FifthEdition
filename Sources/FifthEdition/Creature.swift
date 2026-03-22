@@ -303,7 +303,7 @@ public struct Creature: Codable, Equatable, Sendable {
     public var isNPC: Bool?
 
     public var hasToken: Bool?
-    public var token: Token?
+    public var token: CreatureToken?
     public var tokenCredit: String?
     public var isTokenCustom: Bool?
     public var foundryTokenScale: Float?

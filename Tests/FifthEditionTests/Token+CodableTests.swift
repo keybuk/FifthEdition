@@ -84,7 +84,7 @@ struct ArtItemCodableTests {
     }
 }
 
-struct TokenCodableTests {
+struct CreatureTokenCodableTests {
     @Test
     func token() throws {
         try testCodable(
@@ -94,7 +94,7 @@ struct TokenCodableTests {
                 "source": "MM"
             }
             """,
-            value: Token(
+            value: CreatureToken(
                 name: "Adult Red Dragon",
                 source: "MM",
             ),
@@ -112,7 +112,7 @@ struct TokenCodableTests {
                 "page": 49
             }
             """,
-            value: Token(
+            value: CreatureToken(
                 name: "Acererak",
                 source: "MM",
                 page: .number(49),
