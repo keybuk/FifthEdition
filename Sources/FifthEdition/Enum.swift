@@ -358,6 +358,7 @@ public enum TraitTag: String, CaseIterable, Codable, Sendable {
     case spellImmunity = "Spell Immunity"
     case spiderClimb = "Spider Climb"
     case sunlightSensitivity = "Sunlight Sensitivity"
+    case sureFooted = "Sure-Footed"
     case treeStride = "Tree Stride"
     case tunneler = "Tunneler"
     case turnImmunity = "Turn Immunity"
