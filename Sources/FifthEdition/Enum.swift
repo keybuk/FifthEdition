@@ -333,6 +333,7 @@ public enum TraitTag: String, CaseIterable, Codable, Sendable {
     case damageAbsorption = "Damage Absorption"
     case deathBurst = "Death Burst"
     case devilsSight = "Devil's Sight"
+    case etherealSight = "Ethereal Sight"
     case falseAppearance = "False Appearance"
     case feyAncestry = "Fey Ancestry"
     case flyby = "Flyby"
