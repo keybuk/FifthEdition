@@ -192,7 +192,7 @@ public struct Creature: Codable, Equatable, Sendable {
     public var sourceNote: String?
     public var page: Page?
     public var otherSources: Set<Source>?
-    public var referenceSources: Set<Source>?
+    public var referenceSources: Set<String>?
     public var additionalSources: Set<Source>?
     public var inSrd: SrdReference?
     public var inSrd52: SrdReference?
