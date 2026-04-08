@@ -64,3 +64,10 @@ public struct Book: Equatable, Sendable {
     public var cover: MediaHref?
     public var contents: [Contents]
 }
+
+@MemberwiseInit(.public)
+public struct Books: Equatable, Codable, Sendable {
+    public static let entryPath: String = "data/books.json"
+
+    public var book: [Book] = []
+}
