@@ -20,6 +20,18 @@ struct ActionTagCodableTests {
     }
 }
 
+struct BookGroupCodableTests {
+    @Test(arguments: BookGroup.allCases)
+    func `book groups`(_ bookGroup: BookGroup) throws {
+        try testCodable(
+            json: """
+            "\(bookGroup.rawValue)"
+            """,
+            value: bookGroup,
+        )
+    }
+}
+
 struct ConditionCodableTests {
     @Test(arguments: Condition.allCases)
     func conditions(_ condition: Condition) throws {
@@ -364,6 +376,18 @@ struct SpellcastingTypeCodableTests {
                 .innate,
                 .psionics,
             ]),
+        )
+    }
+}
+
+struct StorylineCodableTests {
+    @Test(arguments: Storyline.allCases)
+    func storylines(_ storyline: Storyline) throws {
+        try testCodable(
+            json: """
+            "\(storyline.rawValue)"
+            """,
+            value: storyline,
         )
     }
 }

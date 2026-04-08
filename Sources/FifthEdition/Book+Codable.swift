@@ -16,9 +16,12 @@ extension Book: Codable {
         case parentSource
         case isLegacy = "legacy"
         case group
+        case publishedOrder
         case author
         case published
         case revised
+        case level
+        case storyline
         case cover
         case contents
     }
@@ -32,6 +35,7 @@ extension Book: Codable {
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
         isLegacy = try container.decodeIfPresent(Bool.self, forKey: .isLegacy)
         group = try container.decode(BookGroup.self, forKey: .group)
+        publishedOrder = try container.decodeIfPresent(Int.self, forKey: .publishedOrder)
         author = try container.decodeIfPresent(String.self, forKey: .author)
 
         let dateFormatter = DateFormatter()
@@ -60,8 +64,10 @@ extension Book: Codable {
             }
         }
 
+        level = try container.decodeIfPresent(Level.self, forKey: .level)
+        storyline = try container.decodeIfPresent(Storyline.self, forKey: .storyline)
         cover = try container.decodeIfPresent(MediaHref.self, forKey: .cover)
-        contents = try container.decode([Book.Contents].self, forKey: .contents)
+        contents = try container.decode([Contents].self, forKey: .contents)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -73,6 +79,7 @@ extension Book: Codable {
         try container.encodeIfPresent(parentSource, forKey: .parentSource)
         try container.encodeIfPresent(isLegacy, forKey: .isLegacy)
         try container.encode(group, forKey: .group)
+        try container.encodeIfPresent(publishedOrder, forKey: .publishedOrder)
         try container.encodeIfPresent(author, forKey: .author)
 
         let dateFormatter = DateFormatter()
@@ -83,6 +90,8 @@ extension Book: Codable {
             try container.encode(dateFormatter.string(from: revised), forKey: .revised)
         }
 
+        try container.encodeIfPresent(level, forKey: .level)
+        try container.encodeIfPresent(storyline, forKey: .storyline)
         try container.encodeIfPresent(cover, forKey: .cover)
         try container.encode(contents, forKey: .contents)
     }
@@ -135,6 +144,36 @@ extension Book.Contents.Ordinal.Identifier: Codable {
         switch self {
         case let .string(value): try container.encode(value)
         case let .integer(value): try container.encode(value)
+        }
+    }
+}
+
+extension Book.Level: Codable {
+    enum CodingKeys: String, CodingKey {
+        case start
+        case end
+        case custom
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try? container.decode(String.self, forKey: .custom) {
+            self = .custom(value)
+        } else {
+            self = try .range(
+                container.decode(Int.self, forKey: .start) ... container.decode(Int.self, forKey: .end),
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case let .range(value):
+            try container.encode(value.lowerBound, forKey: .start)
+            try container.encode(value.upperBound, forKey: .end)
+        case let .custom(value):
+            try container.encode(value, forKey: .custom)
         }
     }
 }

@@ -36,6 +36,38 @@ struct BookCodableTests {
     }
 
     @Test
+    func `Book with required fields for Adventure`() throws {
+        try testCodable(
+            json: """
+            {
+                "name": "Lost Mine of Phandelver",
+                "id": "LMoP",
+                "source": "LMoP",
+                "group": "supplement",
+                "published": "2014-07-15",
+                "storyline": "Starter Set",
+                "level": {
+                    "start": 1,
+                    "end": 5
+                },
+                "contents": []
+            }
+            """,
+            value: Book(
+                name: "Lost Mine of Phandelver",
+                id: "LMoP",
+                source: "LMoP",
+                group: .supplement,
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2014, month: 7, day: 15).date),
+                level: .range(1 ... 5),
+                storyline: .starterSet,
+                contents: [],
+            ),
+        )
+    }
+
+    @Test
     func `Book with standard fields`() throws {
         try testCodable(
             json: """
@@ -142,6 +174,42 @@ struct BookCodableTests {
                                                    year: 2025, month: 4, day: 30).date),
                 revised: DateComponents(calendar: Calendar(identifier: .iso8601),
                                         year: 2025, month: 4, day: 30).date,
+                contents: [],
+            ),
+        )
+    }
+
+    @Test
+    func `Book with fields for a compendium Adventure`() throws {
+        try testCodable(
+            json: """
+            {
+                "name": "Essentials Kit: Dragon of Icespire Peak",
+                "id": "DIP",
+                "source": "DIP",
+                "parentSource": "ESK",
+                "group": "supplement",
+                "published": "2019-06-24",
+                "publishedOrder": 0,
+                "storyline": "Essentials Kit",
+                "level": {
+                    "start": 1,
+                    "end": 6
+                },
+                "contents": []
+            }
+            """,
+            value: Book(
+                name: "Essentials Kit: Dragon of Icespire Peak",
+                id: "DIP",
+                source: "DIP",
+                parentSource: "ESK",
+                group: .supplement,
+                publishedOrder: 0,
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2019, month: 6, day: 24).date),
+                level: .range(1 ... 6),
+                storyline: .essentialsKit,
                 contents: [],
             ),
         )
@@ -276,6 +344,33 @@ struct BookContentsCodableTests {
             }
             """,
             value: Book.Contents("Miscellaneous Creatures", ordinal: .init(.appendix, identifier: .string("A"))),
+        )
+    }
+}
+
+struct BookLevelCodableTests {
+    @Test
+    func `Level with range`() throws {
+        try testCodable(
+            json: """
+            {
+                "start": 1,
+                "end": 5
+            }
+            """,
+            value: Book.Level.range(1 ... 5),
+        )
+    }
+
+    @Test
+    func `Level with custom`() throws {
+        try testCodable(
+            json: """
+            {
+                "custom": "Players use monster stat blocks",
+            }
+            """,
+            value: Book.Level.custom("Players use monster stat blocks"),
         )
     }
 }
