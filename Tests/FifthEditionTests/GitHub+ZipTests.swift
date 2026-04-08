@@ -11,19 +11,22 @@ import Testing
 
 struct GitHubZipTests {
     @Test
-    func `Obtain ZIP asset from release`() async throws {
+    func `zipAssets returns ZIP assets from release`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
         let releases = try await GitHubRelease.releasesFrom(url: url)
         let release = try #require(releases.first, "Missing release")
 
-        let asset = try #require(release.zipAsset)
-        #expect(asset.name == "example.zip")
+        let assets = release.zipAssets
+        #expect(assets.count == 1)
+
+        #expect(assets[0].name == "example.zip")
+        #expect(assets[0].contentType == "application/zip")
     }
 
     @Test
-    func `Obtain ZIP part assets from release`() async throws {
+    func `zipPartAssets returns ZIP part assets from release`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 

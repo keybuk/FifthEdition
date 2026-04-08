@@ -11,11 +11,17 @@ import Foundation
 public extension FileHandle {
     func sha256Digest() throws -> String {
         var hasher = SHA256()
-        while let chunk = try read(upToCount: SHA256.blockByteCount) {
+        while let chunk = try read(upToCount: 64 * 1024), !chunk.isEmpty {
             hasher.update(data: chunk)
         }
 
-        return "sha256:" + Data(hasher.finalize()).map { byte in
+        return hasher.finalize().digestString
+    }
+}
+
+public extension SHA256.Digest {
+    var digestString: String {
+        "sha256:" + Data(self).map { byte in
             String(format: "%02x", byte)
         }.joined()
     }

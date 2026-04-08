@@ -11,7 +11,7 @@ import Testing
 
 struct GitHubCodableTests {
     @Test
-    func `GitHubRelease is Decodable`() throws {
+    func `init(from:)`() throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -27,7 +27,7 @@ struct GitHubCodableTests {
     }
 
     @Test
-    func `GitHubRelease is Codable`() throws {
+    func `encode(to:)`() throws {
         // Test this separately since we won't care how Date is encoded internally.
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")

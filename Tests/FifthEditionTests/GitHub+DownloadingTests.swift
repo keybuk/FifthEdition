@@ -11,13 +11,13 @@ import Testing
 
 struct GitHubDownloadingTests {
     @Test
-    func `Construct API URL`() {
+    func `urlFor(owner:name:)`() {
         let url = GitHubRelease.urlFor(owner: "octocat", name: "Hello-World")
         #expect(url == URL(string: "https://api.github.com/repos/octocat/Hello-World/releases")!)
     }
 
     @Test
-    func `Obtain releases from API`() async throws {
+    func `releasesFrom(url:) returns releases`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -30,7 +30,7 @@ struct GitHubDownloadingTests {
     }
 
     @Test
-    func `Latest release from collection`() async throws {
+    func `latest returns latest release`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -40,7 +40,7 @@ struct GitHubDownloadingTests {
     }
 
     @Test
-    func `Named release from collection`() async throws {
+    func `subscript(name:) returns release from collection`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -52,7 +52,7 @@ struct GitHubDownloadingTests {
     }
 
     @Test
-    func `Asset of content type from collection`() async throws {
+    func `subscript(contentType:) returns asset of content type from collection`() async throws {
         let url = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
                                "Missing test data")
 
@@ -93,13 +93,13 @@ struct AssetDownloadTests {
     }
 
     @Test
-    func `FileHandle SHA256 digest`() throws {
+    func `sha256 digest`() throws {
         let digest = try FileHandle(forReadingFrom: Self.exampleZipURL).sha256Digest()
         #expect(digest == Self.exampleZipDigest)
     }
 
     @Test
-    func `Download asset with digest`() async throws {
+    func `downloadInto(_:) for asset with digest`() async throws {
         let targetDirectory = try FileManager.default.url(
             for: .itemReplacementDirectory,
             in: .userDomainMask,
@@ -124,7 +124,7 @@ struct AssetDownloadTests {
     }
 
     @Test
-    func `Skip downloading asset with digest`() async throws {
+    func `downloadInto(_:) skips downloading existing asset with digest`() async throws {
         let targetDirectory = try FileManager.default.url(
             for: .itemReplacementDirectory,
             in: .userDomainMask,
@@ -149,7 +149,7 @@ struct AssetDownloadTests {
     }
 
     @Test
-    func `Repeat downloading asset with incorrect digest`() async throws {
+    func `downloadInto(_:) re-downloads asset with incorrect digest`() async throws {
         let targetDirectory = try FileManager.default.url(
             for: .itemReplacementDirectory,
             in: .userDomainMask,
@@ -175,7 +175,7 @@ struct AssetDownloadTests {
     }
 
     @Test
-    func `Download asset without digest`() async throws {
+    func `downloadInto(_:) for asset without digest`() async throws {
         let targetDirectory = try FileManager.default.url(
             for: .itemReplacementDirectory,
             in: .userDomainMask,
@@ -199,7 +199,7 @@ struct AssetDownloadTests {
     }
 
     @Test
-    func `Repeat download asset without digest`() async throws {
+    func `downloadInto(_:) re-downloads asset without digest`() async throws {
         let targetDirectory = try FileManager.default.url(
             for: .itemReplacementDirectory,
             in: .userDomainMask,
@@ -222,5 +222,52 @@ struct AssetDownloadTests {
 
         // Verify the digest is correct, meaning the wrong file was replaced by the right one.
         #expect(try FileHandle(forReadingFrom: targetURL).sha256Digest() == Self.exampleZipDigest)
+    }
+
+    @Test
+    func `downloadInto(_:) throws error if download fails`() async throws {
+        let targetDirectory = try FileManager.default.url(
+            for: .itemReplacementDirectory,
+            in: .userDomainMask,
+            appropriateFor: FileManager.default.temporaryDirectory,
+            create: true,
+        )
+        defer { try? FileManager.default.removeItem(at: targetDirectory) }
+
+        // Override download URL and digest to match test data since we're using the GitHub examples releases.json
+        // otherwise.
+        var asset = try await Self.exampleAsset
+        asset.browserDownloadURL = targetDirectory.appending(path: UUID().uuidString, directoryHint: .notDirectory)
+        asset.digest = Self.exampleZipDigest
+
+        let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
+        await #expect {
+            try await asset.downloadInto(targetURL)
+        } throws: { error in
+            (error as NSError).domain == NSURLErrorDomain
+                && (error as NSError).code == NSURLErrorFileDoesNotExist
+        }
+    }
+
+    @Test
+    func `downloadInto(_:) throws error if downloaded asset has wrong digest`() async throws {
+        let targetDirectory = try FileManager.default.url(
+            for: .itemReplacementDirectory,
+            in: .userDomainMask,
+            appropriateFor: FileManager.default.temporaryDirectory,
+            create: true,
+        )
+        defer { try? FileManager.default.removeItem(at: targetDirectory) }
+
+        // Override download URL and digest to match test data since we're using the GitHub examples releases.json
+        // otherwise.
+        var asset = try await Self.exampleAsset
+        asset.browserDownloadURL = try Self.badExampleZipURL
+        asset.digest = Self.exampleZipDigest
+
+        let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
+        await #expect(throws: GitHubAsset.AssetError.digestMismatch) {
+            try await asset.downloadInto(targetURL)
+        }
     }
 }

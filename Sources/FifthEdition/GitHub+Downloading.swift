@@ -49,19 +49,25 @@ public extension GitHubAsset {
         case digestMismatch
     }
 
+    enum DownloadProgress {
+        case downloading(Int64, Int64)
+        case validating
+    }
+
     /// Download the asset into a target URL, verifying the digest.
-    /// - Parameter url: Target URL for file.
+    /// - Parameters:
+    ///   - url: Target URL for file.
+    ///   - progress: Called to report progress.
     ///
     /// The file is downloaded from the asset source URL into the target directory, with the same name as the asset
     /// itself. The directory must already exist before calling this function.
     ///
     /// If the file already exists, the digest is checked, and if the same, the download is skipped. If the downloaded
     /// file has the wrong asset, an error is thrown.
-    func downloadInto(_ url: URL) async throws {
+    func downloadInto(_ url: URL, progress: @escaping @Sendable (DownloadProgress) -> Void = { _ in }) async throws {
         // If the target already exists, and the digest matches that in the asset, we can avoid downloading again.
         if let handle = try? FileHandle(forReadingFrom: url) {
-            // TODO: Progress reporting
-            print("Validating existing file")
+            progress(.validating)
             if let digest, digest.hasPrefix("sha256:"),
                try handle.sha256Digest() == digest
             {
@@ -72,16 +78,17 @@ public extension GitHubAsset {
         }
 
         // Download and then verify the digest.
-        // TODO: Progress reporting
-        let (downloadedURL, _) = try await URLSession.shared.download(from: browserDownloadURL)
+        try await browserDownloadURL.download(to: url) { bytesWritten, bytesExpected in
+            progress(.downloading(bytesWritten, bytesExpected))
+        }
+
         if let digest, digest.hasPrefix("sha256:") {
-            let handle = try FileHandle(forReadingFrom: downloadedURL)
+            progress(.validating)
+            let handle = try FileHandle(forReadingFrom: url)
             guard try handle.sha256Digest() == digest else {
-                try FileManager.default.removeItem(at: downloadedURL)
+                try FileManager.default.removeItem(at: url)
                 throw AssetError.digestMismatch
             }
         }
-
-        try FileManager.default.moveItem(at: downloadedURL, to: url)
     }
 }
