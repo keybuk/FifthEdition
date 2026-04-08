@@ -16,6 +16,20 @@ public enum ActionTag: String, CaseIterable, Codable, Sendable {
     case tentacles = "Tentacles"
 }
 
+public enum BookGroup: String, CaseIterable, Codable, Sendable {
+    case core
+    case supplement
+    case supplementAlt = "supplement-alt"
+    case setting
+    case settingAlt = "setting-alt"
+    case prerelease
+    case homebrew
+    case screen
+    case organizedPlay = "organized-play"
+    case recipe
+    case other
+}
+
 public enum Condition: String, CaseIterable, Codable, Sendable {
     case blinded
     case charmed
