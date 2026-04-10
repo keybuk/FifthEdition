@@ -6,8 +6,44 @@
 //
 
 import Foundation
+import Synchronization
 import Testing
 @testable import FifthEdition
+
+final class URLProtocolMock: URLProtocol {
+    static let responses = Mutex<[URL: Data]>([:])
+
+    static func urlSession() -> URLSession {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [Self.self]
+        return URLSession(configuration: configuration)
+    }
+
+    override class func canInit(with _: URLRequest) -> Bool {
+        true
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        guard let url = request.url else { return }
+
+        let data = Self.responses.withLock { $0[url] }
+        if let response = HTTPURLResponse(url: url,
+                                          statusCode: data != nil ? 200 : 404,
+                                          httpVersion: nil,
+                                          headerFields: nil)
+        {
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data ?? Data())
+            client?.urlProtocolDidFinishLoading(self)
+        }
+    }
+
+    override func stopLoading() {}
+}
 
 struct GitHubDownloadingTests {
     @Test
@@ -27,6 +63,42 @@ struct GitHubDownloadingTests {
 
         let asset = try #require(release.assets.first, "Missing asset")
         #expect(asset.name == "example.zip")
+    }
+
+    @Test
+    func `releasesFor(owner:name:) returns releases`() async throws {
+        let testURL = try #require(Bundle.module.url(forResource: "releases", withExtension: "json"),
+                                   "Missing test data")
+        let testData = try Data(contentsOf: testURL)
+
+        let url = GitHubRelease.urlFor(owner: "octocat", name: "Hello-World")
+        URLProtocolMock.responses.withLock {
+            $0[url] = testData
+        }
+
+        let releases = try await GitHubRelease.releasesFor(
+            owner: "octocat",
+            name: "Hello-World",
+            urlSession: URLProtocolMock.urlSession(),
+        )
+
+        let release = try #require(releases.first, "Missing release")
+        #expect(release.name == "v1.0.0")
+
+        let asset = try #require(release.assets.first, "Missing asset")
+        #expect(asset.name == "example.zip")
+    }
+
+    @Test
+    func `releasesFor(owner:name:) throws error on 404`() async throws {
+        let error = await #expect(throws: URLError.self) {
+            try await GitHubRelease.releasesFor(
+                owner: "octocat",
+                name: "Goodbye-Stars",
+                urlSession: URLProtocolMock.urlSession(),
+            )
+        }
+        #expect(error?.code == .badServerResponse)
     }
 
     @Test
@@ -225,6 +297,25 @@ struct AssetDownloadTests {
     }
 
     @Test
+    func `downloadInto(_:) throws error on 404`() async throws {
+        let targetDirectory = try FileManager.default.url(
+            for: .itemReplacementDirectory,
+            in: .userDomainMask,
+            appropriateFor: FileManager.default.temporaryDirectory,
+            create: true,
+        )
+        defer { try? FileManager.default.removeItem(at: targetDirectory) }
+
+        let asset = try await Self.exampleAsset
+
+        let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
+        let error = await #expect(throws: URLError.self) {
+            try await asset.downloadInto(targetURL, configuration: URLProtocolMock.urlSession().configuration)
+        }
+        #expect(error?.code == .badServerResponse)
+    }
+
+    @Test
     func `downloadInto(_:) throws error if download fails`() async throws {
         let targetDirectory = try FileManager.default.url(
             for: .itemReplacementDirectory,
@@ -241,12 +332,10 @@ struct AssetDownloadTests {
         asset.digest = Self.exampleZipDigest
 
         let targetURL = targetDirectory.appending(component: asset.name, directoryHint: .notDirectory)
-        await #expect {
+        let error = await #expect(throws: URLError.self) {
             try await asset.downloadInto(targetURL)
-        } throws: { error in
-            (error as NSError).domain == NSURLErrorDomain
-                && (error as NSError).code == NSURLErrorFileDoesNotExist
         }
+        #expect(error?.code == .fileDoesNotExist)
     }
 
     @Test

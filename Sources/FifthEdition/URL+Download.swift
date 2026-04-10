@@ -12,10 +12,10 @@ public extension URL {
     /// Retrieve the contents of this URL into a saved file asynchronously.
     /// - Parameters:
     ///   - url: The URL to download into.
+    ///   - configuration: `URLSession` configuration to use, defaults to `.default`.
     ///   - progress: Called to report download progress with total bytes written and expected as parameters.
     /// - Returns: `URLResponse`.
-    @discardableResult
-    func download(to url: URL,
+    func download(to url: URL, configuration _: URLSessionConfiguration = .default,
                   progress: @escaping @Sendable (Int64, Int64) -> Void = { _, _ in })
         async throws -> URLResponse?
     {

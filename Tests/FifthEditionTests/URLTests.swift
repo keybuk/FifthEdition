@@ -83,11 +83,9 @@ struct URLDownloadTests {
         let sourceURL = targetDirectory.appending(component: UUID().uuidString, directoryHint: .notDirectory)
         let targetURL = targetDirectory.appending(component: UUID().uuidString, directoryHint: .notDirectory)
 
-        await #expect {
+        let error = await #expect(throws: URLError.self) {
             try await sourceURL.download(to: targetURL)
-        } throws: { error in
-            (error as NSError).domain == NSURLErrorDomain
-                && (error as NSError).code == NSURLErrorFileDoesNotExist
         }
+        #expect(error?.code == .fileDoesNotExist)
     }
 }
