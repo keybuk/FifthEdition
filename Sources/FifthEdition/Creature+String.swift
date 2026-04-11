@@ -244,14 +244,14 @@ extension Creature.SkillSet: CustomDebugStringConvertible {
                 values: skills, other,
             )
         } else {
-            String(describing: skills)
+            String(reflecting: skills)
         }
     }
 }
 
 extension Creature.ToolSet: CustomDebugStringConvertible {
     public var debugDescription: String {
-        String(describing: tools)
+        String(reflecting: tools)
     }
 }
 

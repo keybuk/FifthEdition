@@ -16,7 +16,7 @@ extension Page: CustomStringConvertible {
 
 extension Speed.Alternate: CustomDebugStringConvertible {
     public var debugDescription: String {
-        String(describing: speeds)
+        String(reflecting: speeds)
     }
 }
 

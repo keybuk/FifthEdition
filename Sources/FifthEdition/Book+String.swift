@@ -5,8 +5,8 @@
 //  Created by Scott James Remnant on 4/11/26.
 //
 
-extension Book.Contents: CustomStringConvertible {
-    public var description: String {
+extension Book.Contents: CustomDebugStringConvertible {
+    public var debugDescription: String {
         debugDescriptionOf(
             String(describing: type(of: self)),
             names: "_", "headers", "ordinal",
@@ -15,8 +15,8 @@ extension Book.Contents: CustomStringConvertible {
     }
 }
 
-extension Book.Contents.Header: CustomStringConvertible {
-    public var description: String {
+extension Book.Contents.Header: CustomDebugStringConvertible {
+    public var debugDescription: String {
         debugDescriptionOf(
             String(describing: type(of: self)),
             names: "_", "depth", "index",
@@ -25,8 +25,8 @@ extension Book.Contents.Header: CustomStringConvertible {
     }
 }
 
-extension Book.Contents.Ordinal: CustomStringConvertible {
-    public var description: String {
+extension Book.Contents.Ordinal: CustomDebugStringConvertible {
+    public var debugDescription: String {
         debugDescriptionOf(
             String(describing: Swift.type(of: self)),
             names: "_", "identifier",
