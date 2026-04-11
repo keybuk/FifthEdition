@@ -66,23 +66,12 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
         "\(average) (\(stringValue))"
     }
 
-    /// Crates a new dice notation.
+    /// Creates a new dice notation.
     /// - Parameters:
     ///   - die: The die to roll.
     ///   - count: Number of `die` to roll.
     ///   - modifier: Modifier to add or subtract from the rolled total.
     public init(_ die: Die, count: Int = 1, modifier: Int = 0) {
-        self.count = count
-        self.die = die
-        self.modifier = modifier
-    }
-
-    /// Crates a new dice notation.
-    /// - Parameters:
-    ///   - count: Number of `die` to roll.
-    ///   - die: The die to roll.
-    ///   - modifier: Modifier to add or subtract from the rolled total.
-    public init(count: Int = 1, die: Die, modifier: Int = 0) {
         self.count = count
         self.die = die
         self.modifier = modifier
