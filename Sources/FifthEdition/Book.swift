@@ -77,19 +77,3 @@ public struct Book: Equatable, Sendable {
     public var cover: MediaHref?
     public var contents: [Contents]
 }
-
-public typealias Adventure = Book
-
-@MemberwiseInit(.public)
-public struct Adventures: Equatable, Codable, Sendable {
-    public static let entryPath: String = "data/adventures.json"
-
-    public var adventure: [Adventure] = []
-}
-
-@MemberwiseInit(.public)
-public struct Books: Equatable, Codable, Sendable {
-    public static let entryPath: String = "data/books.json"
-
-    public var book: [Book] = []
-}
