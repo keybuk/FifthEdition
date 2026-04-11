@@ -32,11 +32,6 @@ let package = Package(
         .testTarget(
             name: "FifthEditionTests",
             dependencies: ["FifthEdition"],
-            resources: [
-                .copy("Resources/releases.json"),
-                .copy("Resources/example.zip"),
-                .copy("Resources/bad_example.zip"),
-            ],
         ),
     ],
 )
