@@ -10,7 +10,7 @@ import Testing
 
 struct SpeedSubscriptTests {
     @Test
-    func `Get speed by subscript`() {
+    func `speed[]`() {
         let speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -19,7 +19,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Get unset speed by subscript`() {
+    func `speed[] returns nil when unset`() {
         let speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -28,7 +28,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Set speed by subscript`() {
+    func `speed[] sets unset speed`() {
         var speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -43,7 +43,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Change speed by subscript`() {
+    func `speed[] updates speed`() {
         var speed = Speed([
             .walk: .speed(30),
             .climb: .speed(60),
@@ -57,7 +57,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Get alternate speed by subscript`() {
+    func `alternate[]`() {
         let speed = Speed(
             [
                 .walk: .speed(30),
@@ -71,7 +71,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Get unset alternate speed by subscript`() {
+    func `alternate[] returns nil when unset`() {
         let speed = Speed(
             [
                 .walk: .speed(30),
@@ -86,7 +86,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Set alternate speed by subscript`() {
+    func `alternate[] sets unset speed`() {
         var speed = Speed(
             [
                 .walk: .speed(30),
@@ -106,7 +106,7 @@ struct SpeedSubscriptTests {
     }
 
     @Test
-    func `Change alternate speed by subscript`() {
+    func `alternate[] updates speed`() {
         var speed = Speed(
             [
                 .walk: .speed(30),

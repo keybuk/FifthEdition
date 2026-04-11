@@ -10,7 +10,7 @@
 import MemberwiseInit
 
 @MemberwiseInit(.public)
-public struct Books: Equatable, Codable, Sendable {
+public struct Books: Codable, Equatable, Sendable {
     public static let entryPath: String = "data/books.json"
 
     public var book: [Book] = []

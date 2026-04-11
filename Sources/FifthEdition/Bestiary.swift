@@ -10,7 +10,7 @@
 import MemberwiseInit
 
 @MemberwiseInit(.public)
-public struct Bestiary: Equatable, Codable, Sendable {
+public struct Bestiary: Codable, Equatable, Sendable {
     public static let entryBasePath: String = "data/bestiary"
     public static let indexEntryPath: String = "\(entryBasePath)/index.json"
 

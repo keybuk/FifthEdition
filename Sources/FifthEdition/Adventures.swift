@@ -12,7 +12,7 @@ import MemberwiseInit
 public typealias Adventure = Book
 
 @MemberwiseInit(.public)
-public struct Adventures: Equatable, Codable, Sendable {
+public struct Adventures: Codable, Equatable, Sendable {
     public static let entryPath: String = "data/adventures.json"
 
     public var adventure: [Adventure] = []

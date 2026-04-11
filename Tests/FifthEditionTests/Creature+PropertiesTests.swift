@@ -10,7 +10,7 @@ import Testing
 
 struct CreatureGridSquaresTests {
     @Test(arguments: Size.allCases)
-    func `Grid squares for single size`(_ size: Size) {
+    func `grid squares`(_ size: Size) {
         let creature = Creature(
             name: "\(size.rawValue.uppercased()) Monster",
             source: "XMM",
@@ -27,7 +27,7 @@ struct CreatureGridSquaresTests {
     }
 
     @Test
-    func `Grid squares when no size given`() {
+    func `gridSquares returns 1 when no size`() {
         let creature = Creature(
             name: "Sizeless Monster",
             source: "XMM",
@@ -36,7 +36,7 @@ struct CreatureGridSquaresTests {
     }
 
     @Test
-    func `Grid squares for multiple sizes`() {
+    func `gridSquares returns smallest size`() {
         let creature = Creature(
             name: "Growing Monster",
             source: "XMM",
@@ -167,7 +167,7 @@ struct CreatureTokenPathTests {
 
 struct CreatureUidTests {
     @Test
-    func UID() {
+    func uid() {
         let creature = Creature(
             name: "Blink Dog",
             source: "XMM",
@@ -176,7 +176,7 @@ struct CreatureUidTests {
     }
 
     @Test
-    func `No UID if no name`() {
+    func `uid is nil if no name`() {
         let creature = Creature(
             source: "XMM",
         )
@@ -184,7 +184,7 @@ struct CreatureUidTests {
     }
 
     @Test
-    func `No UID if no source`() {
+    func `uid is nil if no source`() {
         let creature = Creature(
             name: "Blink Dog",
         )
@@ -194,7 +194,7 @@ struct CreatureUidTests {
 
 struct CreatureSkillSetSubscriptTests {
     @Test
-    func `Get skill by subscript`() {
+    func `skill[]`() {
         let skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -203,7 +203,7 @@ struct CreatureSkillSetSubscriptTests {
     }
 
     @Test
-    func `Get unset skill by subscript`() {
+    func `skill[] returns nil if unset`() {
         let skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -212,7 +212,7 @@ struct CreatureSkillSetSubscriptTests {
     }
 
     @Test
-    func `Set skill by subscript`() {
+    func `skill[] sets unset skill`() {
         var skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -227,7 +227,7 @@ struct CreatureSkillSetSubscriptTests {
     }
 
     @Test
-    func `Change skill by subscript`() {
+    func `skill[] updates skill`() {
         var skill = Creature.SkillSet([
             .deception: "+5",
             .perception: "+4",
@@ -243,7 +243,7 @@ struct CreatureSkillSetSubscriptTests {
 
 struct CreatureToolSetSubscriptTests {
     @Test
-    func `Get tool by subscript`() {
+    func `tool[]`() {
         let tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
@@ -252,7 +252,7 @@ struct CreatureToolSetSubscriptTests {
     }
 
     @Test
-    func `Get unset tool by subscript`() {
+    func `tool[] returns nil if unset`() {
         let tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
@@ -261,7 +261,7 @@ struct CreatureToolSetSubscriptTests {
     }
 
     @Test
-    func `Set tool by subscript`() {
+    func `tool[] sets unset tool`() {
         var tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",
@@ -276,7 +276,7 @@ struct CreatureToolSetSubscriptTests {
     }
 
     @Test
-    func `Change tool by subscript`() {
+    func `tool[] updates tool`() {
         var tool = Creature.ToolSet([
             .cobblersTools: "+1",
             .smithsTools: "+2",

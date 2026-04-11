@@ -25,7 +25,7 @@ public struct Creature: Codable, Equatable, Sendable {
 
     public enum Alignment: Equatable, Sendable {
         @MemberwiseInit(.public, _optionalsDefaultNil: true)
-        public struct Choice: Equatable, Codable, Sendable {
+        public struct Choice: Codable, Equatable, Sendable {
             public var alignment: FifthEdition.Alignment
             public var chance: Int?
             public var note: String?
