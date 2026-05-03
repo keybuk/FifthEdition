@@ -5,6 +5,8 @@
 --import-grouping alpha
 --import-grouping testable-last
 
+--ranges no-space
+
 --complex-attributes prev-line
 --computed-var-attributes prev-line
 --func-attributes prev-line

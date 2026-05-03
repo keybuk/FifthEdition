@@ -47,7 +47,7 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
 
     /// The range of possible rolls this notation yields.
     public var range: ClosedRange<Int> {
-        (count + modifier) ... (count * die.rawValue + modifier)
+        (count + modifier)...(count * die.rawValue + modifier)
     }
 
     /// The dice notation expressed as a human readable string.

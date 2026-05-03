@@ -60,7 +60,7 @@ struct BookCodableTests {
                 group: .supplement,
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                    year: 2014, month: 7, day: 15).date),
-                level: .range(1 ... 5),
+                level: .range(1...5),
                 storyline: .starterSet,
                 contents: [],
             ),
@@ -208,7 +208,7 @@ struct BookCodableTests {
                 publishedOrder: 0,
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                    year: 2019, month: 6, day: 24).date),
-                level: .range(1 ... 6),
+                level: .range(1...6),
                 storyline: .essentialsKit,
                 contents: [],
             ),
@@ -358,7 +358,7 @@ struct BookLevelCodableTests {
                 "end": 5
             }
             """,
-            value: Book.Level.range(1 ... 5),
+            value: Book.Level.range(1...5),
         )
     }
 

@@ -161,7 +161,7 @@ extension Book.Level: Codable {
             self = .custom(value)
         } else {
             self = try .range(
-                container.decode(Int.self, forKey: .start) ... container.decode(Int.self, forKey: .end),
+                container.decode(Int.self, forKey: .start)...container.decode(Int.self, forKey: .end),
             )
         }
     }

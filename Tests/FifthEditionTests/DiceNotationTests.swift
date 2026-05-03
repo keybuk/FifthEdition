@@ -46,16 +46,16 @@ struct DiceNotationTests {
         50, // 1d100
     ]
     static let testRanges: [ClosedRange<Int>] = [
-        4 ... 4, // 4d1
-        3 ... 6, // 3d2
-        2 ... 4, // 1d3 + 1
-        1 ... 7, // 2d4 - 1
-        3 ... 8, // 1d6 + 2
-        2 ... 23, // 3d8 - 1
-        14 ... 50, // 4d10 + 10
-        -1 ... 10, // 1d12-2
-        -2 ... 36, // 2d20 - 4
-        1 ... 100, // 1d100
+        4...4, // 4d1
+        3...6, // 3d2
+        2...4, // 1d3 + 1
+        1...7, // 2d4 - 1
+        3...8, // 1d6 + 2
+        2...23, // 3d8 - 1
+        14...50, // 4d10 + 10
+        -1...10, // 1d12-2
+        -2...36, // 2d20 - 4
+        1...100, // 1d100
     ]
 
     @Test(arguments: zip(testStrings, testValues))
@@ -96,7 +96,7 @@ struct DiceNotationTests {
     @Test(arguments: testValues)
     func `roll()`(_ input: (count: Int, die: Die, modifier: Int)) {
         let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        for _ in 0 ..< 100 {
+        for _ in 0..<100 {
             #expect(dice.range.contains(dice.roll()))
         }
     }
