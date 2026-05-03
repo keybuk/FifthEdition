@@ -17,7 +17,11 @@ public struct Spellcasting: Codable, Equatable, Sendable {
     // TODO:
 }
 
+/// Link to media.
 public enum MediaHref: Equatable, Sendable {
+    /// Relative path with 5etools image archive.
     case path(String)
+
+    /// External URL.
     case url(URL)
 }

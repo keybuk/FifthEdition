@@ -4,76 +4,71 @@
 //
 //  Created by Scott James Remnant on 4/8/26.
 //
-//  Derived from schema-template/adventures.json
-//  Version: 1.10.34
-//
 //  Derived from schema-template/books.json
 //  Version: 1.2.19
 
 import Foundation
 import MemberwiseInit
 
+/// Published source book.
 @MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Book: Equatable, Sendable {
-    @MemberwiseInit(.public, _optionalsDefaultNil: true)
-    public struct Contents: Codable, Equatable, Sendable {
-        @MemberwiseInit(.public, _optionalsDefaultNil: true)
-        public struct Header: Equatable, Sendable {
-            @Init(label: "_")
-            public var header: String
-            public var depth: Int?
-            public var index: Int?
-        }
-
-        @MemberwiseInit(.public, _optionalsDefaultNil: true)
-        public struct Ordinal: Codable, Equatable, Sendable {
-            public enum OrdinalType: String, Codable, Equatable, Sendable {
-                case chapter
-                case appendix
-                case part
-                case episode
-                case level
-                case section
-            }
-
-            public enum Identifier: Equatable, Sendable {
-                case integer(Int)
-                case string(String)
-            }
-
-            @Init(label: "_")
-            public var type: OrdinalType
-            public var identifier: Identifier?
-        }
-
-        @Init(label: "_")
-        public var name: String
-        public var headers: [Header]?
-        public var ordinal: Ordinal?
-    }
-
-    public enum Level: Equatable, Sendable {
-        case range(ClosedRange<Int>)
-        case custom(String)
-    }
-
+    /// Book name.
     public var name: String
-    public var alias: [String]?
+
+    /// Other names the book is known by.
+    ///
+    /// Usually used to prefix with a collection name.
+    public var alias: [String] = []
+
+    /// Unique identifier used to reference this book.
     public var id: String
+
+    /// Source identifier this book belongs to.
     public var source: String
 
+    /// Source identifier of the collection this book belongs to.
+    ///
+    /// Used for sources which contain multiple adventures, e.g. "TftYP", or _packages_ of related books, e.g. "SAiS".
     public var parentSource: String?
-    public var isLegacy: Bool?
-    public var group: BookGroup
-    public var publishedOrder: Int?
 
+    /// Whether this is a legacy book.
+    public var isLegacy: Bool = false
+
+    /// The group under which this book should be listed.
+    public var group: Group
+
+    /// Author of the book.
     public var author: String?
+
+    /// Date of publication.
     public var published: Date
+
+    /// Date the book was most recently revised.
     public var revised: Date?
 
-    public var level: Level?
-    public var storyline: Storyline?
-
+    /// Cover image.
+    ///
+    /// Preferred sizes are 300 x 300px or 600 x 600px.
     public var cover: MediaHref?
-    public var contents: [Contents]
+
+    /// Table of contents.
+    public var contents: [CorpusContents]
+}
+
+public extension Book {
+    /// Book grouping.
+    enum Group: String, CaseIterable, Codable, Sendable {
+        case core
+        case supplement
+        case supplementAlt = "supplement-alt"
+        case setting
+        case settingAlt = "setting-alt"
+        case prerelease
+        case homebrew
+        case screen
+        case organizedPlay = "organized-play"
+        case recipe
+        case other
+    }
 }

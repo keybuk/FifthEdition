@@ -9,11 +9,12 @@
 
 import MemberwiseInit
 
-public typealias Adventure = Book
-
+/// Adventures.
 @MemberwiseInit(.public)
 public struct Adventures: Codable, Equatable, Sendable {
-    public static let entryPath: String = "data/adventures.json"
+    /// Relative path of the data file within the 5etools source archive.
+    public static let jsonPath: String = "data/adventures.json"
 
+    /// List of adventures.
     public var adventure: [Adventure] = []
 }

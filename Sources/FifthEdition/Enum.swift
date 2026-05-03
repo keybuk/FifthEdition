@@ -16,20 +16,6 @@ public enum ActionTag: String, CaseIterable, Codable, Sendable {
     case tentacles = "Tentacles"
 }
 
-public enum BookGroup: String, CaseIterable, Codable, Sendable {
-    case core
-    case supplement
-    case supplementAlt = "supplement-alt"
-    case setting
-    case settingAlt = "setting-alt"
-    case prerelease
-    case homebrew
-    case screen
-    case organizedPlay = "organized-play"
-    case recipe
-    case other
-}
-
 public enum Condition: String, CaseIterable, Codable, Sendable {
     case blinded
     case charmed
@@ -107,8 +93,14 @@ public enum DragonColor: String, CaseIterable, Codable, Sendable {
 }
 
 public enum Edition: String, CaseIterable, Codable, Sendable {
+    /// 5e (2014) edition.
     case classic
-    case one
+
+    /// 5.5e (2014) edition.
+    case modern = "one"
+
+    static let legacy = Edition.classic
+    static let one = Edition.modern
 }
 
 public enum EnvironmentType: String, CaseIterable, Codable, Sendable {
@@ -284,55 +276,6 @@ public enum SpellcastingType: String, CaseIterable, Codable, Sendable {
     case sorcerer = "Class, Sorcerer"
     case warlock = "Class, Warlock"
     case wizard = "Class, Wizard"
-}
-
-public enum Storyline: String, CaseIterable, Codable, Sendable {
-    case starterSet = "Starter Set"
-    case tyrannyOfDragons = "Tyranny of Dragons"
-    case elementalEvil = "Elemental Evil"
-    case rageOfDemons = "Rage of Demons"
-    case ravenloft = "Ravenloft"
-    case stormKingsThunder = "Storm King's Thunder"
-    case talesFromTheYawningPortal = "Tales from the Yawning Portal"
-    case tombOfAnnihilation = "Tomb of Annihilation"
-    case waterdeep = "Waterdeep"
-    case ravnica = "Ravnica"
-    case extraLife = "Extra Life"
-    case ghostsOfSaltmarsh = "Ghosts of Saltmarsh"
-    case acquisitionsIncorporated = "Acquisitions Incorporated"
-    case essentialsKit = "Essentials Kit"
-    case strangerThings = "Stranger Things"
-    case baldursGate = "Baldur's Gate"
-    case eberron = "Eberron"
-    case rickAndMorty = "Rick and Morty"
-    case wildemount = "Wildemount"
-    case icewindDale = "Icewind Dale"
-    case mythicOdsseysOfTheros = "Mythic Odysseys of Theros"
-    case candlekeepMysteries = "Candlekeep Mysteries"
-    case adventuresInTheForgottenRealms = "Adventures in the Forgotten Realms"
-    case theWildBeyondTheWitchlight = "The Wild Beyond the Witchlight"
-    case ixalan = "Ixalan"
-    case nerdsRestoringHarmony = "NERDS Restoring Harmony"
-    case strixhaven = "Strixhaven"
-    case criticalRole = "Critical Role"
-    case journeysThroughTheRadiantCitadel = "Journeys through the Radiant Citadel"
-    case spelljammer = "Spelljammer"
-    case dragonlance = "Dragonlance"
-    case keysFromTheGoldenVault = "Keys from the Golden Vault"
-    case giantsOfTheStarForge = "Giants of the Star Forge"
-    case minecraft = "Minecraft"
-    case planescape = "Planescape"
-    case adventureAtlas = "Adventure Atlas"
-    case heroesFeast = "Heroes' Feast"
-    case familyFriendly = "Family Friendly"
-    case venca = "Vecna"
-    case questsFromTheInfiniteStaircase = "Quests from the Infinite Staircase"
-    case lego = "LEGO"
-    case shadowRealm = "Shadow Realm"
-    case animatedSeries = "Animated Series"
-    case dragonDelves = "Dragon Delves"
-    case forgottenRealms = "Forgotten Realms"
-    case miscellaneous = "Miscellaneous"
 }
 
 public enum Tool: String, CaseIterable, Codable, Sendable {

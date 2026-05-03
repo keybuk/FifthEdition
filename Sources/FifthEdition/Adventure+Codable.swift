@@ -1,26 +1,28 @@
 //
-//  Book+Codable.swift
+//  Adventure+Codable.swift
 //  FifthEdition
 //
-//  Created by Scott James Remnant on 4/8/26.
+//  Created by Scott James Remnant on 5/2/26.
 //
 
 import Foundation
 
-extension Book: Codable {
+extension Adventure: Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case alias
         case id
         case source
         case parentSource
-        case isLegacy = "legacy"
         case group
         case author
+        case contents
+        case level
         case published
         case revised
+        case publishedOrder
         case cover
-        case contents
+        case storyline
     }
 
     public init(from decoder: any Decoder) throws {
@@ -30,9 +32,10 @@ extension Book: Codable {
         id = try container.decode(String.self, forKey: .id)
         source = try container.decode(String.self, forKey: .source)
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
-        isLegacy = try container.decodeIfPresent(Bool.self, forKey: .isLegacy) ?? false
         group = try container.decode(Group.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
+        contents = try container.decode([CorpusContents].self, forKey: .contents)
+        level = try container.decode(Level.self, forKey: .level)
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -60,8 +63,9 @@ extension Book: Codable {
             }
         }
 
+        publishedOrder = try container.decodeIfPresent(Int.self, forKey: .publishedOrder)
         cover = try container.decodeIfPresent(MediaHref.self, forKey: .cover)
-        contents = try container.decode([CorpusContents].self, forKey: .contents)
+        storyline = try container.decode(String.self, forKey: .storyline)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -73,11 +77,10 @@ extension Book: Codable {
         try container.encode(id, forKey: .id)
         try container.encode(source, forKey: .source)
         try container.encodeIfPresent(parentSource, forKey: .parentSource)
-        if isLegacy {
-            try container.encode(isLegacy, forKey: .isLegacy)
-        }
         try container.encode(group, forKey: .group)
         try container.encodeIfPresent(author, forKey: .author)
+        try container.encode(contents, forKey: .contents)
+        try container.encode(level, forKey: .level)
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -87,7 +90,38 @@ extension Book: Codable {
             try container.encode(dateFormatter.string(from: revised), forKey: .revised)
         }
 
+        try container.encodeIfPresent(publishedOrder, forKey: .publishedOrder)
         try container.encodeIfPresent(cover, forKey: .cover)
-        try container.encode(contents, forKey: .contents)
+        try container.encode(storyline, forKey: .storyline)
+    }
+}
+
+extension Adventure.Level: Codable {
+    enum CodingKeys: String, CodingKey {
+        case start
+        case end
+        case custom
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try? container.decode(String.self, forKey: .custom) {
+            self = .custom(value)
+        } else {
+            self = try .range(
+                container.decode(Int.self, forKey: .start)...container.decode(Int.self, forKey: .end),
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case let .range(value):
+            try container.encode(value.lowerBound, forKey: .start)
+            try container.encode(value.upperBound, forKey: .end)
+        case let .custom(value):
+            try container.encode(value, forKey: .custom)
+        }
     }
 }

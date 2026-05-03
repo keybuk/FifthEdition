@@ -9,9 +9,12 @@
 
 import MemberwiseInit
 
+/// Books.
 @MemberwiseInit(.public)
 public struct Books: Codable, Equatable, Sendable {
-    public static let entryPath: String = "data/books.json"
+    /// Relative path of the data file within the 5etools source archive.
+    public static let jsonPath: String = "data/books.json"
 
+    /// List of books.
     public var book: [Book] = []
 }
