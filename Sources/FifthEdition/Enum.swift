@@ -4,6 +4,8 @@
 //
 //  Created by Scott James Remnant on 12/29/25.
 //
+//  Derived from schema-template/util-edition.json
+//  Version: 1.0.1
 
 public enum ActionTag: String, CaseIterable, Codable, Sendable {
     case breathWeapon = "Breath Weapon"
@@ -92,6 +94,10 @@ public enum DragonColor: String, CaseIterable, Codable, Sendable {
     case spirit
 }
 
+/// D&D edition.
+///
+/// Identifies the 5th edition ruleset that a given entity is written for, either the ``classic`` 2014 5e rules, or the
+/// ``modern`` 2024 5.5e rules.
 public enum Edition: String, CaseIterable, Codable, Sendable {
     /// 5e (2014) edition.
     case classic
@@ -99,7 +105,10 @@ public enum Edition: String, CaseIterable, Codable, Sendable {
     /// 5.5e (2014) edition.
     case modern = "one"
 
+    /// Alias for the ``classic`` 5e (2014) edition, as used by e.g. D&D Beyond.
     static let legacy = Edition.classic
+
+    /// Alias for the ``modern`` 5.5e (2024) edition, as used in the 5etools schema.
     static let one = Edition.modern
 }
 
