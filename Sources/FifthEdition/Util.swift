@@ -5,7 +5,7 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 //  Derived from schema-template/util.json
-//  Version: 1.17.39
+//  Version: 1.18.0
 
 import EnumOptionSet
 import MemberwiseInit
@@ -27,9 +27,28 @@ extension Alignment: Hashable {
     static let any: Self = .all
 }
 
+/// Index of files.
 @MemberwiseInit(.public)
-public struct IndexFile: Equatable, Sendable {
-    public var entries: [String: String]
+public struct Index: Equatable, Sendable {
+    /// Index entries.
+    ///
+    /// Usually keys are sources and values are paths.
+    public var entries: [String: String] = [:]
+}
+
+/// Metadata.
+@MemberwiseInit(.public)
+public struct MetaBlock: Equatable, Sendable {
+    /// Dependencies.
+    ///
+    /// Values are an array of dependency sources.
+    public var dependencies: [String: [String]] = [:]
+
+    /// Other sources to be loaded.
+    ///
+    /// Values are a map where keys are other sources to be loaded; values are ``Creature/otherSources`` sources from
+    /// that source to search for.",
+    public var otherSources: [String: [String: String]] = [:]
 }
 
 public enum Page: Equatable, Hashable, Sendable {

@@ -66,7 +66,7 @@ extension Alignment: Codable {
     }
 }
 
-extension IndexFile: Codable {
+extension Index: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         entries = try container.decode([String: String].self)
@@ -75,6 +75,29 @@ extension IndexFile: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(entries)
+    }
+}
+
+extension MetaBlock: Codable {
+    enum CodingKeys: String, CodingKey {
+        case dependencies
+        case otherSources
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        dependencies = try container.decodeIfPresent([String: [String]].self, forKey: .dependencies) ?? [:]
+        otherSources = try container.decodeIfPresent([String: [String: String]].self, forKey: .otherSources) ?? [:]
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if !dependencies.isEmpty {
+            try container.encode(dependencies, forKey: .dependencies)
+        }
+        if !otherSources.isEmpty {
+            try container.encode(otherSources, forKey: .otherSources)
+        }
     }
 }
 

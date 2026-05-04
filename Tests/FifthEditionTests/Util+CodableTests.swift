@@ -69,9 +69,9 @@ struct AlignmentCodableTests {
     }
 }
 
-struct IndexFileCodableTests {
+struct IndexCodableTests {
     @Test
-    func `Index file`() throws {
+    func `Index with list`() throws {
         try testCodable(
             json: """
             {
@@ -80,12 +80,52 @@ struct IndexFileCodableTests {
               "XPHB" : "foo-xphb.json"
             }
             """,
-            value: IndexFile(
+            value: Index(
                 entries: [
                     "XDMG": "foo-xdmg.json",
                     "XMM": "foo-xmm.json",
                     "XPHB": "foo-xphb.json",
                 ],
+            ),
+        )
+    }
+}
+
+struct MetaBlockCodableTests {
+    @Test
+    func `MetaBlock with dependencies`() throws {
+        try testCodable(
+            json: """
+            {
+                "dependencies": {
+                    "monster": [
+                        "MM",
+                        "VRGR"
+                    ]
+                }
+            }
+            """,
+            value: MetaBlock(
+                dependencies: ["monster": ["MM", "VRGR"]],
+            ),
+        )
+    }
+
+    @Test
+    func `MetaBlock with otherSources`() throws {
+        try testCodable(
+            json: """
+            {
+                "otherSources": {
+                    "monster": {
+                        "MM": "CoS",
+                        "VRGR": "CoS"
+                    }
+                }
+            }
+            """,
+            value: MetaBlock(
+                otherSources: ["monster": ["MM": "CoS", "VRGR": "CoS"]],
             ),
         )
     }
