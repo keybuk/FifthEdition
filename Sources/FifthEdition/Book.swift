@@ -33,6 +33,8 @@ public struct Book: Equatable, Sendable {
     public var parentSource: String?
 
     /// Whether this is a legacy book.
+    ///
+    /// - Note: This property is present in the schema but not in data.
     public var isLegacy: Bool = false
 
     /// The group under which this book should be listed.
@@ -53,7 +55,7 @@ public struct Book: Equatable, Sendable {
     public var cover: MediaHref?
 
     /// Table of contents.
-    public var contents: [CorpusContents]
+    public var contents: [CorpusContents] = []
 }
 
 public extension Book {

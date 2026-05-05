@@ -16,6 +16,9 @@ extension Adventure: Codable {
         case parentSource
         case group
         case author
+        case alAveragePlayerLevel
+        case alLength
+        case alId
         case contents
         case level
         case published
@@ -34,6 +37,9 @@ extension Adventure: Codable {
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
         group = try container.decode(Group.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
+        alAveragePlayerLevel = try container.decodeIfPresent(Int.self, forKey: .alAveragePlayerLevel)
+        alLength = try container.decodeIfPresent(LengthCoding.self, forKey: .alLength)?.value
+        alId = try container.decodeIfPresent(String.self, forKey: .alId)
         contents = try container.decode([CorpusContents].self, forKey: .contents)
         level = try container.decode(Level.self, forKey: .level)
 
@@ -79,6 +85,9 @@ extension Adventure: Codable {
         try container.encodeIfPresent(parentSource, forKey: .parentSource)
         try container.encode(group, forKey: .group)
         try container.encodeIfPresent(author, forKey: .author)
+        try container.encodeIfPresent(alAveragePlayerLevel, forKey: .alAveragePlayerLevel)
+        try container.encodeIfPresent(alLength.map { LengthCoding($0) }, forKey: .alLength)
+        try container.encodeIfPresent(alId, forKey: .alId)
         try container.encode(contents, forKey: .contents)
         try container.encode(level, forKey: .level)
 
@@ -93,6 +102,41 @@ extension Adventure: Codable {
         try container.encodeIfPresent(publishedOrder, forKey: .publishedOrder)
         try container.encodeIfPresent(cover, forKey: .cover)
         try container.encode(storyline, forKey: .storyline)
+    }
+}
+
+extension Adventure {
+    struct LengthCoding: Codable {
+        enum CodingKeys: String, CodingKey {
+            case exact
+            case min
+            case max
+        }
+
+        var value: ClosedRange<Int>
+
+        init(_ value: ClosedRange<Int>) {
+            self.value = value
+        }
+
+        init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            if let exactValue = try? container.decode(Int.self, forKey: .exact) {
+                value = exactValue...exactValue
+            } else {
+                value = try container.decode(Int.self, forKey: .min)...container.decode(Int.self, forKey: .max)
+            }
+        }
+
+        func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            if value.count == 1 {
+                try container.encode(value.lowerBound, forKey: .exact)
+            } else {
+                try container.encode(value.lowerBound, forKey: .min)
+                try container.encode(value.upperBound, forKey: .max)
+            }
+        }
     }
 }
 

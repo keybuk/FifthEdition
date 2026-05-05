@@ -38,8 +38,23 @@ public struct Adventure: Equatable, Sendable {
     /// Author of the adventure.
     public var author: String?
 
+    /// Adventurers League average player level.
+    ///
+    /// - Note: For use in homebrew.
+    public var alAveragePlayerLevel: Int?
+
+    /// Adventurers League length in hours.
+    ///
+    /// - Note: For use in homebrew.
+    public var alLength: ClosedRange<Int>?
+
+    /// Adventurers League ID.
+    ///
+    /// - Note: For use in homebrew.
+    public var alId: String?
+
     /// Table of contents.
-    public var contents: [CorpusContents]
+    public var contents: [CorpusContents] = []
 
     /// The character levels that the adventure ranges across.
     public var level: Level

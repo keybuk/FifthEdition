@@ -174,6 +174,87 @@ struct AdventureCodableTests {
             ),
         )
     }
+
+    @Test
+    func `Adventure with adventures league`() throws {
+        try testCodable(
+            json: """
+            {
+                "name": "Defiance in Phlan",
+                "id": "DDEX1-01",
+                "source": "DDEX1-01",
+                "group": "other",
+                "alAveragePlayerLevel": 1,
+                "alLength": {
+                    "exact": 5
+                },
+                "alId": "DDEX1-01",
+                "contents": [],
+                "level": {
+                    "start": 1,
+                    "end": 1
+                },
+                "published": "2014-09-01",
+                "storyline": "Tyranny of Dragons"
+            }
+            """,
+            value: Adventure(
+                name: "Defiance in Phlan",
+                id: "DDEX1-01",
+                source: "DDEX1-01",
+                group: .other,
+                alAveragePlayerLevel: 1,
+                alLength: 5...5,
+                alId: "DDEX1-01",
+                contents: [],
+                level: .range(1...1),
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2014, month: 9, day: 1).date),
+                storyline: "Tyranny of Dragons",
+            ),
+        )
+    }
+
+    @Test
+    func `Adventure with adventures league length range`() throws {
+        try testCodable(
+            json: """
+            {
+                "name": "Rrakkma",
+                "id": "AL-RKM",
+                "source": "AL-RKM",
+                "group": "other",
+                "alAveragePlayerLevel": 9,
+                "alLength": {
+                    "min": 6,
+                    "max": 8
+                },
+                "alId": "DDIA-MORD",
+                "contents": [],
+                "level": {
+                    "start": 9,
+                    "end": 9
+                },
+                "published": "2018-05-18",
+                "storyline": "Fifth Edition"
+            }
+            """,
+            value: Adventure(
+                name: "Rrakkma",
+                id: "AL-RKM",
+                source: "AL-RKM",
+                group: .other,
+                alAveragePlayerLevel: 9,
+                alLength: 6...8,
+                alId: "DDIA-MORD",
+                contents: [],
+                level: .range(9...9),
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2018, month: 5, day: 18).date),
+                storyline: "Fifth Edition",
+            ),
+        )
+    }
 }
 
 struct AdventureGroupCodableTests {
