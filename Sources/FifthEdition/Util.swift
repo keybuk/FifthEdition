@@ -27,21 +27,6 @@ extension Alignment: Hashable {
     static let any: Self = .all
 }
 
-/// Metadata.
-@MemberwiseInit(.public)
-public struct MetaBlock: Equatable, Sendable {
-    /// Dependencies.
-    ///
-    /// Values are an array of dependency sources.
-    public var dependencies: [String: [String]] = [:]
-
-    /// Other sources to be loaded.
-    ///
-    /// Values are a map where keys are other sources to be loaded; values are ``Creature/otherSources`` sources from
-    /// that source to search for.",
-    public var otherSources: [String: [String: String]] = [:]
-}
-
 public enum Page: Equatable, Hashable, Sendable {
     case number(Int)
     case numeral(String)

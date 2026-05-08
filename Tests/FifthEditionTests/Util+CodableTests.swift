@@ -69,46 +69,6 @@ struct AlignmentCodableTests {
     }
 }
 
-struct MetaBlockCodableTests {
-    @Test
-    func `MetaBlock with dependencies`() throws {
-        try testCodable(
-            json: """
-            {
-                "dependencies": {
-                    "monster": [
-                        "MM",
-                        "VRGR"
-                    ]
-                }
-            }
-            """,
-            value: MetaBlock(
-                dependencies: ["monster": ["MM", "VRGR"]],
-            ),
-        )
-    }
-
-    @Test
-    func `MetaBlock with otherSources`() throws {
-        try testCodable(
-            json: """
-            {
-                "otherSources": {
-                    "monster": {
-                        "MM": "CoS",
-                        "VRGR": "CoS"
-                    }
-                }
-            }
-            """,
-            value: MetaBlock(
-                otherSources: ["monster": ["MM": "CoS", "VRGR": "CoS"]],
-            ),
-        )
-    }
-}
-
 struct PageCodableTests {
     @Test
     func `Numeric page`() throws {

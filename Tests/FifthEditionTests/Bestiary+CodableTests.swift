@@ -86,9 +86,9 @@ struct BestiaryCodableTests {
                         page: .number(186),
                     ),
                 ],
-                meta: MetaBlock(
-                    dependencies: ["monster": ["MM", "VRGR"]],
-                    otherSources: ["monster": ["MM": "CoS", "VRGR": "CoS"]],
+                meta: Meta(
+                    dependencies: [.monster: ["MM", "VRGR"]],
+                    otherSources: [.monster: ["MM": "CoS", "VRGR": "CoS"]],
                 ),
             ),
         )

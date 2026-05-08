@@ -46,6 +46,6 @@ public struct Bestiary: Equatable, Sendable {
     /// Creatures in the bestiary.
     public var monster: [Creature] = []
 
-    /// Metadata.
-    public var meta: MetaBlock?
+    /// Metadata about the bestiary..
+    public var meta: Meta?
 }
