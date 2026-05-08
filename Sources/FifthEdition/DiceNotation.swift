@@ -5,66 +5,18 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-import Foundation
-
-/// Die to be rolled.
-///
-/// Can represent those both in and out of jail.
-public enum Die: Int, Comparable, Equatable, Sendable {
-    case d1 = 1
-    case d2 = 2
-    case d3 = 3
-    case d4 = 4
-    case d6 = 6
-    case d8 = 8
-    case d10 = 10
-    case d12 = 12
-    case d20 = 20
-    case d100 = 100
-
-    public static func < (lhs: Die, rhs: Die) -> Bool {
-        lhs.rawValue < rhs.rawValue
-    }
-}
-
 /// Dice notation.
 ///
 /// Encodes the notation of a number of dice to be rolled, and a modifier added or subtracted, e.g. `"2d6 + 4"`.
-public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
-    /// Number of dice to be rolled.
-    public let count: Int
-
+public struct DiceNotation: Equatable, Hashable, Sendable {
     /// Die to be rolled.
     public let die: Die
 
+    /// Number of dice to be rolled.
+    public let count: Int
+
     /// Modifier to be added or subtracted from the rolled total.
     public let modifier: Int
-
-    /// The average roll this notation yields.
-    public var average: Int {
-        (count * (die.rawValue + 1)) / 2 + modifier
-    }
-
-    /// The range of possible rolls this notation yields.
-    public var range: ClosedRange<Int> {
-        (count + modifier)...(count * die.rawValue + modifier)
-    }
-
-    /// The dice notation expressed as a human readable string.
-    public var stringValue: String {
-        let rolledString = "\(count)d\(die.rawValue)"
-
-        switch modifier {
-        case 1...: return "\(rolledString) + \(modifier)"
-        case ..<0: return "\(rolledString) - \(abs(modifier))"
-        default: return rolledString
-        }
-    }
-
-    /// The dice notation described including its average.
-    public var description: String {
-        "\(average) (\(stringValue))"
-    }
 
     /// Creates a new dice notation.
     /// - Parameters:
@@ -72,11 +24,38 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
     ///   - count: Number of `die` to roll.
     ///   - modifier: Modifier to add or subtract from the rolled total.
     public init(_ die: Die, count: Int = 1, modifier: Int = 0) {
-        self.count = count
         self.die = die
+        self.count = count
         self.modifier = modifier
     }
+}
 
+public extension DiceNotation {
+    /// The average roll this notation yields.
+    var average: Int {
+        (count * (die.rawValue + 1)) / 2 + modifier
+    }
+
+    /// The range of possible rolls this notation yields.
+    var range: ClosedRange<Int> {
+        (count + modifier)...(count * die.rawValue + modifier)
+    }
+
+    /// Returns a random roll of the dice notation.
+    /// - Returns: A random value within the range of the dice notation.
+    func roll() -> Int {
+        .random(in: range)
+    }
+
+    /// Returns a random roll of the dice notation, using the given generator as a source for randomness.
+    /// - Parameter generator: The random number generator to use when creating the roll.
+    /// - Returns: A random value within the range of the dice notation.
+    func roll(using generator: inout some RandomNumberGenerator) -> Int {
+        .random(in: range, using: &generator)
+    }
+}
+
+extension DiceNotation: CustomStringConvertible {
     /// Creates a new dice notation from the given string.
     /// - Parameter string: The string representation of the dice notation.
     ///
@@ -99,16 +78,19 @@ public struct DiceNotation: CustomStringConvertible, Equatable, Sendable {
         }
     }
 
-    /// Returns a random roll of the dice notation.
-    /// - Returns: A random value within the range of the dice notation.
-    public func roll() -> Int {
-        .random(in: range)
+    /// The dice notation described including its average.
+    public var description: String {
+        "\(average) (\(stringValue))"
     }
 
-    /// Returns a random roll of the dice notation, using the given generator as a source for randomness.
-    /// - Parameter generator: The random number generator to use when creating the roll.
-    /// - Returns: A random value within the range of the dice notation.
-    public func roll(using generator: inout some RandomNumberGenerator) -> Int {
-        .random(in: range, using: &generator)
+    /// The dice notation expressed as a human readable string.
+    public var stringValue: String {
+        let rolledString = "\(count)\(die)"
+
+        switch modifier {
+        case 1...: return "\(rolledString) + \(modifier)"
+        case ..<0: return "\(rolledString) - \(abs(modifier))"
+        default: return rolledString
+        }
     }
 }

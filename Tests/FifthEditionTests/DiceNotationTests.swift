@@ -8,19 +8,30 @@
 import Testing
 @testable import FifthEdition
 
-struct DiceNotationTests {
-    static let testStrings: [String] = [
-        "4d1",
-        "3d2",
-        "1d3 + 1",
-        "2d4 - 1",
-        "1d6 + 2",
-        "3d8 - 1",
-        "4d10 + 10",
-        "1d12 - 2",
-        "2d20 - 4",
-        "1d100",
+struct DiceNotationInitTests {
+    static let testValues: [(Int, Die, Int)] = [
+        (4, .d1, 0), // 4d1
+        (3, .d2, 0), // 3d2
+        (1, .d3, 1), // 1d3 + 1
+        (2, .d4, -1), // 2d4 - 1
+        (1, .d6, 2), // 1d6 + 2
+        (3, .d8, -1), // 3d8 - 1
+        (4, .d10, 10), // 4d10 + 10
+        (1, .d12, -2), // 1d12-2
+        (2, .d20, -4), // 2d20 - 4
+        (1, .d100, 0), // 1d100
     ]
+
+    @Test(arguments: testValues)
+    func `init(_:count:modifier:)`(_ input: (count: Int, die: Die, modifier: Int)) {
+        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
+        #expect(dice.count == input.count)
+        #expect(dice.die == input.die)
+        #expect(dice.modifier == input.modifier)
+    }
+}
+
+struct DiceNotationRollTests {
     static let testValues: [(Int, Die, Int)] = [
         (4, .d1, 0), // 4d1
         (3, .d2, 0), // 3d2
@@ -58,23 +69,6 @@ struct DiceNotationTests {
         1...100, // 1d100
     ]
 
-    @Test(arguments: zip(testStrings, testValues))
-    func `init(_:)`(_ string: String, expected: (count: Int, die: Die, modifier: Int)) throws {
-        let dice = try #require(DiceNotation(string),
-                                "Failed to parse expression: \(string)")
-        #expect(dice.count == expected.count)
-        #expect(dice.die == expected.die)
-        #expect(dice.modifier == expected.modifier)
-    }
-
-    @Test(arguments: testValues)
-    func `init(_:count:modifier:)`(_ input: (count: Int, die: Die, modifier: Int)) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(dice.count == input.count)
-        #expect(dice.die == input.die)
-        #expect(dice.modifier == input.modifier)
-    }
-
     @Test(arguments: zip(testValues, testAverages))
     func average(_ input: (count: Int, die: Die, modifier: Int), expected: Int) {
         let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
@@ -85,12 +79,6 @@ struct DiceNotationTests {
     func range(_ input: (count: Int, die: Die, modifier: Int), expected: ClosedRange<Int>) {
         let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
         #expect(dice.range == expected)
-    }
-
-    @Test(arguments: zip(testValues, testStrings))
-    func `string value`(_ input: (count: Int, die: Die, modifier: Int), expected: String) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(dice.stringValue == expected)
     }
 
     @Test(arguments: testValues)
@@ -114,6 +102,42 @@ struct DiceNotationTests {
         let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
         let roll = dice.roll(using: &generator)
         #expect(roll == dice.range.upperBound)
+    }
+}
+
+struct DiceNotationStringTests {
+    static let testValues: [(Int, Die, Int)] = [
+        (4, .d1, 0), // 4d1
+        (3, .d2, 0), // 3d2
+        (1, .d3, 1), // 1d3 + 1
+        (2, .d4, -1), // 2d4 - 1
+        (1, .d6, 2), // 1d6 + 2
+        (3, .d8, -1), // 3d8 - 1
+        (4, .d10, 10), // 4d10 + 10
+        (1, .d12, -2), // 1d12-2
+        (2, .d20, -4), // 2d20 - 4
+        (1, .d100, 0), // 1d100
+    ]
+    static let testStrings: [String] = [
+        "4d1",
+        "3d2",
+        "1d3 + 1",
+        "2d4 - 1",
+        "1d6 + 2",
+        "3d8 - 1",
+        "4d10 + 10",
+        "1d12 - 2",
+        "2d20 - 4",
+        "1d100",
+    ]
+
+    @Test(arguments: zip(testStrings, testValues))
+    func `init(_:)`(_ string: String, expected: (count: Int, die: Die, modifier: Int)) throws {
+        let dice = try #require(DiceNotation(string),
+                                "Failed to parse expression: \(string)")
+        #expect(dice.count == expected.count)
+        #expect(dice.die == expected.die)
+        #expect(dice.modifier == expected.modifier)
     }
 
     @Test
@@ -184,5 +208,17 @@ struct DiceNotationTests {
     @Test
     func `init(_:) returns nil for missing sign`() {
         #expect(DiceNotation("2d6 3") == nil)
+    }
+
+    @Test(arguments: testValues)
+    func description(_ input: (count: Int, die: Die, modifier: Int)) {
+        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
+        #expect(String(describing: dice) == "\(dice.average) (\(dice.stringValue))")
+    }
+
+    @Test(arguments: zip(testValues, testStrings))
+    func `string value`(_ input: (count: Int, die: Die, modifier: Int), expected: String) {
+        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
+        #expect(dice.stringValue == expected)
     }
 }
