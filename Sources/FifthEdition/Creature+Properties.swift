@@ -10,16 +10,7 @@ public extension Creature {
     ///
     /// Where the creature has multiple sizes, the smallest is returned.
     var gridSquares: Int {
-        guard let size = size?.sorted().first else { return 1 }
-
-        switch size {
-        case .tiny: return 1
-        case .small: return 1
-        case .medium: return 1
-        case .large: return 2
-        case .huge: return 3
-        case .gargantuan: return 4
-        }
+        size?.sorted().first?.gridSquares ?? 1
     }
 
     /// Returns the expected token name.

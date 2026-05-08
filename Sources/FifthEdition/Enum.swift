@@ -236,17 +236,14 @@ public enum SidekickType: String, CaseIterable, Codable, Sendable {
     case warrior
 }
 
-public enum Size: String, CaseIterable, Codable, Comparable, Sendable {
+/// Creature size.
+public enum Size: String, CaseIterable, Codable, Sendable {
     case tiny
     case small
     case medium
     case large
     case huge
     case gargantuan
-
-    public static func < (lhs: Size, rhs: Size) -> Bool {
-        allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
-    }
 }
 
 public enum Skill: String, CaseIterable, Codable, Sendable {

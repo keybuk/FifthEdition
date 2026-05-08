@@ -303,21 +303,6 @@ struct SizeCodableTests {
     }
 }
 
-struct SizeComparableTests {
-    static let testValues: [Bool] = [
-        Size.tiny < Size.large,
-        Size.medium < Size.huge,
-        Size.medium > Size.small,
-        Size.large > Size.tiny,
-        Size.small < Size.huge,
-    ]
-
-    @Test(arguments: testValues)
-    func `Size comparisons`(_ testedValue: Bool) {
-        #expect(testedValue)
-    }
-}
-
 struct SkillCodableTests {
     @Test(arguments: Skill.allCases)
     func skills(_ skill: Skill) throws {
