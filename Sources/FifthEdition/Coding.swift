@@ -5,6 +5,53 @@
 //  Created by Scott James Remnant on 12/28/25.
 //
 
+import Foundation
+
+/// Protocol for alternate value coding.
+///
+/// Wraps an underlying type ``Value`` so that conforming types can implement custom ``Decodable`` and ``Encodable``
+/// implementations on ``value``.
+///
+/// ```swift
+/// struct ValueCoding: Codable, CodingValue {
+///     var value: Value
+///
+///     init(_ value: Value) { self.value = value }
+///
+///     init(from decoder: any Decoder) throws { ... }
+///     func encode(to encoder: any Encoder) throws { ... }
+/// }
+/// ```
+///
+/// Decoding:
+/// ```swift
+/// let container = try decoder.container(keyedBy: CodingKeys.self)
+/// value = try container.decode(ValueCoding.self, forKey: .value).value
+/// optionalValue = try container.decodeIfPresent(ValueCoding.self, forKey: .optionalValue)?.value
+/// ```
+///
+/// Encoding:
+/// ```swift
+/// var container = encoder.container(keyedBy: CodingKeys.self)
+/// try container.encode(ValueCoding(value), forKey: .value)
+/// try container.encodeIfPresent(ValueCoding(optionalValue), forKey: .optionalValue)
+/// ```
+protocol CodingValue {
+    associatedtype Value
+
+    var value: Value { get set }
+
+    init(_ value: Value)
+    init?(_ value: Value?)
+}
+
+extension CodingValue {
+    init?(_ value: Value?) {
+        guard let value else { return nil }
+        self.init(value)
+    }
+}
+
 /// A type that can be used as a key for encoding and decoding any container.
 ///
 /// This can be used in place of the usual ``CodingKeys`` enumeration when the set of key names is only known at
@@ -115,6 +162,36 @@ extension EnumCodingKey: CaseIterable
     /// A collection of all keys for the underlying enumeration type.
     static var allCases: [EnumCodingKey<Value>] {
         Value.allCases.map { value in Self(value) }
+    }
+}
+
+/// Wrapper around ``Date`` to provide an alternate ``Codable`` implementation using ISO8601.
+struct ISO8601DateCoding: Codable, CodingValue, Equatable, Hashable {
+    static let formatStyle = Date.ISO8601FormatStyle(timeZone: .current)
+        .year().month().day()
+
+    var value: Date
+
+    init(_ value: Value) {
+        self.value = value
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let dateStr = try container.decode(String.self)
+        if let dateValue = try? Date(dateStr, strategy: Self.formatStyle) {
+            value = dateValue
+        } else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Invalid date: \(dateStr)",
+            )
+        }
+    }
+
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value.formatted(Self.formatStyle))
     }
 }
 

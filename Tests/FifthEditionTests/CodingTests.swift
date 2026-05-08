@@ -9,6 +9,64 @@ import Foundation
 import Testing
 @testable import FifthEdition
 
+struct CodingValueTests {
+    enum RingOfPower {
+        case one
+        case three
+        case seven
+        case nine
+    }
+
+    struct RingOfPowerCoding: Codable, CodingValue, Equatable {
+        var value: RingOfPower
+
+        init(_ value: RingOfPower) {
+            self.value = value
+        }
+
+        init(from decoder: any Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let intValue = try container.decode(Int.self)
+            value = switch intValue {
+            case 1: .one
+            case 3: .three
+            case 7: .seven
+            case 9: .nine
+            default:
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Invalid value: \(intValue)",
+                )
+            }
+        }
+
+        func encode(to encoder: any Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch value {
+            case .one: try container.encode(1)
+            case .three: try container.encode(3)
+            case .seven: try container.encode(7)
+            case .nine: try container.encode(9)
+            }
+        }
+    }
+
+    @Test
+    func `Implement Codable with ValueCoding`() throws {
+        try testCodable(
+            json: """
+            3
+            """,
+            value: RingOfPowerCoding(.three),
+        )
+    }
+
+    @Test
+    func `init?(_:) returns nil when initialized with nil`() {
+        #expect(RingOfPowerCoding(nil) == nil)
+    }
+}
+
 struct DynamicCodingKeyTests {
     struct Hobbit: Equatable, Codable {
         var frodo: Int
@@ -121,6 +179,19 @@ struct EnumCodingKeyTests {
                     "pallando": "blue",
                 ],
             ),
+        )
+    }
+}
+
+struct ISO8601DateCodingTests {
+    @Test
+    func `Implement Codable with ISO8601DateCoding`() throws {
+        try testCodable(
+            json: """
+            "2024-07-18"
+            """,
+            value: ISO8601DateCoding(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                    year: 2024, month: 7, day: 18).date),
         )
     }
 }

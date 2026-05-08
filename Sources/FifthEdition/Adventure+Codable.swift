@@ -5,8 +5,6 @@
 //  Created by Scott James Remnant on 5/2/26.
 //
 
-import Foundation
-
 extension Adventure: Codable {
     enum CodingKeys: String, CodingKey {
         case name
@@ -42,33 +40,8 @@ extension Adventure: Codable {
         alId = try container.decodeIfPresent(String.self, forKey: .alId)
         contents = try container.decode([CorpusContents].self, forKey: .contents)
         level = try container.decode(Level.self, forKey: .level)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        let publishedDateStr = try container.decode(String.self, forKey: .published)
-        if let publishedDate = dateFormatter.date(from: publishedDateStr) {
-            published = publishedDate
-        } else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .published,
-                in: container,
-                debugDescription: "Invalid date: \(publishedDateStr)",
-            )
-        }
-
-        if let revisedDateStr = try container.decodeIfPresent(String.self, forKey: .revised) {
-            if let revisedDate = dateFormatter.date(from: revisedDateStr) {
-                revised = revisedDate
-            } else {
-                throw DecodingError.dataCorruptedError(
-                    forKey: .revised,
-                    in: container,
-                    debugDescription: "Invalid date: \(publishedDateStr)",
-                )
-            }
-        }
-
+        published = try container.decode(ISO8601DateCoding.self, forKey: .published).value
+        revised = try container.decodeIfPresent(ISO8601DateCoding.self, forKey: .revised)?.value
         publishedOrder = try container.decodeIfPresent(Int.self, forKey: .publishedOrder)
         cover = try container.decodeIfPresent(MediaHref.self, forKey: .cover)
         storyline = try container.decode(String.self, forKey: .storyline)
@@ -90,15 +63,8 @@ extension Adventure: Codable {
         try container.encodeIfPresent(alId, forKey: .alId)
         try container.encode(contents, forKey: .contents)
         try container.encode(level, forKey: .level)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        try container.encode(dateFormatter.string(from: published), forKey: .published)
-        if let revised {
-            try container.encode(dateFormatter.string(from: revised), forKey: .revised)
-        }
-
+        try container.encode(ISO8601DateCoding(published), forKey: .published)
+        try container.encodeIfPresent(ISO8601DateCoding(revised), forKey: .revised)
         try container.encodeIfPresent(publishedOrder, forKey: .publishedOrder)
         try container.encodeIfPresent(cover, forKey: .cover)
         try container.encode(storyline, forKey: .storyline)

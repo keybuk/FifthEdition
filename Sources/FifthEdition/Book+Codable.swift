@@ -5,8 +5,6 @@
 //  Created by Scott James Remnant on 4/8/26.
 //
 
-import Foundation
-
 extension Book: Codable {
     enum CodingKeys: String, CodingKey {
         case name
@@ -33,33 +31,8 @@ extension Book: Codable {
         isLegacy = try container.decodeIfPresent(Bool.self, forKey: .isLegacy) ?? false
         group = try container.decode(Group.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        let publishedDateStr = try container.decode(String.self, forKey: .published)
-        if let publishedDate = dateFormatter.date(from: publishedDateStr) {
-            published = publishedDate
-        } else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .published,
-                in: container,
-                debugDescription: "Invalid date: \(publishedDateStr)",
-            )
-        }
-
-        if let revisedDateStr = try container.decodeIfPresent(String.self, forKey: .revised) {
-            if let revisedDate = dateFormatter.date(from: revisedDateStr) {
-                revised = revisedDate
-            } else {
-                throw DecodingError.dataCorruptedError(
-                    forKey: .revised,
-                    in: container,
-                    debugDescription: "Invalid date: \(publishedDateStr)",
-                )
-            }
-        }
-
+        published = try container.decode(ISO8601DateCoding.self, forKey: .published).value
+        revised = try container.decodeIfPresent(ISO8601DateCoding.self, forKey: .revised)?.value
         cover = try container.decodeIfPresent(MediaHref.self, forKey: .cover)
         contents = try container.decode([CorpusContents].self, forKey: .contents)
     }
@@ -78,15 +51,8 @@ extension Book: Codable {
         }
         try container.encode(group, forKey: .group)
         try container.encodeIfPresent(author, forKey: .author)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        try container.encode(dateFormatter.string(from: published), forKey: .published)
-        if let revised {
-            try container.encode(dateFormatter.string(from: revised), forKey: .revised)
-        }
-
+        try container.encode(ISO8601DateCoding(published), forKey: .published)
+        try container.encodeIfPresent(ISO8601DateCoding(revised), forKey: .revised)
         try container.encodeIfPresent(cover, forKey: .cover)
         try container.encode(contents, forKey: .contents)
     }
