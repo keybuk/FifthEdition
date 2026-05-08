@@ -36,7 +36,7 @@ import MemberwiseInit
 /// }
 /// ```
 @MemberwiseInit(.public, _optionalsDefaultNil: true)
-public struct Bestiary: Equatable, Sendable {
+public struct Bestiary: Codable, Equatable, Sendable {
     /// Relative path of the directory within the 5etools source archive containing the per-source data files.
     public static let jsonBasePath: String = "data/bestiary"
 

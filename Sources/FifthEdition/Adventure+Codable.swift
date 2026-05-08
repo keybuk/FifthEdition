@@ -50,9 +50,7 @@ extension Adventure: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
-        if !alias.isEmpty {
-            try container.encode(alias, forKey: .alias)
-        }
+        try container.encodeIfPresent(!alias.isEmpty ? alias : nil, forKey: .alias)
         try container.encode(id, forKey: .id)
         try container.encode(source, forKey: .source)
         try container.encodeIfPresent(parentSource, forKey: .parentSource)

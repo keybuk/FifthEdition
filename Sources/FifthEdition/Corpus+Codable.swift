@@ -22,9 +22,7 @@ extension CorpusContents: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
-        if !headers.isEmpty {
-            try container.encode(headers, forKey: .headers)
-        }
+        try container.encodeIfPresent(!headers.isEmpty ? headers : nil, forKey: .headers)
         try container.encodeIfPresent(ordinal, forKey: .ordinal)
     }
 }
