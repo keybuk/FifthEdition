@@ -69,28 +69,6 @@ struct AlignmentCodableTests {
     }
 }
 
-struct IndexCodableTests {
-    @Test
-    func `Index with list`() throws {
-        try testCodable(
-            json: """
-            {
-              "XDMG" : "foo-xdmg.json",
-              "XMM" : "foo-xmm.json",
-              "XPHB" : "foo-xphb.json"
-            }
-            """,
-            value: Index(
-                entries: [
-                    "XDMG": "foo-xdmg.json",
-                    "XMM": "foo-xmm.json",
-                    "XPHB": "foo-xphb.json",
-                ],
-            ),
-        )
-    }
-}
-
 struct MetaBlockCodableTests {
     @Test
     func `MetaBlock with dependencies`() throws {

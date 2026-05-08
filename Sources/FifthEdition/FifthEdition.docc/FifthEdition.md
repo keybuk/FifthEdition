@@ -9,6 +9,7 @@ Swift support for 5eTools schema.
 - ``Adventures``
 - ``Bestiary``
 - ``Books``
+- ``Index``
 
 ### Parsed Data
 

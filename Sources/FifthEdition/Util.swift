@@ -27,15 +27,6 @@ extension Alignment: Hashable {
     static let any: Self = .all
 }
 
-/// Index of files.
-@MemberwiseInit(.public)
-public struct Index: Equatable, Sendable {
-    /// Index entries.
-    ///
-    /// Usually keys are sources and values are paths.
-    public var entries: [String: String] = [:]
-}
-
 /// Metadata.
 @MemberwiseInit(.public)
 public struct MetaBlock: Equatable, Sendable {
