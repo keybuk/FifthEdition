@@ -13,23 +13,3 @@ extension Page: CustomStringConvertible {
         }
     }
 }
-
-extension Speed.Alternate: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        String(reflecting: speeds)
-    }
-}
-
-extension Speed: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        if self == .varies {
-            String(describing: type(of: self)) + ".varies"
-        } else {
-            debugDescriptionOf(
-                String(describing: type(of: self)),
-                names: "_", "canHover", "choose", "alternate", "hidden",
-                values: speeds, canHover, choose, alternate, hidden,
-            )
-        }
-    }
-}
