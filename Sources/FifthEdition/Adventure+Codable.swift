@@ -59,7 +59,7 @@ extension Adventure: Codable {
         try container.encode(group, forKey: .group)
         try container.encodeIfPresent(author, forKey: .author)
         try container.encodeIfPresent(alAveragePlayerLevel, forKey: .alAveragePlayerLevel)
-        try container.encodeIfPresent(alLength.map { LengthCoding($0) }, forKey: .alLength)
+        try container.encodeIfPresent(LengthCoding(alLength), forKey: .alLength)
         try container.encodeIfPresent(alId, forKey: .alId)
         try container.encode(contents, forKey: .contents)
         try container.encode(level, forKey: .level)
@@ -72,7 +72,7 @@ extension Adventure: Codable {
 }
 
 extension Adventure {
-    struct LengthCoding: Codable {
+    struct LengthCoding: Codable, CodingValue {
         enum CodingKeys: String, CodingKey {
             case exact
             case min
@@ -87,7 +87,7 @@ extension Adventure {
 
         init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            if let exactValue = try? container.decode(Int.self, forKey: .exact) {
+            if let exactValue = try container.decodeIfPresent(Int.self, forKey: .exact) {
                 value = exactValue...exactValue
             } else {
                 value = try container.decode(Int.self, forKey: .min)...container.decode(Int.self, forKey: .max)
@@ -115,7 +115,7 @@ extension Adventure.Level: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let value = try? container.decode(String.self, forKey: .custom) {
+        if let value = try container.decodeIfPresent(String.self, forKey: .custom) {
             self = .custom(value)
         } else {
             self = try .range(
