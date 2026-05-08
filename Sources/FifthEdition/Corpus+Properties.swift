@@ -21,6 +21,6 @@ private let modernEditionStartDate = DateComponents(calendar: Calendar(identifie
 public extension PublishedCorpus {
     /// Edition that this book/adventure belongs to.
     var edition: Edition {
-        published < modernEditionStartDate ? .classic : .modern
+        published < modernEditionStartDate ? .legacy : .modern
     }
 }

@@ -96,20 +96,20 @@ public enum DragonColor: String, CaseIterable, Codable, Sendable {
 
 /// D&D edition.
 ///
-/// Identifies the 5th edition ruleset that a given entity is written for, either the ``classic`` 2014 5e rules, or the
-/// ``modern`` 2024 5.5e rules.
+/// Identifies the 5th edition ruleset that a given entity is written for, either the ``legacy`` 5e (2014) rules, or the
+/// ``modern`` 5.5e (2024) rules.
 public enum Edition: String, CaseIterable, Codable, Sendable {
-    /// 5e (2014) edition.
-    case classic
+    /// 5e (2014) rules.
+    case legacy = "classic"
 
-    /// 5.5e (2014) edition.
+    /// 5.5e (2014) rules.
     case modern = "one"
 
-    /// Alias for the ``classic`` 5e (2014) edition, as used by e.g. D&D Beyond.
-    static let legacy = Edition.classic
+    /// Alias for the ``legacy`` 5e (2014) edition, as used in the 5etools schema.
+    public static let classic = Edition.legacy
 
     /// Alias for the ``modern`` 5.5e (2024) edition, as used in the 5etools schema.
-    static let one = Edition.modern
+    public static let one = Edition.modern
 }
 
 public enum EnvironmentType: String, CaseIterable, Codable, Sendable {

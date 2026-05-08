@@ -19,7 +19,7 @@ struct PublishedCorpusEditionTests {
                             published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                                year: 2014, month: 8, day: 19).date),
                             contents: [])
-        #expect(book.edition == .classic)
+        #expect(book.edition == .legacy)
     }
 
     @Test
