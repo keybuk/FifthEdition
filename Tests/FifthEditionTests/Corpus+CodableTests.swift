@@ -38,15 +38,16 @@ struct CorpusContentsCodableTests {
                 ]
             }
             """,
-            value: CorpusContents("The Basics", headers: [
-                .init("What Does a DM Do?"),
-                .init("Things You Need"),
-                .init("Preparing a Session"),
-                .init("How to Run a Session"),
-                .init("Example of Play"),
-                .init("Every DM Is Unique"),
-                .init("Ensuring Fun for All"),
-            ]),
+            value: CorpusContents("The Basics",
+                                  headers: [
+                                      CorpusContents.Header("What Does a DM Do?"),
+                                      CorpusContents.Header("Things You Need"),
+                                      CorpusContents.Header("Preparing a Session"),
+                                      CorpusContents.Header("How to Run a Session"),
+                                      CorpusContents.Header("Example of Play"),
+                                      CorpusContents.Header("Every DM Is Unique"),
+                                      CorpusContents.Header("Ensuring Fun for All"),
+                                  ]),
         )
     }
 
@@ -65,10 +66,11 @@ struct CorpusContentsCodableTests {
                 ]
             }
             """,
-            value: CorpusContents("Growing Your Franchise", headers: [
-                .init("Company Positions"),
-                .init("Cartographer", depth: 1),
-            ]),
+            value: CorpusContents("Growing Your Franchise",
+                                  headers: [
+                                      CorpusContents.Header("Company Positions"),
+                                      CorpusContents.Header("Cartographer", depth: 1),
+                                  ]),
         )
     }
 
@@ -86,9 +88,10 @@ struct CorpusContentsCodableTests {
                 ]
             }
             """,
-            value: CorpusContents("Equipment", headers: [
-                .init("Trade Goods", index: 1),
-            ]),
+            value: CorpusContents("Equipment",
+                                  headers: [
+                                      CorpusContents.Header("Trade Goods", index: 1),
+                                  ]),
         )
     }
 
@@ -103,7 +106,8 @@ struct CorpusContentsCodableTests {
                 }
             }
             """,
-            value: CorpusContents("The Colors of Magic", ordinal: .appendix()),
+            value: CorpusContents("The Colors of Magic",
+                                  ordinal: .appendix()),
         )
     }
 
@@ -119,7 +123,8 @@ struct CorpusContentsCodableTests {
                 }
             }
             """,
-            value: CorpusContents("Backgrounds", ordinal: .chapter(integer: 5)),
+            value: CorpusContents("Backgrounds",
+                                  ordinal: .chapter(.integer(5))),
         )
     }
 
@@ -135,7 +140,8 @@ struct CorpusContentsCodableTests {
                 }
             }
             """,
-            value: CorpusContents("Miscellaneous Creatures", ordinal: .appendix(string: "A")),
+            value: CorpusContents("Miscellaneous Creatures",
+                                  ordinal: .appendix(.string("A"))),
         )
     }
 }

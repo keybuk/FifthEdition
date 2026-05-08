@@ -76,15 +76,16 @@ struct BookCodableTests {
                                                    year: 2024, month: 11, day: 12).date),
                 cover: .path("covers/XDMG.webp"),
                 contents: [
-                    .init("The Basics", headers: [
-                        .init("What Does a DM Do?"),
-                        .init("Things You Need"),
-                        .init("Preparing a Session"),
-                        .init("How to Run a Session"),
-                        .init("Example of Play"),
-                        .init("Every DM Is Unique"),
-                        .init("Ensuring Fun for All"),
-                    ]),
+                    CorpusContents("The Basics",
+                                   headers: [
+                                       CorpusContents.Header("What Does a DM Do?"),
+                                       CorpusContents.Header("Things You Need"),
+                                       CorpusContents.Header("Preparing a Session"),
+                                       CorpusContents.Header("How to Run a Session"),
+                                       CorpusContents.Header("Example of Play"),
+                                       CorpusContents.Header("Every DM Is Unique"),
+                                       CorpusContents.Header("Ensuring Fun for All"),
+                                   ]),
                 ],
             ),
         )

@@ -7,7 +7,6 @@
 //  Derived from schema-template/corpus-shared.json
 //  Version: 1.0.1
 
-import Foundation
 import MemberwiseInit
 
 /// Table of contents.
@@ -46,11 +45,19 @@ public extension CorpusContents {
 public extension CorpusContents {
     /// Chapter type and ordinal.
     enum Ordinal: Equatable, Sendable {
-        case chapter(integer: Int? = nil, string: String? = nil)
-        case appendix(integer: Int? = nil, string: String? = nil)
-        case part(integer: Int? = nil, string: String? = nil)
-        case episode(integer: Int? = nil, string: String? = nil)
-        case level(integer: Int? = nil, string: String? = nil)
-        case section(integer: Int? = nil, string: String? = nil)
+        case chapter(Identifier? = nil)
+        case appendix(Identifier? = nil)
+        case part(Identifier? = nil)
+        case episode(Identifier? = nil)
+        case level(Identifier? = nil)
+        case section(Identifier? = nil)
+    }
+}
+
+public extension CorpusContents.Ordinal {
+    /// Chapter ordinal identifier.
+    enum Identifier: Equatable, Sendable {
+        case integer(Int)
+        case string(String)
     }
 }

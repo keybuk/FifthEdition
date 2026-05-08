@@ -5,8 +5,6 @@
 //  Created by Scott James Remnant on 5/2/26.
 //
 
-import Foundation
-
 extension CorpusContents: Codable {
     enum CodingKeys: String, CodingKey {
         case name
@@ -79,79 +77,58 @@ extension CorpusContents.Ordinal: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        let identifier = try container.decodeIfPresent(Identifier.self, forKey: .identifier)
+
         self = switch try container.decode(TypeCodingValues.self, forKey: .type) {
-        case .chapter:
-            .chapter(integer: try? container.decode(Int.self, forKey: .identifier),
-                     string: try? container.decode(String.self, forKey: .identifier))
-        case .appendix:
-            .appendix(integer: try? container.decode(Int.self, forKey: .identifier),
-                      string: try? container.decode(String.self, forKey: .identifier))
-        case .part:
-            .part(integer: try? container.decode(Int.self, forKey: .identifier),
-                  string: try? container.decode(String.self, forKey: .identifier))
-        case .episode:
-            .episode(integer: try? container.decode(Int.self, forKey: .identifier),
-                     string: try? container.decode(String.self, forKey: .identifier))
-        case .level:
-            .level(integer: try? container.decode(Int.self, forKey: .identifier),
-                   string: try? container.decode(String.self, forKey: .identifier))
-        case .section:
-            .section(integer: try? container.decode(Int.self, forKey: .identifier),
-                     string: try? container.decode(String.self, forKey: .identifier))
+        case .chapter: .chapter(identifier)
+        case .appendix: .appendix(identifier)
+        case .part: .part(identifier)
+        case .episode: .episode(identifier)
+        case .level: .level(identifier)
+        case .section: .section(identifier)
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
-        case let .chapter(integerValue, nil):
+        case let .chapter(identifier):
             try container.encode(TypeCodingValues.chapter, forKey: .type)
-            try container.encode(integerValue, forKey: .identifier)
-        case let .chapter(nil, stringValue):
-            try container.encode(TypeCodingValues.chapter, forKey: .type)
-            try container.encode(stringValue, forKey: .identifier)
-        case .chapter:
-            try container.encode(TypeCodingValues.chapter, forKey: .type)
-        case let .appendix(integerValue, nil):
+            try container.encodeIfPresent(identifier, forKey: .identifier)
+        case let .appendix(identifier):
             try container.encode(TypeCodingValues.appendix, forKey: .type)
-            try container.encode(integerValue, forKey: .identifier)
-        case let .appendix(nil, stringValue):
-            try container.encode(TypeCodingValues.appendix, forKey: .type)
-            try container.encode(stringValue, forKey: .identifier)
-        case .appendix:
-            try container.encode(TypeCodingValues.appendix, forKey: .type)
-        case let .part(integerValue, nil):
+            try container.encodeIfPresent(identifier, forKey: .identifier)
+        case let .part(identifier):
             try container.encode(TypeCodingValues.part, forKey: .type)
-            try container.encode(integerValue, forKey: .identifier)
-        case let .part(nil, stringValue):
-            try container.encode(TypeCodingValues.part, forKey: .type)
-            try container.encode(stringValue, forKey: .identifier)
-        case .part:
-            try container.encode(TypeCodingValues.part, forKey: .type)
-        case let .episode(integerValue, nil):
+            try container.encodeIfPresent(identifier, forKey: .identifier)
+        case let .episode(identifier):
             try container.encode(TypeCodingValues.episode, forKey: .type)
-            try container.encode(integerValue, forKey: .identifier)
-        case let .episode(nil, stringValue):
-            try container.encode(TypeCodingValues.episode, forKey: .type)
-            try container.encode(stringValue, forKey: .identifier)
-        case .episode:
-            try container.encode(TypeCodingValues.episode, forKey: .type)
-        case let .level(integerValue, nil):
+            try container.encodeIfPresent(identifier, forKey: .identifier)
+        case let .level(identifier):
             try container.encode(TypeCodingValues.level, forKey: .type)
-            try container.encode(integerValue, forKey: .identifier)
-        case let .level(nil, stringValue):
-            try container.encode(TypeCodingValues.chapter, forKey: .type)
-            try container.encode(stringValue, forKey: .identifier)
-        case .level:
-            try container.encode(TypeCodingValues.level, forKey: .type)
-        case let .section(integerValue, nil):
+            try container.encodeIfPresent(identifier, forKey: .identifier)
+        case let .section(identifier):
             try container.encode(TypeCodingValues.section, forKey: .type)
-            try container.encode(integerValue, forKey: .identifier)
-        case let .section(nil, stringValue):
-            try container.encode(TypeCodingValues.section, forKey: .type)
-            try container.encode(stringValue, forKey: .identifier)
-        case .section:
-            try container.encode(TypeCodingValues.section, forKey: .type)
+            try container.encodeIfPresent(identifier, forKey: .identifier)
+        }
+    }
+}
+
+extension CorpusContents.Ordinal.Identifier: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(Int.self) {
+            self = .integer(value)
+        } else {
+            self = try .string(container.decode(String.self))
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case let .integer(value): try container.encode(value)
+        case let .string(value): try container.encode(value)
         }
     }
 }

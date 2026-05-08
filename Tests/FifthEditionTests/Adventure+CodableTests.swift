@@ -85,12 +85,13 @@ struct AdventureCodableTests {
                 group: .supplement,
                 author: "Wizards RPG Team",
                 contents: [
-                    .init("Running the Adventure", headers: [
-                        .init("Overview"),
-                        .init("The Forgotten Realms"),
-                        .init("First Session: Character Creation"),
-                        .init("The Adventure Begins"),
-                    ]),
+                    CorpusContents("Running the Adventure",
+                                   headers: [
+                                       CorpusContents.Header("Overview"),
+                                       CorpusContents.Header("The Forgotten Realms"),
+                                       CorpusContents.Header("First Session: Character Creation"),
+                                       CorpusContents.Header("The Adventure Begins"),
+                                   ]),
                 ],
                 level: .range(1...6),
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
