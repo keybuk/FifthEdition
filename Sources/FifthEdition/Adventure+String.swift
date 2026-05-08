@@ -13,3 +13,9 @@ extension Adventure.Level: CustomStringConvertible {
         }
     }
 }
+
+extension Adventure.Level: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self = .custom(value)
+    }
+}
