@@ -12,7 +12,7 @@ extension Book: Codable {
         case id
         case source
         case parentSource
-        case isLegacy = "legacy"
+        // isLegacy omitted as not present in data.
         case group
         case author
         case published
@@ -28,7 +28,6 @@ extension Book: Codable {
         id = try container.decode(String.self, forKey: .id)
         source = try container.decode(String.self, forKey: .source)
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
-        isLegacy = try container.decodeIfPresent(Bool.self, forKey: .isLegacy) ?? false
         group = try container.decode(Group.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
         published = try container.decode(ISO8601DateCoding.self, forKey: .published).value
@@ -44,7 +43,6 @@ extension Book: Codable {
         try container.encode(id, forKey: .id)
         try container.encode(source, forKey: .source)
         try container.encodeIfPresent(parentSource, forKey: .parentSource)
-        try container.encodeIfPresent(isLegacy ? true : nil, forKey: .isLegacy)
         try container.encode(group, forKey: .group)
         try container.encodeIfPresent(author, forKey: .author)
         try container.encode(ISO8601DateCoding(published), forKey: .published)

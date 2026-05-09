@@ -38,11 +38,11 @@ struct AdventuresCodableTests {
                     id: "LMoP",
                     source: "LMoP",
                     group: .supplement,
-                    contents: [],
-                    level: .range(1...5),
                     published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                        year: 2014, month: 7, day: 15).date),
+                    level: .range(1...5),
                     storyline: "Starter Set",
+                    contents: [],
                 ),
             ]),
         )

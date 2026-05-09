@@ -33,11 +33,11 @@ struct AdventureCodableTests {
                 id: "LMoP",
                 source: "LMoP",
                 group: .supplement,
-                contents: [],
-                level: .range(1...5),
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                    year: 2014, month: 7, day: 15).date),
+                level: .range(1...5),
                 storyline: "Starter Set",
+                contents: [],
             ),
         )
     }
@@ -83,7 +83,13 @@ struct AdventureCodableTests {
                 source: "DIP",
                 parentSource: "ESK",
                 group: .supplement,
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2019, month: 6, day: 24).date),
+                publishedOrder: 0,
                 author: "Wizards RPG Team",
+                level: .range(1...6),
+                storyline: "Essentials Kit",
+                cover: .path("covers/DIP.webp"),
                 contents: [
                     CorpusContents("Running the Adventure",
                                    headers: [
@@ -93,12 +99,6 @@ struct AdventureCodableTests {
                                        CorpusContents.Header("The Adventure Begins"),
                                    ]),
                 ],
-                level: .range(1...6),
-                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
-                                                   year: 2019, month: 6, day: 24).date),
-                publishedOrder: 0,
-                cover: .path("covers/DIP.webp"),
-                storyline: "Essentials Kit",
             ),
         )
     }
@@ -132,11 +132,11 @@ struct AdventureCodableTests {
                 source: "ToFW",
                 parentSource: "PAitM",
                 group: .supplement,
-                contents: [],
-                level: .range(3...18),
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                    year: 2023, month: 10, day: 7).date),
+                level: .range(3...18),
                 storyline: "Planescape",
+                contents: [],
             ),
         )
     }
@@ -165,13 +165,13 @@ struct AdventureCodableTests {
                 id: "LMoP",
                 source: "LMoP",
                 group: .supplement,
-                contents: [],
-                level: .range(1...5),
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                    year: 2014, month: 7, day: 15).date),
                 revised: DateComponents(calendar: Calendar(identifier: .iso8601),
                                         year: 2023, month: 9, day: 19).date,
+                level: .range(1...5),
                 storyline: "Starter Set",
+                contents: [],
             ),
         )
     }
@@ -204,14 +204,14 @@ struct AdventureCodableTests {
                 id: "DDEX1-01",
                 source: "DDEX1-01",
                 group: .other,
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2014, month: 9, day: 1).date),
+                level: .range(1...1),
                 alAveragePlayerLevel: 1,
                 alLength: 5...5,
                 alId: "DDEX1-01",
-                contents: [],
-                level: .range(1...1),
-                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
-                                                   year: 2014, month: 9, day: 1).date),
                 storyline: "Tyranny of Dragons",
+                contents: [],
             ),
         )
     }
@@ -245,14 +245,14 @@ struct AdventureCodableTests {
                 id: "AL-RKM",
                 source: "AL-RKM",
                 group: .other,
+                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                   year: 2018, month: 5, day: 18).date),
+                level: .range(9...9),
                 alAveragePlayerLevel: 9,
                 alLength: 6...8,
                 alId: "DDIA-MORD",
-                contents: [],
-                level: .range(9...9),
-                published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
-                                                   year: 2018, month: 5, day: 18).date),
                 storyline: "Fifth Edition",
+                contents: [],
             ),
         )
     }

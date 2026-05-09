@@ -32,22 +32,17 @@ public struct Book: Equatable, Sendable {
     /// Used for sources which contain multiple adventures, e.g. "TftYP", or _packages_ of related books, e.g. "SAiS".
     public var parentSource: String?
 
-    /// Whether this is a legacy book.
-    ///
-    /// - Note: This property is present in the schema but not in data.
-    public var isLegacy: Bool = false
-
     /// The group under which this book should be listed.
     public var group: Group
-
-    /// Author of the book.
-    public var author: String?
 
     /// Date of publication.
     public var published: Date
 
     /// Date the book was most recently revised.
     public var revised: Date?
+
+    /// Author of the book.
+    public var author: String?
 
     /// Cover image.
     ///

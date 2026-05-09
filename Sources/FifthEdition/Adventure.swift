@@ -35,8 +35,20 @@ public struct Adventure: Equatable, Sendable {
     /// The group under which this adventure should be listed.
     public var group: Group
 
+    /// Date of publication.
+    public var published: Date
+
+    /// Date the adventure was most recently revised.
+    public var revised: Date?
+
+    /// Sorting order for adventures within a single source.
+    public var publishedOrder: Int?
+
     /// Author of the adventure.
     public var author: String?
+
+    /// The character levels that the adventure ranges across.
+    public var level: Level
 
     /// Adventurers League average player level.
     ///
@@ -53,28 +65,16 @@ public struct Adventure: Equatable, Sendable {
     /// - Note: For use in homebrew.
     public var alId: String?
 
-    /// Table of contents.
-    public var contents: [CorpusContents] = []
-
-    /// The character levels that the adventure ranges across.
-    public var level: Level
-
-    /// Date of publication.
-    public var published: Date
-
-    /// Date the adventure was most recently revised.
-    public var revised: Date?
-
-    /// Sorting order for adventures within a single source.
-    public var publishedOrder: Int?
+    /// Storyline to which this adventure belongs.
+    public var storyline: String
 
     /// Cover image.
     ///
     /// Preferred sizes are 300 x 300px or 600 x 600px.
     public var cover: MediaHref?
 
-    /// Storyline to which this adventure belongs.
-    public var storyline: String
+    /// Table of contents.
+    public var contents: [CorpusContents] = []
 }
 
 public extension Adventure {

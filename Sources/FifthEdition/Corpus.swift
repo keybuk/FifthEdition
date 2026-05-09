@@ -16,11 +16,11 @@ public struct CorpusContents: Equatable, Sendable {
     @Init(label: "_")
     public var name: String
 
-    /// Headings within the chapter.
-    public var headers: [Header] = []
-
     /// Type and ordinal of chapter.
     public var ordinal: Ordinal?
+
+    /// Headings within the chapter.
+    public var headers: [Header] = []
 }
 
 public extension CorpusContents {

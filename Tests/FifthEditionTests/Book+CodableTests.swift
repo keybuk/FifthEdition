@@ -71,9 +71,9 @@ struct BookCodableTests {
                 id: "XDMG",
                 source: "XDMG",
                 group: .core,
-                author: "Wizards RPG Team",
                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
                                                    year: 2024, month: 11, day: 12).date),
+                author: "Wizards RPG Team",
                 cover: .path("covers/XDMG.webp"),
                 contents: [
                     CorpusContents("The Basics",
