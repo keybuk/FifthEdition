@@ -20,14 +20,14 @@ import MemberwiseInit
 /// ```swift
 /// let decoder = JSONDecoder()
 ///
-/// let bestiaryIndexURL = sourceURL.appending(Bestiary.jsonIndexPath)
+/// let bestiaryIndexURL = sourceURL.appending(path: Bestiary.jsonIndexPath)
 /// let bestiaryIndexData = try Data(contentsOf: bestiaryIndexURL)
 /// let bestiaryIndex = try decoder.decode(Index.self, from: bestiaryIndexData)
 ///
 /// for (_, path) in bestiaryIndex.entries {
 ///     // Parse bestiary.
-///     let bestiaryURL = sourceURL
-///         .appending(Bestiary.jsonBasePath)
+///     let bestiaryURL = bestiaryIndexURL
+///         .deletingLastPathComponent()
 ///         .appending(path)
 ///     let bestiaryData = try Data(contentsOf: bestiaryURL)
 ///     let bestiary = try decoder.decode(Bestiary.self, from: bestiaryData)

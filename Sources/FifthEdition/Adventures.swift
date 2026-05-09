@@ -19,7 +19,7 @@ import MemberwiseInit
 /// ```swift
 /// let decoder = JSONDecoder()
 ///
-/// let adventuresURL = sourceURL.appending(Adventures.jsonPath)
+/// let adventuresURL = sourceURL.appending(path: Adventures.jsonPath)
 /// let adventuresData = try Data(contentsOf: adventuresURL)
 /// let adventures = try decoder.decode(Adventures.self, from: adventuresData)
 /// ```

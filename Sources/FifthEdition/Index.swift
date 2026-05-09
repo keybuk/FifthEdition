@@ -25,7 +25,7 @@ import MemberwiseInit
 /// ```swift
 /// let decoder = JSONDecoder()
 ///
-/// let indexURL = sourceURL.appending(indexPath)
+/// let indexURL = sourceURL.appending(path: indexPath)
 /// let indexData = try Data(contentsOf: indexURL)
 /// let index = try decoder.decode(Index.self, from: indexData)
 ///
@@ -33,7 +33,7 @@ import MemberwiseInit
 ///     // Parse file.
 ///     let fileURL = indexURL
 ///         .deletingLastPathComponent()
-///         .appending(path)
+///         .appending(path: path)
 /// }
 /// ```
 @MemberwiseInit(.public)
