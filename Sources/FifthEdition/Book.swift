@@ -71,6 +71,7 @@ public extension Book {
         case screen
         case organizedPlay = "organized-play"
         case recipe
+        case homecraft
         case other
     }
 }
