@@ -53,6 +53,12 @@ extension EnumWrapperMacro: MemberMacro {
                 "\(access)static let allCases: [Wrapper] = [\(raw: caseElements.map { ".\($0.name.text)" }.joined(separator: ", "))]",
             )
 
+        let enumValue = try VariableDeclSyntax("\(access)var value: \(enumDecl.name)?") {
+            """
+            \(enumDecl.name)(rawValue: rawValue)
+            """
+        }
+
         let enumInitializer = try InitializerDeclSyntax("init(_ value: \(enumDecl.name))") {
             """
             rawValue = value.rawValue
@@ -101,6 +107,7 @@ extension EnumWrapperMacro: MemberMacro {
             ) {
                 enumVariables
                 allCases
+                enumValue
                 enumInitializer
                 rawValue
                 rawValueInitializer

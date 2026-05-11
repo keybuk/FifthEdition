@@ -112,9 +112,8 @@ public enum Edition: String, CaseIterable, Codable, Sendable {
     public static let one = Edition.modern
 }
 
-/// Entity described in the schema.
 @EnumWrapper
-public enum EntityValues: String, Sendable {
+public enum EntityValue: String, Sendable {
     case action
     case adventure
     case adventureData
@@ -189,7 +188,8 @@ public enum EntityValues: String, Sendable {
     case vehicleUpgrade
 }
 
-public typealias Entity = EntityValues.Wrapper
+/// Entity described in the schema.
+public typealias Entity = EntityValue.Wrapper
 
 public enum EnvironmentType: String, CaseIterable, Codable, Sendable {
     case any
