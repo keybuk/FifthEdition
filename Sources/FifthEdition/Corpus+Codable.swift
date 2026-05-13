@@ -75,7 +75,7 @@ extension CorpusContents.Ordinal: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let identifier = try container.decodeIfPresent(Identifier.self, forKey: .identifier)
+        let identifier = try container.decodeIfPresent(Ordinal.self, forKey: .identifier)
 
         self = switch try container.decode(TypeCodingValues.self, forKey: .type) {
         case .chapter: .chapter(identifier)
@@ -108,25 +108,6 @@ extension CorpusContents.Ordinal: Codable {
         case let .section(identifier):
             try container.encode(TypeCodingValues.section, forKey: .type)
             try container.encodeIfPresent(identifier, forKey: .identifier)
-        }
-    }
-}
-
-extension CorpusContents.Ordinal.Identifier: Codable {
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let value = try? container.decode(Int.self) {
-            self = .integer(value)
-        } else {
-            self = try .string(container.decode(String.self))
-        }
-    }
-
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch self {
-        case let .integer(value): try container.encode(value)
-        case let .string(value): try container.encode(value)
         }
     }
 }

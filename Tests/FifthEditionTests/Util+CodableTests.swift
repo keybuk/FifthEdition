@@ -126,14 +126,14 @@ struct MetaCodableTests {
     }
 }
 
-struct PageCodableTests {
+struct OrdinalCodableTests {
     @Test
     func `Numeric page`() throws {
         try testCodable(
             json: """
             42
             """,
-            value: Page.number(42),
+            value: Ordinal.number(42),
         )
     }
 
@@ -143,7 +143,7 @@ struct PageCodableTests {
             json: """
             "xxxxii"
             """,
-            value: Page.numeral("xxxxii"),
+            value: Ordinal.numeral("xxxxii"),
         )
     }
 }

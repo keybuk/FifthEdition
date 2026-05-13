@@ -1,13 +1,21 @@
 //
-//  Corpus+PropertiesTests.swift
+//  CorpusTests.swift
 //  FifthEdition
 //
-//  Created by Scott James Remnant on 5/3/26.
+//  Created by Scott James Remnant on 5/7/26.
 //
 
 import Foundation
 import Testing
 @testable import FifthEdition
+
+struct CorpusContentsHeaderInitTests {
+    @Test
+    func `init(stringLiteral:) sets header`() {
+        let header: CorpusContents.Header = "Introduction"
+        #expect(header.header == "Introduction")
+    }
+}
 
 struct PublishedCorpusEditionTests {
     @Test

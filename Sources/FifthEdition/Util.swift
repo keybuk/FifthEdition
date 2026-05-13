@@ -49,10 +49,13 @@ public struct Meta: Equatable, Sendable {
     public var otherSources: [Entity: [String: String]] = [:]
 }
 
-public enum Page: Equatable, Hashable, Sendable {
+/// Ordinal reference to page or chapter.
+public enum Ordinal: Equatable, Hashable, Sendable {
     case number(Int)
     case numeral(String)
 }
+
+public typealias Page = Ordinal
 
 public enum Proficiency: Equatable, Sendable {
     case proficient

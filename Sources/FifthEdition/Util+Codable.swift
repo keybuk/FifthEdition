@@ -88,7 +88,7 @@ extension Meta: Codable {
     }
 }
 
-extension Page: Codable {
+extension Ordinal: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(Int.self) {

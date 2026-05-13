@@ -1,5 +1,5 @@
 //
-//  Adventure+StringTests.swift
+//  AdventureTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/2/26.
@@ -8,13 +8,15 @@
 import Testing
 @testable import FifthEdition
 
-struct AdventureLevelStringTests {
+struct AdventureLevelInitTests {
     @Test
     func `init(stringLiteral:) sets .custom`() {
         let level: Adventure.Level = "Players use monster stat blocks"
         #expect(level == .custom("Players use monster stat blocks"))
     }
+}
 
+struct AdventureLevelStringTests {
     @Test
     func `description for range`() {
         #expect(String(describing: Adventure.Level.range(3...15)) == "3–15")

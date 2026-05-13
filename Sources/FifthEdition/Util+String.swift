@@ -5,7 +5,7 @@
 //  Created by Scott James Remnant on 12/27/25.
 //
 
-extension Page: CustomStringConvertible {
+extension Ordinal: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .number(number): "\(number)"

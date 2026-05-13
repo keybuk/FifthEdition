@@ -1,5 +1,5 @@
 //
-//  Corpus+Properties.swift
+//  Corpus+Published.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/2/26.

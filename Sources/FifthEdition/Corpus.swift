@@ -45,19 +45,11 @@ public extension CorpusContents {
 public extension CorpusContents {
     /// Chapter type and ordinal.
     enum Ordinal: Equatable, Sendable {
-        case chapter(Identifier? = nil)
-        case appendix(Identifier? = nil)
-        case part(Identifier? = nil)
-        case episode(Identifier? = nil)
-        case level(Identifier? = nil)
-        case section(Identifier? = nil)
-    }
-}
-
-public extension CorpusContents.Ordinal {
-    /// Chapter ordinal identifier.
-    enum Identifier: Equatable, Sendable {
-        case integer(Int)
-        case string(String)
+        case chapter(FifthEdition.Ordinal? = nil)
+        case appendix(FifthEdition.Ordinal? = nil)
+        case part(FifthEdition.Ordinal? = nil)
+        case episode(FifthEdition.Ordinal? = nil)
+        case level(FifthEdition.Ordinal? = nil)
+        case section(FifthEdition.Ordinal? = nil)
     }
 }

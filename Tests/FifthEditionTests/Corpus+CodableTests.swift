@@ -124,7 +124,7 @@ struct CorpusContentsCodableTests {
             }
             """,
             value: CorpusContents("Backgrounds",
-                                  ordinal: .chapter(.integer(5))),
+                                  ordinal: .chapter(.number(5))),
         )
     }
 
@@ -141,7 +141,7 @@ struct CorpusContentsCodableTests {
             }
             """,
             value: CorpusContents("Miscellaneous Creatures",
-                                  ordinal: .appendix(.string("A"))),
+                                  ordinal: .appendix(.numeral("A"))),
         )
     }
 }

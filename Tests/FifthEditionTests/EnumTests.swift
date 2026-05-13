@@ -1,5 +1,5 @@
 //
-//  Enum+PropertiesTests.swift
+//  EnumTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/7/26.
@@ -7,6 +7,33 @@
 
 import Testing
 @testable import FifthEdition
+
+struct EntityInitTests {
+    @Test
+    func `init(stringLiteral:) sets rawValue`() {
+        let entity: Entity = "monster"
+        #expect(entity == .monster)
+    }
+
+    @Test
+    func `init(stringLiteral:) sets rawValue for unknown`() {
+        let entity: Entity = "userManual"
+        #expect(entity == Entity(rawValue: "userManual"))
+    }
+}
+
+struct EntityStringTests {
+    @Test(arguments: Entity.allCases)
+    func `description is rawValue`(_ entity: Entity) {
+        #expect(String(describing: entity) == entity.rawValue)
+    }
+
+    @Test
+    func `description is rawValue for unknown`() {
+        let entity = Entity(rawValue: "userManual")
+        #expect(String(describing: entity) == entity.rawValue)
+    }
+}
 
 struct SizeComparableTests {
     static let testValues: [Bool] = [
@@ -39,7 +66,7 @@ struct SizeGridSquaresTests {
     ]
 
     @Test(arguments: expectedValues)
-    func `grid squares`(size: Size, expectedValue: Int) {
+    func `gridSquares has expected value`(size: Size, expectedValue: Int) {
         #expect(size.gridSquares == expectedValue)
     }
 }
