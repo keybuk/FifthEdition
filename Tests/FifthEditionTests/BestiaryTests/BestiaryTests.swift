@@ -1,5 +1,5 @@
 //
-//  Bestiary+CodableTests.swift
+//  BestiaryTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/3/26.
@@ -19,11 +19,13 @@ struct BestiaryCodableTests {
                     {
                         "name": "Amber Golem",
                         "source": "CoS",
+                        "type": "construct",
                         "page": 186,
                     },
                     {
                         "name": "Anastrasya Karelova",
                         "source": "CoS",
+                        "type": "undead",
                         "page": 93,
                         "isNPC": true,
                         "isNamedCreature": true,
@@ -37,11 +39,13 @@ struct BestiaryCodableTests {
                         name: "Amber Golem",
                         source: "CoS",
                         page: .number(186),
+                        type: Creature.CreatureType(.type(.construct)),
                     ),
                     Creature(
                         name: "Anastrasya Karelova",
                         source: "CoS",
                         page: .number(93),
+                        type: Creature.CreatureType(.type(.undead)),
                         isNamedCreature: true,
                         isNPC: true,
                     ),
@@ -73,6 +77,7 @@ struct BestiaryCodableTests {
                     {
                         "name": "Amber Golem",
                         "source": "CoS",
+                        "type": "construct",
                         "page": 186,
                     }
                 ]
@@ -84,6 +89,7 @@ struct BestiaryCodableTests {
                         name: "Amber Golem",
                         source: "CoS",
                         page: .number(186),
+                        type: Creature.CreatureType(.type(.construct)),
                     ),
                 ],
                 meta: Meta(
