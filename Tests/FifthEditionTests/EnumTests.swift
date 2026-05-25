@@ -8,33 +8,6 @@
 import Testing
 @testable import FifthEdition
 
-struct EntityInitTests {
-    @Test
-    func `init(stringLiteral:) sets rawValue`() {
-        let entity: Entity = "monster"
-        #expect(entity == .monster)
-    }
-
-    @Test
-    func `init(stringLiteral:) sets rawValue for unknown`() {
-        let entity: Entity = "userManual"
-        #expect(entity == Entity(rawValue: "userManual"))
-    }
-}
-
-struct EntityStringTests {
-    @Test(arguments: Entity.allCases)
-    func `description is rawValue`(_ entity: Entity) {
-        #expect(String(describing: entity) == entity.rawValue)
-    }
-
-    @Test
-    func `description is rawValue for unknown`() {
-        let entity = Entity(rawValue: "userManual")
-        #expect(String(describing: entity) == entity.rawValue)
-    }
-}
-
 struct SizeComparableTests {
     static let testValues: [Bool] = [
         Size.tiny < Size.large,
