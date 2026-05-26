@@ -1,5 +1,5 @@
 //
-//  Book+CodableTests.swift
+//  BookTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 4/8/26.
@@ -78,13 +78,13 @@ struct BookCodableTests {
                 contents: [
                     CorpusContents("The Basics",
                                    headers: [
-                                       CorpusContents.Header("What Does a DM Do?"),
-                                       CorpusContents.Header("Things You Need"),
-                                       CorpusContents.Header("Preparing a Session"),
-                                       CorpusContents.Header("How to Run a Session"),
-                                       CorpusContents.Header("Example of Play"),
-                                       CorpusContents.Header("Every DM Is Unique"),
-                                       CorpusContents.Header("Ensuring Fun for All"),
+                                       CorpusHeader("What Does a DM Do?"),
+                                       CorpusHeader("Things You Need"),
+                                       CorpusHeader("Preparing a Session"),
+                                       CorpusHeader("How to Run a Session"),
+                                       CorpusHeader("Example of Play"),
+                                       CorpusHeader("Every DM Is Unique"),
+                                       CorpusHeader("Ensuring Fun for All"),
                                    ]),
                 ],
             ),
@@ -152,8 +152,8 @@ struct BookCodableTests {
 }
 
 struct BookGroupCodableTests {
-    @Test(arguments: Book.Group.allCases)
-    func `book groups`(_ bookGroup: Book.Group) throws {
+    @Test(arguments: BookGroup.allCases)
+    func `book groups`(_ bookGroup: BookGroup) throws {
         try testCodable(
             json: """
             "\(bookGroup.rawValue)"

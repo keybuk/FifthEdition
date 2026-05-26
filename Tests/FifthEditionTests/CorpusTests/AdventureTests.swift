@@ -1,5 +1,5 @@
 //
-//  Adventure+CodableTests.swift
+//  AdventureTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/2/26.
@@ -93,10 +93,10 @@ struct AdventureCodableTests {
                 contents: [
                     CorpusContents("Running the Adventure",
                                    headers: [
-                                       CorpusContents.Header("Overview"),
-                                       CorpusContents.Header("The Forgotten Realms"),
-                                       CorpusContents.Header("First Session: Character Creation"),
-                                       CorpusContents.Header("The Adventure Begins"),
+                                       CorpusHeader("Overview"),
+                                       CorpusHeader("The Forgotten Realms"),
+                                       CorpusHeader("First Session: Character Creation"),
+                                       CorpusHeader("The Adventure Begins"),
                                    ]),
                 ],
             ),
@@ -259,8 +259,8 @@ struct AdventureCodableTests {
 }
 
 struct AdventureGroupCodableTests {
-    @Test(arguments: Adventure.Group.allCases)
-    func `adventure groups`(_ adventureGroup: Adventure.Group) throws {
+    @Test(arguments: AdventureGroup.allCases)
+    func `adventure groups`(_ adventureGroup: AdventureGroup) throws {
         try testCodable(
             json: """
             "\(adventureGroup.rawValue)"
@@ -280,7 +280,7 @@ struct AdventureLevelCodableTests {
                 "end": 5
             }
             """,
-            value: Adventure.Level.range(1...5),
+            value: AdventureLevel.range(1...5),
         )
     }
 
@@ -292,7 +292,28 @@ struct AdventureLevelCodableTests {
                 "custom": "Players use monster stat blocks",
             }
             """,
-            value: Adventure.Level.custom("Players use monster stat blocks"),
+            value: AdventureLevel.custom("Players use monster stat blocks"),
         )
+    }
+}
+
+struct AdventureLevelInitTests {
+    @Test
+    func `init(stringLiteral:) sets .custom`() {
+        let level: AdventureLevel = "Players use monster stat blocks"
+        #expect(level == .custom("Players use monster stat blocks"))
+    }
+}
+
+struct AdventureLevelStringTests {
+    @Test
+    func `description for range`() {
+        #expect(String(describing: AdventureLevel.range(3...15)) == "3–15")
+    }
+
+    @Test
+    func `description for custom`() {
+        #expect(String(describing: AdventureLevel.custom("Players use monster stat blocks")) ==
+            "Players use monster stat blocks")
     }
 }

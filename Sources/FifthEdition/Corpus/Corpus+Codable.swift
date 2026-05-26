@@ -15,8 +15,8 @@ extension CorpusContents: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
-        headers = try container.decodeIfPresent([Header].self, forKey: .headers) ?? []
-        ordinal = try container.decodeIfPresent(Ordinal.self, forKey: .ordinal)
+        headers = try container.decodeIfPresent([CorpusHeader].self, forKey: .headers) ?? []
+        ordinal = try container.decodeIfPresent(CorpusOrdinal.self, forKey: .ordinal)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -27,7 +27,7 @@ extension CorpusContents: Codable {
     }
 }
 
-extension CorpusContents.Header: Codable {
+extension CorpusHeader: Codable {
     enum CodingKeys: String, CodingKey {
         case header
         case depth
@@ -58,7 +58,7 @@ extension CorpusContents.Header: Codable {
     }
 }
 
-extension CorpusContents.Ordinal: Codable {
+extension CorpusOrdinal: Codable {
     enum CodingKeys: String, CodingKey {
         case type
         case identifier

@@ -1,10 +1,11 @@
 //
-//  Corpus+CodableTests.swift
+//  CorpusTests.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/2/26.
 //
 
+import Foundation
 import Testing
 @testable import FifthEdition
 
@@ -40,13 +41,13 @@ struct CorpusContentsCodableTests {
             """,
             value: CorpusContents("The Basics",
                                   headers: [
-                                      CorpusContents.Header("What Does a DM Do?"),
-                                      CorpusContents.Header("Things You Need"),
-                                      CorpusContents.Header("Preparing a Session"),
-                                      CorpusContents.Header("How to Run a Session"),
-                                      CorpusContents.Header("Example of Play"),
-                                      CorpusContents.Header("Every DM Is Unique"),
-                                      CorpusContents.Header("Ensuring Fun for All"),
+                                      CorpusHeader("What Does a DM Do?"),
+                                      CorpusHeader("Things You Need"),
+                                      CorpusHeader("Preparing a Session"),
+                                      CorpusHeader("How to Run a Session"),
+                                      CorpusHeader("Example of Play"),
+                                      CorpusHeader("Every DM Is Unique"),
+                                      CorpusHeader("Ensuring Fun for All"),
                                   ]),
         )
     }
@@ -68,8 +69,8 @@ struct CorpusContentsCodableTests {
             """,
             value: CorpusContents("Growing Your Franchise",
                                   headers: [
-                                      CorpusContents.Header("Company Positions"),
-                                      CorpusContents.Header("Cartographer", depth: 1),
+                                      CorpusHeader("Company Positions"),
+                                      CorpusHeader("Cartographer", depth: 1),
                                   ]),
         )
     }
@@ -90,7 +91,7 @@ struct CorpusContentsCodableTests {
             """,
             value: CorpusContents("Equipment",
                                   headers: [
-                                      CorpusContents.Header("Trade Goods", index: 1),
+                                      CorpusHeader("Trade Goods", index: 1),
                                   ]),
         )
     }
@@ -143,5 +144,39 @@ struct CorpusContentsCodableTests {
             value: CorpusContents("Miscellaneous Creatures",
                                   ordinal: .appendix(.numeral("A"))),
         )
+    }
+}
+
+struct CorpusHeaderInitTests {
+    @Test
+    func `init(stringLiteral:) sets header`() {
+        let header: CorpusHeader = "Introduction"
+        #expect(header.header == "Introduction")
+    }
+}
+
+struct PublishedCorpusEditionTests {
+    @Test
+    func `edition for 2014 5e book`() throws {
+        let book = try Book(name: "Player's Handbook (2014)",
+                            id: "PHB",
+                            source: "PHB",
+                            group: .core,
+                            published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                               year: 2014, month: 8, day: 19).date),
+                            contents: [])
+        #expect(book.edition == .legacy)
+    }
+
+    @Test
+    func `edition for 2024 5.5e book`() throws {
+        let book = try Book(name: "Player's Handbook (2024)",
+                            id: "XPHB",
+                            source: "XPHB",
+                            group: .core,
+                            published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                               year: 2024, month: 9, day: 17).date),
+                            contents: [])
+        #expect(book.edition == .modern)
     }
 }

@@ -33,13 +33,13 @@ extension Adventure: Codable {
         id = try container.decode(String.self, forKey: .id)
         source = try container.decode(String.self, forKey: .source)
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
-        group = try container.decode(Group.self, forKey: .group)
+        group = try container.decode(AdventureGroup.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
         alAveragePlayerLevel = try container.decodeIfPresent(Int.self, forKey: .alAveragePlayerLevel)
         alLength = try container.decodeIfPresent(LengthCoding.self, forKey: .alLength)?.value
         alId = try container.decodeIfPresent(String.self, forKey: .alId)
         contents = try container.decode([CorpusContents].self, forKey: .contents)
-        level = try container.decode(Level.self, forKey: .level)
+        level = try container.decode(AdventureLevel.self, forKey: .level)
         published = try container.decode(ISO8601DateCoding.self, forKey: .published).value
         revised = try container.decodeIfPresent(ISO8601DateCoding.self, forKey: .revised)?.value
         publishedOrder = try container.decodeIfPresent(Int.self, forKey: .publishedOrder)
@@ -104,7 +104,7 @@ extension Adventure {
     }
 }
 
-extension Adventure.Level: Codable {
+extension AdventureLevel: Codable {
     enum CodingKeys: String, CodingKey {
         case start
         case end

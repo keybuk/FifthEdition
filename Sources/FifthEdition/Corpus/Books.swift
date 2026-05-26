@@ -31,3 +31,19 @@ public struct Books: Codable, Equatable, Sendable {
     /// Collection of source books.
     public var book: [Book] = []
 }
+
+/// Kinds of source book publications, used for grouping.
+public enum BookGroup: String, CaseIterable, Codable, Sendable {
+    case core
+    case supplement
+    case supplementAlt = "supplement-alt"
+    case setting
+    case settingAlt = "setting-alt"
+    case prerelease
+    case homebrew
+    case screen
+    case organizedPlay = "organized-play"
+    case recipe
+    case homecraft
+    case other
+}

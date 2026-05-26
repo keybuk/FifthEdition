@@ -28,7 +28,7 @@ extension Book: Codable {
         id = try container.decode(String.self, forKey: .id)
         source = try container.decode(String.self, forKey: .source)
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
-        group = try container.decode(Group.self, forKey: .group)
+        group = try container.decode(BookGroup.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
         published = try container.decode(ISO8601DateCoding.self, forKey: .published).value
         revised = try container.decodeIfPresent(ISO8601DateCoding.self, forKey: .revised)?.value
