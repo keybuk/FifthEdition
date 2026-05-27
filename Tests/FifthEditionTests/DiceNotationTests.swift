@@ -8,83 +8,147 @@
 import Testing
 @testable import FifthEdition
 
-struct DiceNotationInitTests {
-    static let testValues: [(Int, Die, Int)] = [
-        (4, .d1, 0), // 4d1
-        (3, .d2, 0), // 3d2
-        (1, .d3, 1), // 1d3 + 1
-        (2, .d4, -1), // 2d4 - 1
-        (1, .d6, 2), // 1d6 + 2
-        (3, .d8, -1), // 3d8 - 1
-        (4, .d10, 10), // 4d10 + 10
-        (1, .d12, -2), // 1d12-2
-        (2, .d20, -4), // 2d20 - 4
-        (1, .d100, 0), // 1d100
-    ]
-
-    @Test(arguments: testValues)
-    func `init(_:count:modifier:)`(_ input: (count: Int, die: Die, modifier: Int)) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(dice.count == input.count)
-        #expect(dice.die == input.die)
-        #expect(dice.modifier == input.modifier)
+struct DieComparableTests {
+    @Test(arguments: zip(Die.allCases, Die.allCases.dropFirst()))
+    func `Die is comparable`(a: Die, b: Die) {
+        #expect(a < b)
     }
 }
 
-struct DiceNotationRollTests {
-    static let testValues: [(Int, Die, Int)] = [
-        (4, .d1, 0), // 4d1
-        (3, .d2, 0), // 3d2
-        (1, .d3, 1), // 1d3 + 1
-        (2, .d4, -1), // 2d4 - 1
-        (1, .d6, 2), // 1d6 + 2
-        (3, .d8, -1), // 3d8 - 1
-        (4, .d10, 10), // 4d10 + 10
-        (1, .d12, -2), // 1d12-2
-        (2, .d20, -4), // 2d20 - 4
-        (1, .d100, 0), // 1d100
+struct DieRawValueTests {
+    static let testValues: [(Die, Int)] = [
+        (.d1, 1),
+        (.d2, 2),
+        (.d3, 3),
+        (.d4, 4),
+        (.d6, 6),
+        (.d8, 8),
+        (.d12, 12),
+        (.d20, 20),
+        (.d100, 100),
     ]
-    static let testAverages: [Int] = [
-        4, // 4d1
-        4, // 3d2
-        3, // 1d3 + 1
-        4, // 2d4 - 1
-        5, // 1d6 + 2
-        12, // 3d8 - 1
-        32, // 4d10 + 10
-        4, // 1d12-2
-        17, // 2d20 - 4
-        50, // 1d100
-    ]
-    static let testRanges: [ClosedRange<Int>] = [
-        4...4, // 4d1
-        3...6, // 3d2
-        2...4, // 1d3 + 1
-        1...7, // 2d4 - 1
-        3...8, // 1d6 + 2
-        2...23, // 3d8 - 1
-        14...50, // 4d10 + 10
-        -1...10, // 1d12-2
-        -2...36, // 2d20 - 4
-        1...100, // 1d100
-    ]
-
-    @Test(arguments: zip(testValues, testAverages))
-    func average(_ input: (count: Int, die: Die, modifier: Int), expected: Int) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(dice.average == expected)
-    }
-
-    @Test(arguments: zip(testValues, testRanges))
-    func range(_ input: (count: Int, die: Die, modifier: Int), expected: ClosedRange<Int>) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(dice.range == expected)
-    }
 
     @Test(arguments: testValues)
-    func `roll()`(_ input: (count: Int, die: Die, modifier: Int)) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
+    func `rawValue is number of sides`(die: Die, sides: Int) {
+        #expect(die.rawValue == sides)
+    }
+}
+
+struct DieRollableTests {
+    static let testAverages: [(Die, Int)] = [
+        (.d1, 1),
+        (.d2, 1),
+        (.d3, 2),
+        (.d4, 2),
+        (.d6, 3),
+        (.d8, 4),
+        (.d12, 6),
+        (.d20, 10),
+        (.d100, 50),
+    ]
+
+    @Test(arguments: testAverages)
+    func `average has expected values`(die: Die, average: Int) {
+        #expect(die.average == average)
+    }
+
+    @Test(arguments: Die.allCases)
+    func `range is 1 to number of sides`(_ die: Die) {
+        #expect(die.range == 1...die.rawValue)
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll()`(_ die: Die) {
         for _ in 0..<100 {
+            #expect(die.range.contains(die.roll()))
+        }
+    }
+
+    struct CheatingRandomNumberGenerator: RandomNumberGenerator {
+        mutating func next() -> UInt64 {
+            UInt64.max
+        }
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll(using:)`(_ die: Die) {
+        var generator = CheatingRandomNumberGenerator()
+        #expect(die.roll(using: &generator) == die.rawValue)
+    }
+}
+
+struct DieStringTests {
+    @Test(arguments: Die.allCases)
+    func `description is the die name`(_ die: Die) {
+        #expect(String(describing: die) == "d\(die.rawValue)")
+    }
+}
+
+struct DiceAbsTests {
+    @Test
+    func `abs(_:) of positive die count`() {
+        #expect(abs(Dice.die(.d6, count: 4)) == Dice.die(.d6, count: 4))
+    }
+
+    @Test
+    func `abs(_:) of negative die count`() {
+        #expect(abs(Dice.die(.d6, count: -4)) == Dice.die(.d6, count: 4))
+    }
+
+    @Test
+    func `abs(_:) of positive modifier`() {
+        #expect(abs(Dice.modifier(10)) == Dice.modifier(10))
+    }
+
+    @Test
+    func `abs(_:) of negative modifier`() {
+        #expect(abs(Dice.modifier(-10)) == Dice.modifier(10))
+    }
+}
+
+struct DiceRollableTests {
+    @Test(arguments: Die.allCases)
+    func `average of single dice have expected values`(die: Die) {
+        #expect(Dice.die(die, count: 1).average == die.average)
+    }
+
+    @Test(arguments: Die.allCases)
+    func `average of two dice have expected values`(die: Die) {
+        #expect(Dice.die(die, count: 2).average == die.rawValue + 1)
+    }
+
+    @Test(arguments: Die.allCases)
+    func `average of negative dice have expected values`(die: Die) {
+        #expect(Dice.die(die, count: -2).average == -(die.rawValue + 1))
+    }
+
+    @Test(arguments: Die.allCases)
+    func `range of single dice have expected values`(die: Die) {
+        #expect(Dice.die(die, count: 1).range == die.range)
+    }
+
+    @Test(arguments: Die.allCases)
+    func `range of two dice have expected values`(die: Die) {
+        #expect(Dice.die(die, count: 2).range == 2...(die.rawValue * 2))
+    }
+
+    @Test(arguments: Die.allCases)
+    func `range of negative dice have expected values`(die: Die) {
+        #expect(Dice.die(die, count: -2).range == (-die.rawValue * 2) ... -2)
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll()`(_ die: Die) {
+        for _ in 0..<100 {
+            let dice = Dice.die(die, count: .random(in: 1...20))
+            #expect(dice.range.contains(dice.roll()))
+        }
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll() with negative count`(_ die: Die) {
+        for _ in 0..<100 {
+            let dice = Dice.die(die, count: .random(in: -20 ... -1))
             #expect(dice.range.contains(dice.roll()))
         }
     }
@@ -95,151 +159,634 @@ struct DiceNotationRollTests {
         }
     }
 
-    @Test(arguments: testValues)
-    func `roll(using:)`(_ input: (count: Int, die: Die, modifier: Int)) {
+    @Test(arguments: Die.allCases)
+    func `roll(using:)`(_ die: Die) {
         var generator = CheatingRandomNumberGenerator()
+        #expect(Dice.die(die, count: 2).roll(using: &generator) == die.rawValue * 2)
+    }
+}
 
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        let roll = dice.roll(using: &generator)
-        #expect(roll == dice.range.upperBound)
+struct DiceStringTests {
+    @Test
+    func `description is count and die`() {
+        #expect(String(describing: Dice.die(.d6, count: 4)) == "4d6")
+    }
+
+    @Test
+    func `description of negative count and die`() {
+        #expect(String(describing: Dice.die(.d6, count: -4)) == "-4d6")
+    }
+
+    @Test
+    func `description is modifier`() {
+        #expect(String(describing: Dice.modifier(10)) == "10")
+    }
+
+    @Test
+    func `description of negative modifier`() {
+        #expect(String(describing: Dice.modifier(-10)) == "-10")
+    }
+}
+
+struct DiceNotationInitTests {
+    @Test
+    func `init(_:) with dice list`() {
+        let notation = DiceNotation([
+            .die(.d4, count: 4),
+            .modifier(10),
+        ])
+        #expect(notation.dice == [
+            .die(.d4, count: 4),
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(arrayLiteral:) with dice list`() {
+        let notation: DiceNotation = [
+            .die(.d4, count: 4),
+            .modifier(10),
+        ]
+        #expect(notation.dice == [
+            .die(.d4, count: 4),
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with raw die`() {
+        let notation = DiceNotation(.d6)
+        #expect(notation.dice == [
+            .die(.d6, count: 1),
+        ])
+    }
+
+    @Test
+    func `init(_:count:)`() {
+        let notation = DiceNotation(.d6, count: 4)
+        #expect(notation.dice == [
+            .die(.d6, count: 4),
+        ])
+    }
+
+    @Test
+    func `init(_:count:modifier:)`() {
+        let notation = DiceNotation(.d6, count: 4, modifier: 10)
+        #expect(notation.dice == [
+            .die(.d6, count: 4),
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with count and die`() {
+        let notation = DiceNotation("4d6")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+        ])
+    }
+
+    @Test
+    func `init(_:) with negative die count`() {
+        let notation = DiceNotation("- 2d8")
+        #expect(notation?.dice == [
+            .die(.d8, count: -2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with negative die count and no spaces`() {
+        let notation = DiceNotation("-2d8")
+        #expect(notation?.dice == [
+            .die(.d8, count: -2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with positive die count`() {
+        let notation = DiceNotation("+ 3d12")
+        #expect(notation?.dice == [
+            .die(.d12, count: 3),
+        ])
+    }
+
+    @Test
+    func `init(_:) with positive die count and no spaces`() {
+        let notation = DiceNotation("+3d12")
+        #expect(notation?.dice == [
+            .die(.d12, count: 3),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die only`() {
+        let notation = DiceNotation("d10")
+        #expect(notation?.dice == [
+            .die(.d10, count: 1),
+        ])
+    }
+
+    @Test(arguments: Die.allCases)
+    func `init(_:) with each die`(_ die: Die) {
+        let count: Int = .random(in: 1...20)
+        let notation = DiceNotation("\(count)\(die)")
+        #expect(notation?.dice == [
+            .die(die, count: count),
+        ])
+    }
+
+    @Test
+    func `init(_:) with modifier only`() {
+        let notation = DiceNotation("10")
+        #expect(notation?.dice == [
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with negative modifier only`() {
+        let notation = DiceNotation("- 10")
+        #expect(notation?.dice == [
+            .modifier(-10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with negative modifier and no spaces only`() {
+        let notation = DiceNotation("-10")
+        #expect(notation?.dice == [
+            .modifier(-10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with positive modifier only`() {
+        let notation = DiceNotation("+ 10")
+        #expect(notation?.dice == [
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with positive modifier and no spaces only`() {
+        let notation = DiceNotation("+ 10")
+        #expect(notation?.dice == [
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die and modifier`() {
+        let notation = DiceNotation("4d6 + 10")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die and modifier without spaces`() {
+        let notation = DiceNotation("4d6+10")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die and negative modifier`() {
+        let notation = DiceNotation("4d6 - 10")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(-10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die and negative modifier without spaces`() {
+        let notation = DiceNotation("4d6-10")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(-10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die and negative modifier using figure dash`() {
+        let notation = DiceNotation("4d6 \u{2012} 10")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(-10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die and negative modifier using minus sign`() {
+        let notation = DiceNotation("4d6 \u{2212} 10")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(-10),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die added`() {
+        let notation = DiceNotation("4d6 + 2d8")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .die(.d8, count: 2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die added without spaces`() {
+        let notation = DiceNotation("4d6+2d8")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .die(.d8, count: 2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die subtracted`() {
+        let notation = DiceNotation("4d6 - 2d8")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die subtracted without spaces`() {
+        let notation = DiceNotation("4d6-2d8")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die subtracted using figure dash`() {
+        let notation = DiceNotation("4d6 \u{2012} 2d8")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with die subtracted using minus sign`() {
+        let notation = DiceNotation("4d6 \u{2212} 2d8")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ])
+    }
+
+    @Test
+    func `init(_:) with modifier added`() {
+        let notation = DiceNotation("4d6 + 10 + 6")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(10),
+            .modifier(6),
+        ])
+    }
+
+    @Test
+    func `init(_:) with modifier subtracted`() {
+        let notation = DiceNotation("4d6 + 10 - 6")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(10),
+            .modifier(-6),
+        ])
+    }
+
+    @Test
+    func `init(_:) with mixed dice and modifiers`() {
+        let notation = DiceNotation("4d6 + 10 - 2d8 - 2")
+        #expect(notation?.dice == [
+            .die(.d6, count: 4),
+            .modifier(10),
+            .die(.d8, count: -2),
+            .modifier(-2),
+        ])
+    }
+}
+
+struct DiceNotationRollableTests {
+    @Test
+    func `average is die average`() {
+        let dice = Dice.die(.d6, count: 2)
+        let notation = DiceNotation([dice])
+        #expect(notation.average == dice.average)
+    }
+
+    @Test
+    func `average is negative die average`() {
+        let dice = Dice.die(.d6, count: -2)
+        let notation = DiceNotation([dice])
+        #expect(notation.average == dice.average)
+    }
+
+    @Test
+    func `average is modifier value`() {
+        let notation = DiceNotation([.modifier(10)])
+        #expect(notation.average == 10)
+    }
+
+    @Test
+    func `average is negative modifier value`() {
+        let notation = DiceNotation([.modifier(-10)])
+        #expect(notation.average == -10)
+    }
+
+    @Test
+    func `average is sum of dice averages`() {
+        let dice: [Dice] = [
+            .die(.d6, count: 4),
+            .die(.d8, count: 2),
+        ]
+        let notation = DiceNotation(dice)
+        #expect(notation.average == dice[0].average + dice[1].average)
+    }
+
+    @Test
+    func `average subtracts die with negative count`() {
+        let dice: [Dice] = [
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ]
+        let notation = DiceNotation(dice)
+        #expect(notation.average == dice[0].average + dice[1].average)
+    }
+
+    @Test
+    func `average is sum of modifiers`() {
+        let notation = DiceNotation([
+            .modifier(10),
+            .modifier(6),
+        ])
+        #expect(notation.average == 16)
+    }
+
+    @Test
+    func `average subtracts negative modifier`() {
+        let notation = DiceNotation([
+            .modifier(10),
+            .modifier(-6),
+        ])
+        #expect(notation.average == 4)
+    }
+
+    @Test
+    func `average is sum of die and modifier`() {
+        let dice = Dice.die(.d6, count: 2)
+        let notation = DiceNotation([dice, .modifier(10)])
+        #expect(notation.average == dice.average + 10)
+    }
+
+    @Test
+    func `range is die range`() {
+        let dice = Dice.die(.d6, count: 2)
+        let notation = DiceNotation([dice])
+        #expect(notation.range == dice.range)
+    }
+
+    @Test
+    func `range is negative die range`() {
+        let dice = Dice.die(.d6, count: -2)
+        let notation = DiceNotation([dice])
+        #expect(notation.range == dice.range)
+    }
+
+    @Test
+    func `range is modifier value`() {
+        let notation = DiceNotation([.modifier(10)])
+        #expect(notation.range == 10...10)
+    }
+
+    @Test
+    func `range is negative modifier value`() {
+        let notation = DiceNotation([.modifier(-10)])
+        #expect(notation.range == -10 ... -10)
+    }
+
+    @Test
+    func `range is sum of dice ranges`() {
+        let dice: [Dice] = [
+            .die(.d6, count: 4),
+            .die(.d8, count: 2),
+        ]
+        let notation = DiceNotation(dice)
+        #expect(notation.range ==
+            (dice[0].range.lowerBound + dice[1].range.lowerBound)
+            ... (dice[0].range.upperBound + dice[1].range.upperBound))
+    }
+
+    @Test
+    func `range subtracts die with negative count`() {
+        let dice: [Dice] = [
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ]
+        let notation = DiceNotation(dice)
+        #expect(notation.range ==
+            (dice[0].range.lowerBound + dice[1].range.lowerBound)
+            ... (dice[0].range.upperBound + dice[1].range.upperBound))
+    }
+
+    @Test
+    func `range is sum of modifiers`() {
+        let notation = DiceNotation([
+            .modifier(10),
+            .modifier(6),
+        ])
+        #expect(notation.range == 16...16)
+    }
+
+    @Test
+    func `range subtracts negative modifier`() {
+        let notation = DiceNotation([
+            .modifier(10),
+            .modifier(-6),
+        ])
+        #expect(notation.range == 4...4)
+    }
+
+    @Test
+    func `range is sum of die and modifier`() {
+        let dice = Dice.die(.d6, count: 2)
+        let notation = DiceNotation([dice, .modifier(10)])
+        #expect(notation.range == (dice.range.lowerBound + 10)...(dice.range.upperBound + 10))
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll()`(_ die: Die) {
+        for _ in 0..<100 {
+            let notation = DiceNotation([
+                .die(die, count: .random(in: 1...20)),
+                .modifier(.random(in: 1...20)),
+            ])
+            #expect(notation.range.contains(notation.roll()))
+        }
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll() with negative count`(_ die: Die) {
+        for _ in 0..<100 {
+            let notation = DiceNotation([
+                .die(die, count: .random(in: -20 ... -1)),
+                .modifier(.random(in: 1...20)),
+            ])
+            #expect(notation.range.contains(notation.roll()))
+        }
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll() with negative modifier`(_ die: Die) {
+        for _ in 0..<100 {
+            let notation = DiceNotation([
+                .die(die, count: .random(in: 1...20)),
+                .modifier(.random(in: -20 ... -1)),
+            ])
+            #expect(notation.range.contains(notation.roll()))
+        }
+    }
+
+    @Test
+    func `roll() with die added`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .die(.d8, count: 2),
+        ])
+        #expect(notation.range.contains(notation.roll()))
+    }
+
+    @Test
+    func `roll() with die subtracted`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ])
+        #expect(notation.range.contains(notation.roll()))
+    }
+
+    struct CheatingRandomNumberGenerator: RandomNumberGenerator {
+        mutating func next() -> UInt64 {
+            UInt64.max
+        }
+    }
+
+    @Test(arguments: Die.allCases)
+    func `roll(using:)`(_ die: Die) {
+        var generator = CheatingRandomNumberGenerator()
+        let notation = DiceNotation([
+            .die(die, count: 2),
+            .modifier(4),
+        ])
+        #expect(notation.roll(using: &generator) == die.rawValue * 2 + 4)
     }
 }
 
 struct DiceNotationStringTests {
-    static let testValues: [(Int, Die, Int)] = [
-        (4, .d1, 0), // 4d1
-        (3, .d2, 0), // 3d2
-        (1, .d3, 1), // 1d3 + 1
-        (2, .d4, -1), // 2d4 - 1
-        (1, .d6, 2), // 1d6 + 2
-        (3, .d8, -1), // 3d8 - 1
-        (4, .d10, 10), // 4d10 + 10
-        (1, .d12, -2), // 1d12-2
-        (2, .d20, -4), // 2d20 - 4
-        (1, .d100, 0), // 1d100
-    ]
-    static let testStrings: [String] = [
-        "4d1",
-        "3d2",
-        "1d3 + 1",
-        "2d4 - 1",
-        "1d6 + 2",
-        "3d8 - 1",
-        "4d10 + 10",
-        "1d12 - 2",
-        "2d20 - 4",
-        "1d100",
-    ]
-
-    @Test(arguments: zip(testStrings, testValues))
-    func `init(_:)`(_ string: String, expected: (count: Int, die: Die, modifier: Int)) throws {
-        let dice = try #require(DiceNotation(string),
-                                "Failed to parse expression: \(string)")
-        #expect(dice.count == expected.count)
-        #expect(dice.die == expected.die)
-        #expect(dice.modifier == expected.modifier)
+    @Test
+    func `description with die only`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+        ])
+        #expect(String(describing: notation) == "4d6")
     }
 
     @Test
-    func `init(_:) allows missing count`() throws {
-        let dice = try #require(DiceNotation("d6 + 3"),
-                                "Failed to parse expression")
-        #expect(dice.count == 1)
-        #expect(dice.die == .d6)
-        #expect(dice.modifier == 3)
+    func `description with die of negative count only`() {
+        let notation = DiceNotation([
+            .die(.d6, count: -4),
+        ])
+        #expect(String(describing: notation) == "-4d6")
     }
 
     @Test
-    func `init(_:) allows missing modifier`() throws {
-        let dice = try #require(DiceNotation("2d6 + 3"),
-                                "Failed to parse expression")
-        #expect(dice.count == 2)
-        #expect(dice.die == .d6)
-        #expect(dice.modifier == 3)
+    func `description with modifier only`() {
+        let notation = DiceNotation([
+            .modifier(10),
+        ])
+        #expect(String(describing: notation) == "10")
     }
 
     @Test
-    func `init(_:) allows missing spaces before modifier`() throws {
-        let dice = try #require(DiceNotation("2d6+ 3"),
-                                "Failed to parse expression")
-        #expect(dice.count == 2)
-        #expect(dice.die == .d6)
-        #expect(dice.modifier == 3)
+    func `description with negative modifier only`() {
+        let notation = DiceNotation([
+            .modifier(-10),
+        ])
+        #expect(String(describing: notation) == "-10")
     }
 
     @Test
-    func `init(_:) allows missing spaces after modifier`() throws {
-        let dice = try #require(DiceNotation("2d6 +3"),
-                                "Failed to parse expression")
-        #expect(dice.count == 2)
-        #expect(dice.die == .d6)
-        #expect(dice.modifier == 3)
+    func `description with die and added modifier`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .modifier(10),
+        ])
+        #expect(String(describing: notation) == "4d6 + 10")
     }
 
     @Test
-    func `init(_:) allows missing spaces around modifier`() throws {
-        let dice = try #require(DiceNotation("2d6+3"),
-                                "Failed to parse expression")
-        #expect(dice.count == 2)
-        #expect(dice.die == .d6)
-        #expect(dice.modifier == 3)
+    func `description with die and subtracted`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .modifier(-10),
+        ])
+        #expect(String(describing: notation) == "4d6 - 10")
     }
 
     @Test
-    func `init(_:) returns nil for empty string`() {
-        #expect(DiceNotation("") == nil)
+    func `description with die added`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .die(.d8, count: 2),
+        ])
+        #expect(String(describing: notation) == "4d6 + 2d8")
     }
 
     @Test
-    func `init(_:) returns nil for invalid string`() {
-        #expect(DiceNotation("invalid") == nil)
+    func `description with die subtracted`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .die(.d8, count: -2),
+        ])
+        #expect(String(describing: notation) == "4d6 - 2d8")
     }
 
     @Test
-    func `init(_:) returns nil for solitary number`() {
-        #expect(DiceNotation("20") == nil)
+    func `description with modifier added`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .modifier(10),
+            .modifier(6),
+        ])
+        #expect(String(describing: notation) == "4d6 + 10 + 6")
     }
 
     @Test
-    func `init(_:) returns nil for unknown die`() {
-        #expect(DiceNotation("d11") == nil)
+    func `description with modifier subtracted`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .modifier(10),
+            .modifier(-6),
+        ])
+        #expect(String(describing: notation) == "4d6 + 10 - 6")
     }
 
     @Test
-    func `init(_:) returns nil for missing sign`() {
-        #expect(DiceNotation("2d6 3") == nil)
-    }
-
-    @Test(arguments: testValues)
-    func description(_ input: (count: Int, die: Die, modifier: Int)) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(String(describing: dice) == "\(dice.average) (\(dice.stringValue))")
-    }
-
-    @Test(arguments: zip(testValues, testStrings))
-    func `string value`(_ input: (count: Int, die: Die, modifier: Int), expected: String) {
-        let dice = DiceNotation(input.die, count: input.count, modifier: input.modifier)
-        #expect(dice.stringValue == expected)
-    }
-}
-
-struct DieComparableTests {
-    @Test(arguments: zip(Die.allCases, Die.allCases.dropFirst()))
-    func `Die is comparable`(a: Die, b: Die) {
-        #expect(a < b)
-    }
-}
-
-struct DieRawValueTests {
-    @Test
-    func `rawValue is the number of sizes`() {
-        #expect(Die.d20.rawValue == 20)
-    }
-}
-
-struct DieStringTests {
-    @Test
-    func `description is the die name`() {
-        #expect(String(describing: Die.d20) == "d20")
+    func `description with mixed dice and modifiers`() {
+        let notation = DiceNotation([
+            .die(.d6, count: 4),
+            .modifier(10),
+            .die(.d8, count: -2),
+            .modifier(-2),
+        ])
+        #expect(String(describing: notation) == "4d6 + 10 - 2d8 - 2")
     }
 }

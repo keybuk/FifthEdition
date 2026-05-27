@@ -17,9 +17,9 @@ extension Creature.AbilityScore: CustomStringConvertible {
 extension Creature.HitPoints: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .hp(let notation, nil): "\(notation)"
+        case .hp(let notation, nil): "\(notation.average) (\(notation))"
         case let .hp(notation, givenAverage):
-            "\(givenAverage!) or \(notation.stringValue)"
+            "\(givenAverage!) (\(notation))"
         case let .unrollable(formula, average):
             "\(average) (\(formula))"
         case let .special(special): special

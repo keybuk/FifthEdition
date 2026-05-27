@@ -5,92 +5,172 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-/// Dice notation.
-///
-/// Encodes the notation of a number of dice to be rolled, and a modifier added or subtracted, e.g. `"2d6 + 4"`.
-public struct DiceNotation: Equatable, Hashable, Sendable {
-    /// Die to be rolled.
-    public let die: Die
+/// Something that can be rolled.
+public protocol Rollable {
+    /// Average roll.
+    var average: Int { get }
 
-    /// Number of dice to be rolled.
-    public let count: Int
+    /// Range of possible rolls.
+    var range: ClosedRange<Int> { get }
 
-    /// Modifier to be added or subtracted from the rolled total.
-    public let modifier: Int
+    /// Returns a random roll.
+    /// - Returns: A random value within ``range``.
+    func roll() -> Int
 
-    /// Creates a new dice notation.
-    /// - Parameters:
-    ///   - die: The die to roll.
-    ///   - count: Number of `die` to roll.
-    ///   - modifier: Modifier to add or subtract from the rolled total.
-    public init(_ die: Die, count: Int = 1, modifier: Int = 0) {
-        self.die = die
-        self.count = count
-        self.modifier = modifier
-    }
+    /// Returns a random roll using the given generator as a source for randomness.
+    /// - Parameter generator: The random number generator to use when creating the roll.
+    /// - Returns: A random value within ``range``.
+    func roll(using generator: inout some RandomNumberGenerator) -> Int
 }
 
-public extension DiceNotation {
-    /// The average roll this notation yields.
-    var average: Int {
-        (count * (die.rawValue + 1)) / 2 + modifier
-    }
-
-    /// The range of possible rolls this notation yields.
-    var range: ClosedRange<Int> {
-        (count + modifier)...(count * die.rawValue + modifier)
-    }
-
-    /// Returns a random roll of the dice notation.
-    /// - Returns: A random value within the range of the dice notation.
+public extension Rollable {
     func roll() -> Int {
         .random(in: range)
     }
 
-    /// Returns a random roll of the dice notation, using the given generator as a source for randomness.
-    /// - Parameter generator: The random number generator to use when creating the roll.
-    /// - Returns: A random value within the range of the dice notation.
     func roll(using generator: inout some RandomNumberGenerator) -> Int {
         .random(in: range, using: &generator)
     }
 }
 
-extension DiceNotation: CustomStringConvertible {
-    /// Creates a new dice notation from the given string.
-    /// - Parameter string: The string representation of the dice notation.
-    ///
-    /// If `string` does not match the format of a dice notation, the initializer returns `nil`.
-    public init?(_ string: String) {
-        let regex = /(\d*)d(\d+) *(?:([+-]) *(\d+))?/
-        guard let match = string.wholeMatch(of: regex) else { return nil }
+/// Die to be rolled.
+///
+/// Can represent those both in and out of jail.
+public enum Die: Int, CaseIterable, Equatable, Hashable, Sendable {
+    case d1 = 1
+    case d2 = 2
+    case d3 = 3
+    case d4 = 4
+    case d6 = 6
+    case d8 = 8
+    case d10 = 10
+    case d12 = 12
+    case d20 = 20
+    case d100 = 100
+}
 
-        let (_, countStr, dieStr, signStr, modifierStr) = match.output
-        guard let die = Die(rawValue: Int(dieStr)!) else { return nil }
-        self.die = die
+extension Die: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
+}
 
-        count = !countStr.isEmpty ? Int(countStr)! : 1
+extension Die: CustomStringConvertible {
+    public var description: String {
+        "d\(rawValue)"
+    }
+}
 
-        if let signStr, let modifierStr {
-            let modifierValue = Int(modifierStr)!
-            modifier = signStr == "-" ? -modifierValue : modifierValue
-        } else {
-            modifier = 0
+extension Die: Rollable {
+    /// The average roll from this die.
+    public var average: Int {
+        (rawValue + 1) / 2
+    }
+
+    /// The range of possible rolls from this die.
+    public var range: ClosedRange<Int> {
+        1...rawValue
+    }
+}
+
+/// One or more ``Die`` to bbe rolled, or a modifier to be applied.
+public enum Dice: Equatable, Hashable, Sendable {
+    case die(Die, count: Int = 1)
+    case modifier(Int)
+}
+
+extension Dice: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .die(die, count): "\(count)\(die)"
+        case let .modifier(modifier): "\(modifier)"
+        }
+    }
+}
+
+extension Dice: Rollable {
+    public var average: Int {
+        switch self {
+        case let .die(die, count): (count * (die.rawValue + 1)) / 2
+        case let .modifier(modifier): modifier
         }
     }
 
-    /// The dice notation described including its average.
-    public var description: String {
-        "\(average) (\(stringValue))"
+    public var range: ClosedRange<Int> {
+        switch self {
+        case let .die(die, count) where count < 0:
+            (die.range.upperBound * count)...(die.range.lowerBound * count)
+        case let .die(die, count):
+            (die.range.lowerBound * count)...(die.range.upperBound * count)
+        case let .modifier(modifier):
+            modifier...modifier
+        }
+    }
+}
+
+public func abs(_ dice: Dice) -> Dice {
+    switch dice {
+    case let .die(die, count): .die(die, count: abs(count))
+    case let .modifier(modifier): .modifier(abs(modifier))
+    }
+}
+
+/// Dice notation.
+///
+/// Encodes the notation of one or more ``Dice`` to be rolled, with zero or more modifiers added or subtracted,
+/// e.g. `"2d6 + 4"`.
+public struct DiceNotation: Equatable, Hashable, Sendable {
+    /// Dice to be rolled and modifiers to be added to or subtracted from the rolled total.
+    public let dice: [Dice]
+
+    public init(_ dice: [Dice]) {
+        self.dice = dice
     }
 
-    /// The dice notation expressed as a human readable string.
-    public var stringValue: String {
-        let rolledString = "\(count)\(die)"
+    /// Create a simple dice notation.
+    /// - Parameters:
+    ///   - die: Die to be rolled.
+    ///   - count: Number of `die` to be rolled.
+    ///   - modifier: Modifier to be added to or subtracted from the rolled total.
+    public init(_ die: Die, count: Int = 1, modifier: Int = 0) {
+        dice = [.die(die, count: count)]
+            + (modifier != 0 ? [.modifier(modifier)] : [])
+    }
+}
 
-        switch modifier {
-        case 1...: return "\(rolledString) + \(modifier)"
-        case ..<0: return "\(rolledString) - \(abs(modifier))"
-        default: return rolledString
+extension DiceNotation: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Dice...) {
+        self.init(elements)
+    }
+}
+
+extension DiceNotation: Rollable {
+    public var average: Int {
+        dice.reduce(0) { partialResult, dice in
+            partialResult + dice.average
+        }
+    }
+
+    public var range: ClosedRange<Int> {
+        dice.reduce(0...0) { partialResult, dice in
+            (partialResult.lowerBound + dice.range.lowerBound)...(partialResult.upperBound + dice.range.upperBound)
+        }
+    }
+}
+
+extension DiceNotation: CustomStringConvertible {
+    public var description: String {
+        dice.reduce("") { partialResult, dice in
+            switch dice {
+            case let .die(_, count) where count < 0:
+                partialResult.isEmpty ? "\(dice)" : "\(partialResult) - \(abs(dice))"
+            case .die:
+                partialResult.isEmpty ? "\(dice)" : "\(partialResult) + \(dice)"
+            case let .modifier(modifier) where modifier < 0:
+                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) - \(abs(modifier))"
+            case let .modifier(modifier):
+                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) + \(modifier)"
+            }
         }
     }
 }

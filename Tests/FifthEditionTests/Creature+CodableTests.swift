@@ -175,7 +175,7 @@ struct CreatureCodableTests {
                 type: .init(.type(.undead)),
                 alignment: .alignment([.chaotic, .evil]),
                 armorClass: [.ac(20)],
-                hitPoints: .hp(.init(.d8, count: 10, modifier: 10)),
+                hitPoints: .hp(DiceNotation(.d8, count: 10, modifier: 10)),
                 speed: .init(
                     [
                         .walk: .speed(60),
@@ -433,7 +433,7 @@ struct CreatureCodableTests {
                 type: .init(.type(.construct)),
                 alignment: .alignment([.chaotic, .evil]),
                 armorClass: [.ac(15)],
-                hitPoints: .hp(.init(.d6, count: 2, modifier: 10)),
+                hitPoints: .hp(DiceNotation(.d6, count: 2, modifier: 10)),
                 speed: .init([.walk: .speed(0)]),
                 languages: ["Common"],
                 summonedBySpell: "Animate Toaster|RD",

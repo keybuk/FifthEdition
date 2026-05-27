@@ -597,7 +597,7 @@ extension Creature.HitPoints: Codable {
         switch self {
         case let .hp(notation, givenAverage):
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(notation.stringValue, forKey: .formula)
+            try container.encode("\(notation)", forKey: .formula)
             try container.encode(givenAverage ?? notation.average, forKey: .average)
         case let .unrollable(formula, average):
             var container = encoder.container(keyedBy: CodingKeys.self)
