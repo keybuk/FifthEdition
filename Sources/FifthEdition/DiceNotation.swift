@@ -55,12 +55,6 @@ extension Die: Comparable {
     }
 }
 
-extension Die: CustomStringConvertible {
-    public var description: String {
-        "d\(rawValue)"
-    }
-}
-
 extension Die: Rollable {
     /// The average roll from this die.
     public var average: Int {
@@ -77,15 +71,6 @@ extension Die: Rollable {
 public enum Dice: Equatable, Hashable, Sendable {
     case die(Die, count: Int = 1)
     case modifier(Int)
-}
-
-extension Dice: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case let .die(die, count): "\(count)\(die)"
-        case let .modifier(modifier): "\(modifier)"
-        }
-    }
 }
 
 extension Dice: Rollable {
@@ -154,23 +139,6 @@ extension DiceNotation: Rollable {
     public var range: ClosedRange<Int> {
         dice.reduce(0...0) { partialResult, dice in
             (partialResult.lowerBound + dice.range.lowerBound)...(partialResult.upperBound + dice.range.upperBound)
-        }
-    }
-}
-
-extension DiceNotation: CustomStringConvertible {
-    public var description: String {
-        dice.reduce("") { partialResult, dice in
-            switch dice {
-            case let .die(_, count) where count < 0:
-                partialResult.isEmpty ? "\(dice)" : "\(partialResult) - \(abs(dice))"
-            case .die:
-                partialResult.isEmpty ? "\(dice)" : "\(partialResult) + \(dice)"
-            case let .modifier(modifier) where modifier < 0:
-                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) - \(abs(modifier))"
-            case let .modifier(modifier):
-                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) + \(modifier)"
-            }
         }
     }
 }

@@ -1,11 +1,43 @@
 //
-//  DiceNotation+Parsing.swift
+//  DiceNotation+String.swift
 //  FifthEdition
 //
 //  Created by Scott James Remnant on 5/26/26.
 //
 
 import RegexBuilder
+
+extension Die: CustomStringConvertible {
+    public var description: String {
+        "d\(rawValue)"
+    }
+}
+
+extension Dice: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .die(die, count): "\(count)\(die)"
+        case let .modifier(modifier): "\(modifier)"
+        }
+    }
+}
+
+extension DiceNotation: CustomStringConvertible {
+    public var description: String {
+        dice.reduce("") { partialResult, dice in
+            switch dice {
+            case let .die(_, count) where count < 0:
+                partialResult.isEmpty ? "\(dice)" : "\(partialResult) - \(abs(dice))"
+            case .die:
+                partialResult.isEmpty ? "\(dice)" : "\(partialResult) + \(dice)"
+            case let .modifier(modifier) where modifier < 0:
+                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) - \(abs(modifier))"
+            case let .modifier(modifier):
+                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) + \(modifier)"
+            }
+        }
+    }
+}
 
 public extension DiceNotation {
     /// Creates a new dice notation from the given string.
