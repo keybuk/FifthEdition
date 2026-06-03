@@ -8,23 +8,43 @@
 import Foundation
 import Testing
 
-func testDecodable<Value: Equatable & Decodable>(json: String, value expectedValue: Value,
-                                                 sourceLocation: SourceLocation = #_sourceLocation)
-    throws
-{
-    let value = try JSONDecoder().decode(Value.self, from: json.data(using: .utf8)!)
-    #expect(value == expectedValue, sourceLocation: sourceLocation)
-}
-
 func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: Value,
                                              sourceLocation: SourceLocation = #_sourceLocation)
     throws
 {
-    try testDecodable(json: json, value: expectedValue, sourceLocation: sourceLocation)
+    #expect(throws: Never.self, sourceLocation: sourceLocation) {
+        let value = try JSONDecoder().decode(Value.self, from: json.data(using: .utf8)!)
+        #expect(value == expectedValue, sourceLocation: sourceLocation)
 
-    // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode and
-    // decode the value, and make sure it stayed the same.
-    let encodedJson = try String(data: JSONEncoder().encode(expectedValue), encoding: .utf8)!
-    let decodedValue = try JSONDecoder().decode(Value.self, from: encodedJson.data(using: .utf8)!)
-    #expect(decodedValue == expectedValue, sourceLocation: sourceLocation)
+        // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode
+        // and decode the value, and make sure it stayed the same.
+        let encodedJson = try String(data: JSONEncoder().encode(expectedValue), encoding: .utf8)!
+        let decodedValue = try JSONDecoder().decode(Value.self, from: encodedJson.data(using: .utf8)!)
+        #expect(decodedValue == expectedValue, sourceLocation: sourceLocation)
+    }
+}
+
+func testCodable<Value: Equatable & CodableWithConfiguration>(json: String, value expectedValue: Value,
+                                                              configuration: Value.DecodingConfiguration,
+                                                              sourceLocation: SourceLocation = #_sourceLocation)
+    throws
+    where Value.DecodingConfiguration == Value.EncodingConfiguration
+{
+    #expect(throws: Never.self, sourceLocation: sourceLocation) {
+        let value = try JSONDecoder().decode(Value.self, from: json.data(using: .utf8)!, configuration: configuration)
+        #expect(value == expectedValue, sourceLocation: sourceLocation)
+
+        // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode
+        // and decode the value, and make sure it stayed the same.
+        let encodedJson = try String(
+            data: JSONEncoder().encode(expectedValue, configuration: configuration),
+            encoding: .utf8,
+        )!
+        let decodedValue = try JSONDecoder().decode(
+            Value.self,
+            from: encodedJson.data(using: .utf8)!,
+            configuration: configuration,
+        )
+        #expect(decodedValue == expectedValue, sourceLocation: sourceLocation)
+    }
 }

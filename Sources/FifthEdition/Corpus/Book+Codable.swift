@@ -5,6 +5,8 @@
 //  Created by Scott James Remnant on 4/8/26.
 //
 
+import Foundation
+
 extension Book: Codable {
     enum CodingKeys: String, CodingKey {
         case name
@@ -30,8 +32,8 @@ extension Book: Codable {
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
         group = try container.decode(BookGroup.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
-        published = try container.decode(ISO8601DateCoding.self, forKey: .published).value
-        revised = try container.decodeIfPresent(ISO8601DateCoding.self, forKey: .revised)?.value
+        published = try container.decode(Date.self, forKey: .published, configuration: .iso8601)
+        revised = try container.decodeIfPresent(Date.self, forKey: .revised, configuration: .iso8601)
         cover = try container.decodeIfPresent(MediaHref.self, forKey: .cover)
         contents = try container.decode([CorpusContents].self, forKey: .contents)
     }
@@ -45,8 +47,8 @@ extension Book: Codable {
         try container.encodeIfPresent(parentSource, forKey: .parentSource)
         try container.encode(group, forKey: .group)
         try container.encodeIfPresent(author, forKey: .author)
-        try container.encode(ISO8601DateCoding(published), forKey: .published)
-        try container.encodeIfPresent(ISO8601DateCoding(revised), forKey: .revised)
+        try container.encode(published, forKey: .published, configuration: .iso8601)
+        try container.encodeIfPresent(revised, forKey: .revised, configuration: .iso8601)
         try container.encodeIfPresent(cover, forKey: .cover)
         try container.encode(contents, forKey: .contents)
     }

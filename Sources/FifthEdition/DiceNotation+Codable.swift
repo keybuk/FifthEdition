@@ -11,7 +11,7 @@ extension DiceNotation: Codable {
         let stringValue = try container.decode(String.self)
         guard let notation = DiceNotation(stringValue) else {
             throw DecodingError.dataCorruptedError(in: container,
-                                                   debugDescription: "Could not parse dice notation")
+                                                   debugDescription: "Could not parse dice notation: \(stringValue)")
         }
 
         self = notation

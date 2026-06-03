@@ -9,6 +9,20 @@ import Foundation
 import Testing
 @testable import FifthEdition
 
+struct DateCodingTests {
+    @Test
+    func `Date encoded in ISO8601 using configuration`() throws {
+        try testCodable(
+            json: """
+            "2020-07-18"
+            """,
+            value: DateComponents(calendar: Calendar(identifier: .iso8601),
+                                  year: 2020, month: 7, day: 18).date,
+            configuration: .iso8601,
+        )
+    }
+}
+
 struct CodingValueTests {
     enum RingOfPower {
         case one
@@ -183,19 +197,6 @@ struct EnumCodingKeyTests {
     }
 }
 
-struct ISO8601DateCodingTests {
-    @Test
-    func `Implement Codable with ISO8601DateCoding`() throws {
-        try testCodable(
-            json: """
-            "2024-07-18"
-            """,
-            value: ISO8601DateCoding(DateComponents(calendar: Calendar(identifier: .iso8601),
-                                                    year: 2024, month: 7, day: 18).date),
-        )
-    }
-}
-
 struct TagSetCodableTests {
     enum Species: String, TagCoding {
         case human
@@ -237,15 +238,13 @@ struct TagSetCodableTests {
 
     @Test
     func `Unknown tag in set`() throws {
+        let json = """
+        [
+            "X"
+        ]
+        """
         #expect(throws: DecodingError.self) {
-            try testDecodable(
-                json: """
-                [
-                    "X"
-                ]
-                """,
-                value: TagSet<Species>(),
-            )
+            try JSONDecoder().decode(TagSet<Species>.self, from: #require(json.data(using: .utf8)))
         }
     }
 }
@@ -299,13 +298,11 @@ struct TaggedCodableTests {
 
     @Test
     func `Unknown tag`() throws {
+        let json = """
+        "X"
+        """
         #expect(throws: DecodingError.self) {
-            try testDecodable(
-                json: """
-                "X"
-                """,
-                value: Tagged<Species>(.human),
-            )
+            try JSONDecoder().decode(Tagged<Species>.self, from: #require(json.data(using: .utf8)))
         }
     }
 }

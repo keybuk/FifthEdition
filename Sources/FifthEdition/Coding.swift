@@ -7,6 +7,32 @@
 
 import Foundation
 
+/// Extend Date to support encoding in an alternate format specified by configuration.
+extension Date: @retroactive CodableWithConfiguration {
+    public enum CodingConfiguration {
+        case iso8601
+    }
+
+    static let formatStyle = Date.ISO8601FormatStyle(timeZone: .current)
+        .year().month().day()
+
+    public init(from decoder: any Decoder, configuration _: CodingConfiguration) throws {
+        let container = try decoder.singleValueContainer()
+        let dateStr = try container.decode(String.self)
+        if let dateValue = try? Date(dateStr, strategy: Self.formatStyle) {
+            self = dateValue
+        } else {
+            throw DecodingError.dataCorruptedError(in: container,
+                                                   debugDescription: "Invalid date")
+        }
+    }
+
+    public func encode(to encoder: any Encoder, configuration _: CodingConfiguration) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(formatted(Self.formatStyle))
+    }
+}
+
 /// Protocol for alternate value coding.
 ///
 /// Wraps an underlying type ``Value`` so that conforming types can implement custom ``Decodable`` and ``Encodable``
@@ -162,36 +188,6 @@ extension EnumCodingKey: CaseIterable
     /// A collection of all keys for the underlying enumeration type.
     static var allCases: [EnumCodingKey<Value>] {
         Value.allCases.map { value in Self(value) }
-    }
-}
-
-/// Wrapper around ``Date`` to provide an alternate ``Codable`` implementation using ISO8601.
-struct ISO8601DateCoding: Codable, CodingValue, Equatable, Hashable {
-    static let formatStyle = Date.ISO8601FormatStyle(timeZone: .current)
-        .year().month().day()
-
-    var value: Date
-
-    init(_ value: Value) {
-        self.value = value
-    }
-
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let dateStr = try container.decode(String.self)
-        if let dateValue = try? Date(dateStr, strategy: Self.formatStyle) {
-            value = dateValue
-        } else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Invalid date: \(dateStr)",
-            )
-        }
-    }
-
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(value.formatted(Self.formatStyle))
     }
 }
 
