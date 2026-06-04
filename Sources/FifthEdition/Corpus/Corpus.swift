@@ -4,7 +4,10 @@
 //
 //  Created by Scott James Remnant on 5/2/26.
 //
-//  Derived from schema-template/corpus-shared.json
+//  Implements schema-template/corpus-shared.json
+//  Version: 1.0.1
+//
+//  Implements schema-template/util-edition.json
 //  Version: 1.0.1
 
 import MemberwiseInit
@@ -54,4 +57,22 @@ public enum CorpusOrdinal: Equatable, Sendable {
     case episode(Ordinal? = nil)
     case level(Ordinal? = nil)
     case section(Ordinal? = nil)
+}
+
+/// D&D edition.
+///
+/// Identifies the 5th edition ruleset that a given entity is written for, either the ``legacy`` 5e (2014) rules, or the
+/// ``modern`` 5.5e (2024) rules.
+public enum Edition: String, CaseIterable, Codable, Sendable {
+    /// 5e (2014) rules.
+    case legacy = "classic"
+
+    /// 5.5e (2014) rules.
+    case modern = "one"
+
+    /// Alias for the ``legacy`` 5e (2014) edition, as used in the 5etools schema.
+    public static let classic = Edition.legacy
+
+    /// Alias for the ``modern`` 5.5e (2024) edition, as used in the 5etools schema.
+    public static let one = Edition.modern
 }

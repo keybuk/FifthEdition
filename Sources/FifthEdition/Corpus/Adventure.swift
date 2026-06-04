@@ -4,7 +4,7 @@
 //
 //  Created by Scott James Remnant on 5/2/26.
 //
-//  Derived from schema-template/adventures.json
+//  Implements schema-template/adventures.json
 //  Version: 1.10.34
 
 import Foundation

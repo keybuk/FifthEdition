@@ -4,7 +4,7 @@
 //
 //  Created by Scott James Remnant on 4/11/26.
 //
-//  Derived from schema-template/adventures.json
+//  Implements schema-template/adventures.json
 //  Version: 1.10.34
 
 import MemberwiseInit

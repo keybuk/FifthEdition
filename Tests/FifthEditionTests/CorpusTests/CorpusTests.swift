@@ -155,6 +155,18 @@ struct CorpusHeaderInitTests {
     }
 }
 
+struct EditionCodableTests {
+    @Test(arguments: Edition.allCases)
+    func editions(_ edition: Edition) throws {
+        try testCodable(
+            json: """
+            "\(edition.rawValue)"
+            """,
+            value: edition,
+        )
+    }
+}
+
 struct PublishedCorpusEditionTests {
     @Test
     func `edition for 2014 5e book`() throws {
