@@ -9,15 +9,8 @@ import Foundation
 import Testing
 @testable import FifthEdition
 
-struct DieComparableTests {
-    @Test(arguments: zip(Die.allCases, Die.allCases.dropFirst()))
-    func `Die is comparable`(a: Die, b: Die) {
-        #expect(a < b)
-    }
-}
-
-struct DieRawValueTests {
-    static let testValues: [(Die, Int)] = [
+struct DieTests {
+    static let expectedSides: [(Die, Int)] = [
         (.d1, 1),
         (.d2, 2),
         (.d3, 3),
@@ -29,14 +22,7 @@ struct DieRawValueTests {
         (.d100, 100),
     ]
 
-    @Test(arguments: testValues)
-    func `rawValue is number of sides`(die: Die, sides: Int) {
-        #expect(die.rawValue == sides)
-    }
-}
-
-struct DieRollableTests {
-    static let testAverages: [(Die, Int)] = [
+    static let expectedAverages: [(Die, Int)] = [
         (.d1, 1),
         (.d2, 1),
         (.d3, 2),
@@ -48,7 +34,17 @@ struct DieRollableTests {
         (.d100, 50),
     ]
 
-    @Test(arguments: testAverages)
+    @Test(arguments: expectedSides)
+    func `rawValue is number of sides`(die: Die, sides: Int) {
+        #expect(die.rawValue == sides)
+    }
+
+    @Test(arguments: zip(Die.allCases, Die.allCases.dropFirst()))
+    func `Die is comparable`(a: Die, b: Die) {
+        #expect(a < b)
+    }
+
+    @Test(arguments: expectedAverages)
     func `average has expected values`(die: Die, average: Int) {
         #expect(die.average == average)
     }
@@ -76,34 +72,36 @@ struct DieRollableTests {
         var generator = CheatingRandomNumberGenerator()
         #expect(die.roll(using: &generator) == die.rawValue)
     }
-}
 
-struct DieStringTests {
     @Test(arguments: Die.allCases)
     func `description is the die name`(_ die: Die) {
-        #expect(String(describing: die) == "d\(die.rawValue)")
+        #expect(die.description == "d\(die.rawValue.formatted(.number))")
     }
 }
 
-struct DiceAbsTests {
+struct DiceTests {
     @Test
-    func `abs(_:) of positive die count`() {
-        #expect(abs(Dice.die(.d6, count: 4)) == Dice.die(.d6, count: 4))
+    func `description is count and die`() {
+        let dice = Dice.die(.d6, count: 4)
+        #expect(dice.description == "4d6")
     }
 
     @Test
-    func `abs(_:) of negative die count`() {
-        #expect(abs(Dice.die(.d6, count: -4)) == Dice.die(.d6, count: 4))
+    func `description of negative count and die`() {
+        let dice = Dice.die(.d6, count: -4)
+        #expect(dice.description == "-4d6")
     }
 
     @Test
-    func `abs(_:) of positive modifier`() {
-        #expect(abs(Dice.modifier(10)) == Dice.modifier(10))
+    func `description of positive modifier`() {
+        let dice = Dice.modifier(10)
+        #expect(dice.description == "10")
     }
 
     @Test
-    func `abs(_:) of negative modifier`() {
-        #expect(abs(Dice.modifier(-10)) == Dice.modifier(10))
+    func `description of negative modifier`() {
+        let dice = Dice.modifier(-10)
+        #expect(dice.description == "-10")
     }
 }
 
@@ -164,28 +162,6 @@ struct DiceRollableTests {
     func `roll(using:)`(_ die: Die) {
         var generator = CheatingRandomNumberGenerator()
         #expect(Dice.die(die, count: 2).roll(using: &generator) == die.rawValue * 2)
-    }
-}
-
-struct DiceStringTests {
-    @Test
-    func `description is count and die`() {
-        #expect(String(describing: Dice.die(.d6, count: 4)) == "4d6")
-    }
-
-    @Test
-    func `description of negative count and die`() {
-        #expect(String(describing: Dice.die(.d6, count: -4)) == "-4d6")
-    }
-
-    @Test
-    func `description is modifier`() {
-        #expect(String(describing: Dice.modifier(10)) == "10")
-    }
-
-    @Test
-    func `description of negative modifier`() {
-        #expect(String(describing: Dice.modifier(-10)) == "-10")
     }
 }
 
@@ -719,7 +695,7 @@ struct DiceNotationStringTests {
         let notation = DiceNotation([
             .die(.d6, count: 4),
         ])
-        #expect(String(describing: notation) == "4d6")
+        #expect(notation.description == "4d6")
     }
 
     @Test
@@ -727,7 +703,7 @@ struct DiceNotationStringTests {
         let notation = DiceNotation([
             .die(.d6, count: -4),
         ])
-        #expect(String(describing: notation) == "-4d6")
+        #expect(notation.description == "-4d6")
     }
 
     @Test
@@ -735,7 +711,7 @@ struct DiceNotationStringTests {
         let notation = DiceNotation([
             .modifier(10),
         ])
-        #expect(String(describing: notation) == "10")
+        #expect(notation.description == "10")
     }
 
     @Test
@@ -743,7 +719,7 @@ struct DiceNotationStringTests {
         let notation = DiceNotation([
             .modifier(-10),
         ])
-        #expect(String(describing: notation) == "-10")
+        #expect(notation.description == "-10")
     }
 
     @Test
@@ -752,7 +728,7 @@ struct DiceNotationStringTests {
             .die(.d6, count: 4),
             .modifier(10),
         ])
-        #expect(String(describing: notation) == "4d6 + 10")
+        #expect(notation.description == "4d6 + 10")
     }
 
     @Test
@@ -761,7 +737,7 @@ struct DiceNotationStringTests {
             .die(.d6, count: 4),
             .modifier(-10),
         ])
-        #expect(String(describing: notation) == "4d6 - 10")
+        #expect(notation.description == "4d6 - 10")
     }
 
     @Test
@@ -770,7 +746,7 @@ struct DiceNotationStringTests {
             .die(.d6, count: 4),
             .die(.d8, count: 2),
         ])
-        #expect(String(describing: notation) == "4d6 + 2d8")
+        #expect(notation.description == "4d6 + 2d8")
     }
 
     @Test
@@ -779,7 +755,7 @@ struct DiceNotationStringTests {
             .die(.d6, count: 4),
             .die(.d8, count: -2),
         ])
-        #expect(String(describing: notation) == "4d6 - 2d8")
+        #expect(notation.description == "4d6 - 2d8")
     }
 
     @Test
@@ -789,7 +765,7 @@ struct DiceNotationStringTests {
             .modifier(10),
             .modifier(6),
         ])
-        #expect(String(describing: notation) == "4d6 + 10 + 6")
+        #expect(notation.description == "4d6 + 10 + 6")
     }
 
     @Test
@@ -799,7 +775,7 @@ struct DiceNotationStringTests {
             .modifier(10),
             .modifier(-6),
         ])
-        #expect(String(describing: notation) == "4d6 + 10 - 6")
+        #expect(notation.description == "4d6 + 10 - 6")
     }
 
     @Test
@@ -810,6 +786,6 @@ struct DiceNotationStringTests {
             .die(.d8, count: -2),
             .modifier(-2),
         ])
-        #expect(String(describing: notation) == "4d6 + 10 - 2d8 - 2")
+        #expect(notation.description == "4d6 + 10 - 2d8 - 2")
     }
 }

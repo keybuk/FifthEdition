@@ -9,16 +9,23 @@ import RegexBuilder
 
 extension Die: CustomStringConvertible {
     public var description: String {
-        "d\(rawValue)"
+        "d\(rawValue.formatted(.number))"
     }
 }
 
 extension Dice: CustomStringConvertible {
     public var description: String {
         switch self {
-        case let .die(die, count): "\(count)\(die)"
-        case let .modifier(modifier): "\(modifier)"
+        case let .die(die, count): "\(count.formatted(.number))\(die)"
+        case let .modifier(modifier): modifier.formatted(.number)
         }
+    }
+}
+
+private func abs(_ dice: Dice) -> Dice {
+    switch dice {
+    case let .die(die, count): .die(die, count: abs(count))
+    case let .modifier(modifier): .modifier(abs(modifier))
     }
 }
 
@@ -31,9 +38,13 @@ extension DiceNotation: CustomStringConvertible {
             case .die:
                 partialResult.isEmpty ? "\(dice)" : "\(partialResult) + \(dice)"
             case let .modifier(modifier) where modifier < 0:
-                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) - \(abs(modifier))"
+                partialResult.isEmpty
+                    ? "\(modifier.formatted(.number))"
+                    : "\(partialResult) - \(abs(modifier).formatted(.number))"
             case let .modifier(modifier):
-                partialResult.isEmpty ? "\(modifier)" : "\(partialResult) + \(modifier)"
+                partialResult.isEmpty
+                    ? "\(modifier.formatted(.number))"
+                    : "\(partialResult) + \(modifier.formatted(.number))"
             }
         }
     }

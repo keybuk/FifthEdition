@@ -93,13 +93,6 @@ extension Dice: Rollable {
     }
 }
 
-public func abs(_ dice: Dice) -> Dice {
-    switch dice {
-    case let .die(die, count): .die(die, count: abs(count))
-    case let .modifier(modifier): .modifier(abs(modifier))
-    }
-}
-
 /// Dice notation.
 ///
 /// Encodes the notation of one or more ``Dice`` to be rolled, with zero or more modifiers added or subtracted,
