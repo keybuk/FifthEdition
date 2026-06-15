@@ -168,12 +168,10 @@ struct DiceRollableTests {
 struct DiceNotationCodableTests {
     @Test
     func `DiceNotation encoded format is string`() throws {
-        try testCodable(
-            json: """
-            "4d6 + 10"
-            """,
-            value: DiceNotation(.d6, count: 4, modifier: 10),
-        )
+        try testCodable(json: """
+                        "4d6 + 10"
+                        """,
+                        value: DiceNotation(.d6, count: 4, modifier: 10))
     }
 
     @Test

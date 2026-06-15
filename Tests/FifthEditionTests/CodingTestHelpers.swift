@@ -8,7 +8,8 @@
 import Foundation
 import Testing
 
-func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: Value,
+func testCodable<Value: Equatable & Codable>(json: String,
+                                             value expectedValue: Value,
                                              sourceLocation: SourceLocation = #_sourceLocation)
     throws
 {
@@ -24,7 +25,8 @@ func testCodable<Value: Equatable & Codable>(json: String, value expectedValue: 
     }
 }
 
-func testCodable<Value: Equatable & CodableWithConfiguration>(json: String, value expectedValue: Value,
+func testCodable<Value: Equatable & CodableWithConfiguration>(json: String,
+                                                              value expectedValue: Value,
                                                               configuration: Value.DecodingConfiguration,
                                                               sourceLocation: SourceLocation = #_sourceLocation)
     throws
@@ -36,15 +38,11 @@ func testCodable<Value: Equatable & CodableWithConfiguration>(json: String, valu
 
         // JSONEncoder isn't deterministic when dealing with Set<>, so rather than comparing for exact output, encode
         // and decode the value, and make sure it stayed the same.
-        let encodedJson = try String(
-            data: JSONEncoder().encode(expectedValue, configuration: configuration),
-            encoding: .utf8,
-        )!
-        let decodedValue = try JSONDecoder().decode(
-            Value.self,
-            from: encodedJson.data(using: .utf8)!,
-            configuration: configuration,
-        )
+        let encodedJson = try String(data: JSONEncoder().encode(expectedValue, configuration: configuration),
+                                     encoding: .utf8)!
+        let decodedValue = try JSONDecoder().decode(Value.self,
+                                                    from: encodedJson.data(using: .utf8)!,
+                                                    configuration: configuration)
         #expect(decodedValue == expectedValue, sourceLocation: sourceLocation)
     }
 }

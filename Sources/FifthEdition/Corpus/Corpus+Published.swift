@@ -17,7 +17,9 @@ extension Book: PublishedCorpus {}
 
 /// Date of publication of the 2024 (5.5e) Players Handbook.
 private let modernEditionStartDate = DateComponents(calendar: Calendar(identifier: .iso8601),
-                                                    year: 2024, month: 9, day: 17).date!
+                                                    year: 2024,
+                                                    month: 9,
+                                                    day: 17).date!
 
 public extension PublishedCorpus {
     /// 5th edition ruleset content applies to.

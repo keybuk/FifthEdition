@@ -12,32 +12,30 @@ import Testing
 struct BooksCodableTests {
     @Test
     func `Books list`() throws {
-        try testCodable(
-            json: """
-            {
-                "book": [
-                    {
-                        "name": "Player's Handbook",
-                        "id": "PHB",
-                        "source": "PHB",
-                        "group": "core",
-                        "published": "2014-08-19",
-                        "contents": []
-                    }
-                ]
-            }
-            """,
-            value: Books(book: [
-                Book(
-                    name: "Player's Handbook",
-                    id: "PHB",
-                    source: "PHB",
-                    group: .core,
-                    published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
-                                                       year: 2014, month: 8, day: 19).date),
-                    contents: [],
-                ),
-            ]),
-        )
+        try testCodable(json: """
+                        {
+                            "book": [
+                                {
+                                    "name": "Player's Handbook",
+                                    "id": "PHB",
+                                    "source": "PHB",
+                                    "group": "core",
+                                    "published": "2014-08-19",
+                                    "contents": []
+                                }
+                            ]
+                        }
+                        """,
+                        value: Books(book: [
+                            Book(name: "Player's Handbook",
+                                 id: "PHB",
+                                 source: "PHB",
+                                 group: .core,
+                                 published: #require(DateComponents(calendar: Calendar(identifier: .iso8601),
+                                                                    year: 2014,
+                                                                    month: 8,
+                                                                    day: 19).date),
+                                 contents: []),
+                        ]))
     }
 }
