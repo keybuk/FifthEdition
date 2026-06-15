@@ -5,7 +5,7 @@
 //  Created by Scott James Remnant on 5/2/26.
 //
 //  Implements schema-template/adventures.json
-//  Version: 1.10.34
+//  Version: 1.10.35
 
 import Foundation
 import MemberwiseInit
@@ -102,20 +102,18 @@ public enum AdventureGroup: String, CaseIterable, Codable, Sendable {
 /// Character levels that the adventure ranges across.
 public enum AdventureLevel: Equatable, Sendable {
     case range(ClosedRange<Int>)
-    case custom(String)
+    case special(String)
 }
 
-extension AdventureLevel: CustomStringConvertible {
+extension AdventureLevel: CustomStringConvertible, ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self = .special(value)
+    }
+
     public var description: String {
         switch self {
         case let .range(range): "\(range.lowerBound)–\(range.upperBound)"
-        case let .custom(custom): custom
+        case let .special(special): special
         }
-    }
-}
-
-extension AdventureLevel: ExpressibleByStringLiteral {
-    public init(stringLiteral value: String) {
-        self = .custom(value)
     }
 }

@@ -45,7 +45,7 @@ extension Adventure: Codable {
         author = try container.decodeIfPresent(String.self, forKey: .author)
         alAveragePlayerLevel = try container.decodeIfPresent(Int.self, forKey: .alAveragePlayerLevel)
 
-        // Decode alLength into a range.
+        // alLength is an object we turn into a range.
         if container.contains(.alLength) {
             let nestedContainer = try container.nestedContainer(keyedBy: LengthCodingKeys.self, forKey: .alLength)
             if let exactValue = try nestedContainer.decodeIfPresent(Int.self, forKey: .exact) {
@@ -77,7 +77,7 @@ extension Adventure: Codable {
         try container.encodeIfPresent(author, forKey: .author)
         try container.encodeIfPresent(alAveragePlayerLevel, forKey: .alAveragePlayerLevel)
 
-        // Encode alLength to exact or range.
+        // alLength is encoded as an object for the range.
         if let alLength {
             var nestedContainer = container.nestedContainer(keyedBy: LengthCodingKeys.self, forKey: .alLength)
             if alLength.count == 1 {
@@ -103,17 +103,16 @@ extension AdventureLevel: Codable {
     enum CodingKeys: String, CodingKey {
         case start
         case end
-        case custom
+        case special = "custom"
     }
 
     public init(from decoder: any Decoder) throws {
+        // Value is an object we turn into a range, or a special string.
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let value = try container.decodeIfPresent(String.self, forKey: .custom) {
-            self = .custom(value)
+        if let value = try container.decodeIfPresent(String.self, forKey: .special) {
+            self = .special(value)
         } else {
-            self = try .range(
-                container.decode(Int.self, forKey: .start)...container.decode(Int.self, forKey: .end),
-            )
+            self = try .range(container.decode(Int.self, forKey: .start)...container.decode(Int.self, forKey: .end))
         }
     }
 
@@ -123,8 +122,8 @@ extension AdventureLevel: Codable {
         case let .range(value):
             try container.encode(value.lowerBound, forKey: .start)
             try container.encode(value.upperBound, forKey: .end)
-        case let .custom(value):
-            try container.encode(value, forKey: .custom)
+        case let .special(value):
+            try container.encode(value, forKey: .special)
         }
     }
 }

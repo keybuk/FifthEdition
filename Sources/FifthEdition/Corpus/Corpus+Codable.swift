@@ -35,6 +35,7 @@ extension CorpusHeader: Codable {
     }
 
     public init(from decoder: any Decoder) throws {
+        // Value is an object or a string.
         if let value = try? decoder.singleValueContainer().decode(String.self) {
             header = value
         } else {
@@ -74,6 +75,7 @@ extension CorpusOrdinal: Codable {
     }
 
     public init(from decoder: any Decoder) throws {
+        // Value is an object mapped to an enum.
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let identifier = try container.decodeIfPresent(Ordinal.self, forKey: .identifier)
 
