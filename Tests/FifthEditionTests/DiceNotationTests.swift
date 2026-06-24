@@ -50,12 +50,12 @@ struct DieTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `range is 1 to number of sides`(_ die: Die) {
+    func `range is 1 to number of sides`(die: Die) {
         #expect(die.range == 1...die.rawValue)
     }
 
     @Test(arguments: Die.allCases)
-    func `roll()`(_ die: Die) {
+    func `roll()`(die: Die) {
         for _ in 0..<100 {
             #expect(die.range.contains(die.roll()))
         }
@@ -68,13 +68,13 @@ struct DieTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll(using:)`(_ die: Die) {
+    func `roll(using:)`(die: Die) {
         var generator = CheatingRandomNumberGenerator()
         #expect(die.roll(using: &generator) == die.rawValue)
     }
 
     @Test(arguments: Die.allCases)
-    func `description is the die name`(_ die: Die) {
+    func `description is the die name`(die: Die) {
         #expect(die.description == "d\(die.rawValue.formatted(.number))")
     }
 }
@@ -137,7 +137,7 @@ struct DiceRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll()`(_ die: Die) {
+    func `roll()`(die: Die) {
         for _ in 0..<100 {
             let dice = Dice.die(die, count: .random(in: 1...20))
             #expect(dice.range.contains(dice.roll()))
@@ -145,7 +145,7 @@ struct DiceRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll() with negative count`(_ die: Die) {
+    func `roll() with negative count`(die: Die) {
         for _ in 0..<100 {
             let dice = Dice.die(die, count: .random(in: -20 ... -1))
             #expect(dice.range.contains(dice.roll()))
@@ -159,7 +159,7 @@ struct DiceRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll(using:)`(_ die: Die) {
+    func `roll(using:)`(die: Die) {
         var generator = CheatingRandomNumberGenerator()
         #expect(Dice.die(die, count: 2).roll(using: &generator) == die.rawValue * 2)
     }
@@ -168,10 +168,12 @@ struct DiceRollableTests {
 struct DiceNotationCodableTests {
     @Test
     func `DiceNotation encoded format is string`() throws {
-        try testCodable(json: """
-                        "4d6 + 10"
-                        """,
-                        value: DiceNotation(.d6, count: 4, modifier: 10))
+        try testCodable(
+            json: """
+            "4d6 + 10"
+            """,
+            value: DiceNotation(.d6, count: 4, modifier: 10),
+        )
     }
 
     @Test
@@ -284,7 +286,7 @@ struct DiceNotationInitTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `init(_:) with each die`(_ die: Die) {
+    func `init(_:) with each die`(die: Die) {
         let count: Int = .random(in: 1...20)
         let notation = DiceNotation("\(count)\(die)")
         #expect(notation?.dice == [
@@ -620,7 +622,7 @@ struct DiceNotationRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll()`(_ die: Die) {
+    func `roll()`(die: Die) {
         for _ in 0..<100 {
             let notation = DiceNotation([
                 .die(die, count: .random(in: 1...20)),
@@ -631,7 +633,7 @@ struct DiceNotationRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll() with negative count`(_ die: Die) {
+    func `roll() with negative count`(die: Die) {
         for _ in 0..<100 {
             let notation = DiceNotation([
                 .die(die, count: .random(in: -20 ... -1)),
@@ -642,7 +644,7 @@ struct DiceNotationRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll() with negative modifier`(_ die: Die) {
+    func `roll() with negative modifier`(die: Die) {
         for _ in 0..<100 {
             let notation = DiceNotation([
                 .die(die, count: .random(in: 1...20)),
@@ -677,7 +679,7 @@ struct DiceNotationRollableTests {
     }
 
     @Test(arguments: Die.allCases)
-    func `roll(using:)`(_ die: Die) {
+    func `roll(using:)`(die: Die) {
         var generator = CheatingRandomNumberGenerator()
         let notation = DiceNotation([
             .die(die, count: 2),

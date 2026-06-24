@@ -5,6 +5,8 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
+import RegexBuilder
+
 /// Something that can be rolled.
 public protocol Rollable {
     /// Average roll.
@@ -49,6 +51,12 @@ public enum Die: Int, CaseIterable, Equatable, Hashable, Sendable {
     case d100 = 100
 }
 
+extension Die: CustomStringConvertible {
+    public var description: String {
+        "d\(rawValue.formatted(.number))"
+    }
+}
+
 extension Die: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.rawValue < rhs.rawValue
@@ -67,13 +75,23 @@ extension Die: Rollable {
     }
 }
 
-/// One or more ``Die`` to bbe rolled, or a modifier to be applied.
+/// One or more ``Die`` to be rolled, or a modifier to be applied.
 public enum Dice: Equatable, Hashable, Sendable {
     case die(Die, count: Int = 1)
     case modifier(Int)
 }
 
+extension Dice: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .die(die, count): "\(count.formatted(.number))\(die)"
+        case let .modifier(modifier): modifier.formatted(.number)
+        }
+    }
+}
+
 extension Dice: Rollable {
+    /// The average roll from the dice or value of the modifier.
     public var average: Int {
         switch self {
         case let .die(die, count): (count * (die.rawValue + 1)) / 2
@@ -81,6 +99,7 @@ extension Dice: Rollable {
         }
     }
 
+    /// The range of possible rolls from the dice or value of the modifier.
     public var range: ClosedRange<Int> {
         switch self {
         case let .die(die, count) where count < 0:
@@ -93,10 +112,17 @@ extension Dice: Rollable {
     }
 }
 
+private func abs(_ dice: Dice) -> Dice {
+    switch dice {
+    case let .die(die, count): .die(die, count: abs(count))
+    case let .modifier(modifier): .modifier(abs(modifier))
+    }
+}
+
 /// Dice notation.
 ///
-/// Encodes the notation of one or more ``Dice`` to be rolled, with zero or more modifiers added or subtracted,
-/// e.g. `"2d6 + 4"`.
+/// Encodes the notation of one or more ``Dice`` to be rolled, with zero or more modifiers added or subtracted, e.g.
+/// `"2d6 + 4"`.
 public struct DiceNotation: Equatable, Hashable, Sendable {
     /// Dice to be rolled and modifiers to be added to or subtracted from the rolled total.
     public let dice: [Dice]
@@ -119,6 +145,95 @@ public struct DiceNotation: Equatable, Hashable, Sendable {
 extension DiceNotation: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Dice...) {
         self.init(elements)
+    }
+}
+
+extension DiceNotation: CustomStringConvertible {
+    /// Creates a new dice notation from the given string.
+    /// - Parameter string: The string representation of the dice notation.
+    /// - Returns: `nil` if the string does not match the format of a dice notation.
+    public init?(_ string: String) {
+        let signReference = RegexBuilder.Reference(Int.self)
+        let signRegex = Regex {
+            ZeroOrMore(.whitespace)
+            Capture(as: signReference) {
+                One(CharacterClass.anyOf("+\u{2012}\u{2212}-"))
+            } transform: { match in
+                match == "+" ? 1 : -1
+            }
+            ZeroOrMore(.whitespace)
+        }
+
+        let diceCountReference = RegexBuilder.Reference(Int.self)
+        let dieReference = RegexBuilder.Reference(Die.self)
+        let diceRegex = Regex {
+            Capture(as: diceCountReference) {
+                ZeroOrMore(.digit)
+            } transform: { match in
+                !match.isEmpty ? Int(match)! : 1
+            }
+            "d"
+            TryCapture(as: dieReference) {
+                OneOrMore(.digit)
+            } transform: { match in
+                Die(rawValue: Int(match)!)
+            }
+        }
+
+        let modifierReference = RegexBuilder.Reference(Int.self)
+        let modifierRegex = Regex {
+            Capture(as: modifierReference) {
+                OneOrMore(.digit)
+            } transform: { match in
+                Int(match)!
+            }
+        }
+
+        var dice: [Dice] = []
+
+        var remainingString = string[...]
+        while !remainingString.isEmpty {
+            let sign: Int
+            if let match = remainingString.prefixMatch(of: signRegex) {
+                sign = match[signReference]
+                remainingString = remainingString[match.range.upperBound...]
+            } else if dice.isEmpty {
+                sign = 1
+            } else {
+                return nil
+            }
+
+            if let match = remainingString.prefixMatch(of: diceRegex) {
+                dice.append(.die(match[dieReference], count: sign * match[diceCountReference]))
+                remainingString = remainingString[match.range.upperBound...]
+            } else if let match = remainingString.prefixMatch(of: modifierRegex) {
+                dice.append(.modifier(sign * match[modifierReference]))
+                remainingString = remainingString[match.range.upperBound...]
+            } else {
+                return nil
+            }
+        }
+
+        self.init(dice)
+    }
+
+    public var description: String {
+        dice.reduce("") { partialResult, dice in
+            switch dice {
+            case let .die(_, count) where count < 0:
+                partialResult.isEmpty ? "\(dice)" : "\(partialResult) - \(abs(dice))"
+            case .die:
+                partialResult.isEmpty ? "\(dice)" : "\(partialResult) + \(dice)"
+            case let .modifier(modifier) where modifier < 0:
+                partialResult.isEmpty
+                    ? "\(modifier.formatted(.number))"
+                    : "\(partialResult) - \(abs(modifier).formatted(.number))"
+            case let .modifier(modifier):
+                partialResult.isEmpty
+                    ? "\(modifier.formatted(.number))"
+                    : "\(partialResult) + \(modifier.formatted(.number))"
+            }
+        }
     }
 }
 
