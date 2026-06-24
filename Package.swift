@@ -30,6 +30,9 @@ let package = Package(
                 "EnumOptionSet",
                 .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
             ],
+            resources: [
+                .copy("FifthEdition.docc"),
+            ],
         ),
         .testTarget(
             name: "FifthEditionTests",
