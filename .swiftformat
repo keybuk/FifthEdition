@@ -15,14 +15,16 @@
 
 --ifdef noindent
 
+--wrap-arguments preserve
 --wrap-collections before-first
 --wrap-conditions after-first
 --wrap-effects if-multiline
 --wrap-enum-cases always
---wrap-parameters after-first
+--wrap-parameters preserve
 --wrap-return-type if-multiline
 --wrap-ternary before-operators
 --wrap-type-aliases after-first
+--allow-partial-wrapping false
 
 --enable blockComments
 --enable isEmpty

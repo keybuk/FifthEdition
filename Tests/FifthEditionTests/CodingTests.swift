@@ -17,7 +17,9 @@ struct DateCodingTests {
             "2020-07-18"
             """,
             value: DateComponents(calendar: Calendar(identifier: .iso8601),
-                                  year: 2020, month: 7, day: 18).date,
+                                  year: 2020,
+                                  month: 7,
+                                  day: 18).date,
             configuration: .iso8601,
         )
     }

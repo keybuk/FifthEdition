@@ -370,7 +370,8 @@ extension TagSet: Encodable
         for value in self {
             guard let tag = Element.tag(for: value) else {
                 throw EncodingError.invalidValue(
-                    value, EncodingError.Context(
+                    value,
+                    EncodingError.Context(
                         codingPath: container.codingPath,
                         debugDescription: "No tag for value: \(value)",
                     ),
@@ -445,7 +446,8 @@ extension Tagged: Encodable
         var container = encoder.singleValueContainer()
         guard let tag = Value.tag(for: value) else {
             throw EncodingError.invalidValue(
-                value, EncodingError.Context(
+                value,
+                EncodingError.Context(
                     codingPath: container.codingPath,
                     debugDescription: "No tag for value: \(value)",
                 ),

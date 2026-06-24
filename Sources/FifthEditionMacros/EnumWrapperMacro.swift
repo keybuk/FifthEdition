@@ -12,7 +12,8 @@ import SwiftSyntaxMacros
 public struct EnumWrapperMacro {}
 
 extension EnumWrapperMacro: MemberMacro {
-    public static func expansion(of _: AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax,
+    public static func expansion(of _: AttributeSyntax,
+                                 providingMembersOf declaration: some DeclGroupSyntax,
                                  conformingTo _: [TypeSyntax],
                                  in _: some MacroExpansionContext)
         throws -> [DeclSyntax]

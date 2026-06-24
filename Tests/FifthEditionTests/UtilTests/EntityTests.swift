@@ -11,42 +11,50 @@ import Testing
 struct EntityCodableTests {
     @Test(arguments: Entity.allCases)
     func entities(_ entity: Entity) throws {
-        try testCodable(json: """
-                        "\(entity.rawValue)"
-                        """,
-                        value: entity)
+        try testCodable(
+            json: """
+            "\(entity.rawValue)"
+            """,
+            value: entity,
+        )
     }
 
     @Test
     func `Unknown entity`() throws {
-        try testCodable(json: """
-                        "userManual"
-                        """,
-                        value: Entity(rawValue: "userManual"))
+        try testCodable(
+            json: """
+            "userManual"
+            """,
+            value: Entity(rawValue: "userManual"),
+        )
     }
 
     @Test(arguments: Entity.allCases)
-    func `Entity can be used as dictionary key`(_ entity: Entity) throws {
-        try testCodable(json: """
-                        {
-                            "\(entity.rawValue)": 42
-                        }
-                        """,
-                        value: [
-                            entity: 42,
-                        ])
+    func `Entity can be used as dictionary key`(entity: Entity) throws {
+        try testCodable(
+            json: """
+            {
+                "\(entity.rawValue)": 42
+            }
+            """,
+            value: [
+                entity: 42,
+            ],
+        )
     }
 
     @Test
     func `Unknown entity can be used as dictionary key`() throws {
-        try testCodable(json: """
-                        {
-                            "userManual": 42
-                        }
-                        """,
-                        value: [
-                            Entity(rawValue: "userManual"): 42,
-                        ])
+        try testCodable(
+            json: """
+            {
+                "userManual": 42
+            }
+            """,
+            value: [
+                Entity(rawValue: "userManual"): 42,
+            ],
+        )
     }
 }
 
@@ -66,7 +74,7 @@ struct EntityInitTests {
 
 struct EntityStringTests {
     @Test(arguments: Entity.allCases)
-    func `description is rawValue`(_ entity: Entity) {
+    func `description is rawValue`(entity: Entity) {
         #expect(String(describing: entity) == entity.rawValue)
     }
 
