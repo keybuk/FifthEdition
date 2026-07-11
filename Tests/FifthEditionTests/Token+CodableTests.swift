@@ -18,10 +18,8 @@ struct ArtItemCodableTests {
                 "source": "MM",
             }
             """,
-            value: ArtItem(
-                name: "Adult Red Dragon",
-                source: "MM",
-            ),
+            value: ArtItem(name: "Adult Red Dragon",
+                           source: "MM"),
         )
     }
 
@@ -35,11 +33,9 @@ struct ArtItemCodableTests {
                 "page": 49
             }
             """,
-            value: ArtItem(
-                name: "Acererak",
-                source: "MM",
-                page: .number(49),
-            ),
+            value: ArtItem(name: "Acererak",
+                           source: "MM",
+                           page: .number(49)),
         )
     }
 
@@ -54,12 +50,10 @@ struct ArtItemCodableTests {
                 "tokenCustom": true
             }
             """,
-            value: ArtItem(
-                name: "Spellcaster",
-                source: "ESK",
-                tokenCredit: "Bob",
-                isTokenCustom: true,
-            ),
+            value: ArtItem(name: "Spellcaster",
+                           source: "ESK",
+                           tokenCredit: "Bob",
+                           isTokenCustom: true),
         )
     }
 
@@ -75,11 +69,9 @@ struct ArtItemCodableTests {
                 ]
             }
             """,
-            value: ArtItem(
-                name: "Myconid Adult",
-                source: "XMM",
-                tokenTags: [.topDown],
-            ),
+            value: ArtItem(name: "Myconid Adult",
+                           source: "XMM",
+                           tokenTags: [.topDown]),
         )
     }
 }
@@ -94,17 +86,14 @@ struct CreatureTokenCodableTests {
                 "source": "MM"
             }
             """,
-            value: CreatureToken(
-                name: "Adult Red Dragon",
-                source: "MM",
-            ),
+            value: CreatureToken(name: "Adult Red Dragon",
+                                 source: "MM"),
         )
     }
 
     @Test
     func `Token with page`() throws {
-        try testCodable(
-            // While not in the schema, the sole use of this in the bestiary has a page reference.
+        try testCodable( // While not in the schema, the sole use of this in the bestiary has a page reference.
             json: """
             {
                 "name": "Acererak",
@@ -112,11 +101,8 @@ struct CreatureTokenCodableTests {
                 "page": 49
             }
             """,
-            value: CreatureToken(
-                name: "Acererak",
-                source: "MM",
-                page: .number(49),
-            ),
-        )
+            value: CreatureToken(name: "Acererak",
+                                 source: "MM",
+                                 page: .number(49)))
     }
 }

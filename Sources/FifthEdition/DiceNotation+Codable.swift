@@ -9,7 +9,7 @@ extension DiceNotation: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         let stringValue = try container.decode(String.self)
-        guard let notation = DiceNotation(stringValue) else {
+        guard let notation = DiceNotation(string: stringValue) else {
             throw DecodingError.dataCorruptedError(in: container,
                                                    debugDescription: "Could not parse dice notation: \(stringValue)")
         }

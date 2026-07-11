@@ -103,9 +103,7 @@ extension EnumWrapperMacro: MemberMacro {
         }
 
         let wrapperStruct =
-            try StructDeclSyntax(
-                "\(access)struct Wrapper: \(raw: protocols.joined(separator: ", "))",
-            ) {
+            try StructDeclSyntax("\(access)struct Wrapper: \(raw: protocols.joined(separator: ", "))") {
                 enumVariables
                 allCases
                 enumValue

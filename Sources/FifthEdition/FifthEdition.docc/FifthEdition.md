@@ -4,6 +4,10 @@ Swift support for 5eTools schema.
 
 ## Topics
 
+### Parsing Homebrew
+
+- ``Homebrew``
+
 ### Parsing 5etools Data
 
 - ``Adventures``
@@ -15,3 +19,4 @@ Swift support for 5eTools schema.
 
 - ``Adventure``
 - ``Book``
+- ``Creature``

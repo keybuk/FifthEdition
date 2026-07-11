@@ -27,5 +27,13 @@ public struct Adventures: Codable, Equatable, Sendable {
     public static let jsonPath: String = "data/adventures.json"
 
     /// Collection of adventures.
+    @Init(label: "_")
     public var adventure: [Adventure] = []
+}
+
+extension Adventures: ExpressibleByArrayLiteral {
+    /// Initialize ``adventure`` from an array literal.
+    public init(arrayLiteral elements: Adventure...) {
+        self.init(elements)
+    }
 }
