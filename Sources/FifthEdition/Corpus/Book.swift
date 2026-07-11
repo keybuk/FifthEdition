@@ -43,7 +43,7 @@ public struct Book: Equatable, Sendable {
     public var parentSource: String?
 
     /// Kind of publication, used for grouping.
-    public var group: BookGroup
+    public var group: Group
 
     /// Date of publication.
     public var published: Date
@@ -60,5 +60,23 @@ public struct Book: Equatable, Sendable {
     public var cover: MediaHref?
 
     /// Table of contents.
-    public var contents: [CorpusContents] = []
+    public var contents: [Contents] = []
+}
+
+public extension Book {
+    /// Kinds of source book publications, used for grouping.
+    enum Group: String, CaseIterable, Codable, Sendable {
+        case core
+        case supplement
+        case supplementAlt = "supplement-alt"
+        case setting
+        case settingAlt = "setting-alt"
+        case prerelease
+        case homebrew
+        case screen
+        case organizedPlay = "organized-play"
+        case recipe
+        case homecraft
+        case other
+    }
 }

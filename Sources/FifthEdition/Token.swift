@@ -8,13 +8,13 @@
 import MemberwiseInit
 
 @MemberwiseInit(.public, _optionalsDefaultNil: true)
-public struct ArtItem: Codable, Equatable, Sendable {
-    public enum TokenTag: String, Codable, Equatable, Sendable {
+public struct ArtItem: Codable, Equatable, Hashable, Sendable {
+    public enum TokenTag: String, Codable, Sendable {
         case topDown
     }
 
-    public var name: String
-    public var source: String
+    public var name: String?
+    public var source: String?
     public var page: Page?
     public var tokenCredit: String?
     public var isTokenCustom: Bool?
@@ -22,7 +22,7 @@ public struct ArtItem: Codable, Equatable, Sendable {
 }
 
 @MemberwiseInit(.public, _optionalsDefaultNil: true)
-public struct CreatureToken: Codable, Equatable, Sendable {
+public struct CreatureToken: Codable, Equatable, Hashable, Sendable {
     public var name: String
     public var source: String
     public var page: Page?
