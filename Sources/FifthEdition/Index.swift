@@ -33,5 +33,13 @@ public struct Index: Equatable, Sendable {
     /// Index entries.
     ///
     /// Maps source identifiers to a filename relative to this index.
+    @Init(label: "_")
     public var entries: [String: String] = [:]
+}
+
+extension Index: ExpressibleByDictionaryLiteral {
+    /// Initialize ``entries`` from a dictionary literal.
+    public init(dictionaryLiteral elements: (String, String)...) {
+        self.init(Dictionary(uniqueKeysWithValues: elements))
+    }
 }

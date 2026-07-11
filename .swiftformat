@@ -1,46 +1,29 @@
 --language-mode 6
+
+# indent
 --indent 4
---max-width 120
-
---import-grouping access-control
---import-grouping alpha
---import-grouping testable-last
-
---ranges no-space
-
---complex-attributes prev-line
---computed-var-attributes prev-line
---func-attributes prev-line
---stored-var-attributes same-line
---type-attributes prev-line
-
 --ifdef noindent
 
---wrap-arguments preserve
---wrap-collections before-first
---wrap-conditions after-first
---wrap-effects if-multiline
---wrap-enum-cases always
---wrap-parameters preserve
---wrap-return-type if-multiline
---wrap-ternary before-operators
---wrap-type-aliases after-first
---allow-partial-wrapping false
+# spaceAroundOperators
+--ranges no-space
 
---enable blockComments
+# wrap
+--max-width 120
+
+# Optional Rules
 --enable emptyExtensions
 --enable forWhere
+--enable ifExpressions
 --enable isEmpty
---enable noGuardInTests
 --enable preferContains
 --enable preferCountWhere
 --enable preferFirstWhere
 --enable preferFlatMap
 --enable preferMinOverSorted
+--enable preferStructSwiftTestingSuites
+--enable preferSwiftStringAPI
 --enable preferSwiftTesting
---enable privateSwiftUIDynamicProperties
---enable singlePropertyPerLine
---enable sortSwitchCases
 --enable testSuiteAccessControl
 --enable urlMacro
 --enable validateTestCases
+--enable wrapMultilineFunctionChains

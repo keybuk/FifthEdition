@@ -19,7 +19,7 @@ struct IndexCodableTests {
               "XPHB" : "foo-xphb.json"
             }
             """,
-            value: Index(entries: [
+            value: Index([
                 "XDMG": "foo-xdmg.json",
                 "XMM": "foo-xmm.json",
                 "XPHB": "foo-xphb.json",

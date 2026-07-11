@@ -41,9 +41,17 @@ public struct Bestiary: Codable, Equatable, Sendable {
     /// Relative path of the index data file within the 5etools source archive.
     public static let jsonIndexPath: String = "\(jsonBasePath)/index.json"
 
-    /// Creatures in the bestiary.
-    public var monster: [Creature] = []
+    /// Collection of creatures.
+    @Init(label: "_")
+    public var monster: [Creature]
 
-    /// Metadata about the bestiary..
+    /// Metadata.
     public var meta: Meta?
+}
+
+extension Bestiary: ExpressibleByArrayLiteral {
+    /// Initialize ``monster`` from an array literal.
+    public init(arrayLiteral elements: Creature...) {
+        self.init(elements)
+    }
 }

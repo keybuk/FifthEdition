@@ -44,9 +44,7 @@ struct MediaHrefCodableTests {
                 "url": "https://5e.tools/bestiary/aboleth.mp3"
             }
             """,
-            value: MediaHref.url(
-                #require(URL(string: "https://5e.tools/bestiary/aboleth.mp3")),
-            ),
+            value: MediaHref.url(#require(URL(string: "https://5e.tools/bestiary/aboleth.mp3"))),
         )
     }
 
@@ -58,9 +56,7 @@ struct MediaHrefCodableTests {
                 "url": "https://5e.tools/bestiary/aboleth.mp3"
             }
             """,
-            value: MediaHref.url(
-                #require(URL(string: "https://5e.tools/bestiary/aboleth.mp3")),
-            ),
+            value: MediaHref.url(#require(URL(string: "https://5e.tools/bestiary/aboleth.mp3"))),
         )
     }
 }
