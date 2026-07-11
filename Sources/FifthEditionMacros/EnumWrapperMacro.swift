@@ -112,8 +112,12 @@ extension EnumWrapperMacro: MemberMacro {
                 enumInitializer
                 rawValue
                 rawValueInitializer
-                if let literalInitializer { literalInitializer }
-                if let description { description }
+                if let literalInitializer {
+                    literalInitializer
+                }
+                if let description {
+                    description
+                }
             }
 
         return [

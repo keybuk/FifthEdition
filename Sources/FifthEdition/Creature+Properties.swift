@@ -10,7 +10,7 @@ public extension Creature {
     ///
     /// Where the creature has multiple sizes, the smallest is returned.
     var gridSquares: Int {
-        size?.sorted().first?.gridSquares ?? 1
+        size?.min()?.gridSquares ?? 1
     }
 
     /// Returns the expected token name.
