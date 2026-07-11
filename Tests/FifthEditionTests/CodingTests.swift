@@ -25,64 +25,6 @@ struct DateCodingTests {
     }
 }
 
-struct CodingValueTests {
-    enum RingOfPower {
-        case one
-        case three
-        case seven
-        case nine
-    }
-
-    struct RingOfPowerCoding: Codable, CodingValue, Equatable {
-        var value: RingOfPower
-
-        init(_ value: RingOfPower) {
-            self.value = value
-        }
-
-        init(from decoder: any Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            let intValue = try container.decode(Int.self)
-            value = switch intValue {
-            case 1: .one
-            case 3: .three
-            case 7: .seven
-            case 9: .nine
-            default:
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "Invalid value: \(intValue)",
-                )
-            }
-        }
-
-        func encode(to encoder: any Encoder) throws {
-            var container = encoder.singleValueContainer()
-            switch value {
-            case .one: try container.encode(1)
-            case .three: try container.encode(3)
-            case .seven: try container.encode(7)
-            case .nine: try container.encode(9)
-            }
-        }
-    }
-
-    @Test
-    func `Implement Codable with ValueCoding`() throws {
-        try testCodable(
-            json: """
-            3
-            """,
-            value: RingOfPowerCoding(.three),
-        )
-    }
-
-    @Test
-    func `init?(_:) returns nil when initialized with nil`() {
-        #expect(RingOfPowerCoding(nil) == nil)
-    }
-}
-
 struct DynamicCodingKeyTests {
     struct Hobbit: Equatable, Codable {
         var frodo: Int
@@ -97,14 +39,14 @@ struct DynamicCodingKeyTests {
 
         init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            frodo = try container.decode(Int.self, forKey: CodingKeys("frodo"))
-            bilbo = try container.decode(Int.self, forKey: CodingKeys("bilbo"))
+            frodo = try container.decode(Int.self, forKey: CodingKeys(stringValue: "frodo"))
+            bilbo = try container.decode(Int.self, forKey: CodingKeys(stringValue: "bilbo"))
         }
 
         func encode(to encoder: any Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(frodo, forKey: CodingKeys("frodo"))
-            try container.encode(bilbo, forKey: CodingKeys("bilbo"))
+            try container.encode(frodo, forKey: CodingKeys(stringValue: "frodo"))
+            try container.encode(bilbo, forKey: CodingKeys(stringValue: "bilbo"))
         }
     }
 
@@ -117,96 +59,82 @@ struct DynamicCodingKeyTests {
                 "bilbo": 111
             }
             """,
-            value: Hobbit(
-                frodo: 33,
-                bilbo: 111,
-            ),
+            value: Hobbit(frodo: 33,
+                          bilbo: 111),
         )
     }
 }
 
-struct EnumCodingKeyTests {
-    struct Wizard: Equatable, Codable {
-        enum Name: String, CaseIterable {
-            case gandalf
-            case radagast
-            case saruman
-        }
+struct SetCodingTests {
+    @Test
+    func `Set encoded using configuration`() throws {
+        try testCodable(
+            json: """
+            [
+                "2020-07-18",
+                "2021-12-18",
+            ]
+            """,
+            value: Set([
+                DateComponents(calendar: Calendar(identifier: .iso8601),
+                               year: 2020,
+                               month: 7,
+                               day: 18).date,
+                DateComponents(calendar: Calendar(identifier: .iso8601),
+                               year: 2021,
+                               month: 12,
+                               day: 18).date,
+            ]),
+            configuration: .iso8601,
+        )
+    }
+}
 
-        var colors: [Name: String] = [:]
-        var others: [String: String] = [:]
+struct AlternativeCodingMapTests {
+    enum Species: String, AlternativeCodingMap {
+        case human
+        case dwarf
+        case elf
+        case hobbit
+        case tiefling
 
-        typealias CodingKeys = EnumCodingKey<Name>
+        static let codingValues: [(Species, String)] = [
+            (.human, "H"),
+            (.dwarf, "D"),
+            (.elf, "E"),
+            (.hobbit, "O"),
+        ]
+    }
 
-        init(colors: [Name: String], others: [String: String]) {
-            self.colors = colors
-            self.others = others
-        }
-
-        init(from decoder: any Decoder) throws {
-            // Test iterating CodingKeys.allCases and obtaining enum value.
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            colors = try CodingKeys.allCases.reduce(into: [Name: String]()) { result, key in
-                result[key.value!] = try container.decode(String.self, forKey: key)
-            }
-
-            // We can also iterate unknown values through container.allKeys and check value is nil.
-            others = try container.allKeys.reduce(into: [String: String]()) { result, key in
-                if key.value == nil {
-                    result[key.stringValue] = try container.decode(String.self, forKey: key)
-                }
-            }
-        }
-
-        func encode(to encoder: any Encoder) throws {
-            // Test iterating Name.allCases and converting to key.
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            for key in CodingKeys.allCases {
-                try container.encode(colors[key.value!], forKey: key)
-            }
-
-            // We can also create unknown values directly this way.
-            for (key, value) in others {
-                try container.encode(value, forKey: CodingKeys(stringValue: key))
-            }
-        }
+    @Test(arguments: Species.codingValues)
+    func `init?(codingValue:) default conformance`(value: Species, codingValue: String) {
+        #expect(Species(codingValue: codingValue) == value)
     }
 
     @Test
-    func `Implement Codable with EnumCodingKey`() throws {
-        try testCodable(
-            json: """
-            {
-                "gandalf": "grey",
-                "radagast": "brown",
-                "saruman": "white",
-                "alatar": "blue",
-                "pallando": "blue"
-            }
-            """,
-            value: Wizard(
-                colors: [
-                    .gandalf: "grey",
-                    .saruman: "white",
-                    .radagast: "brown",
-                ],
-                others: [
-                    "alatar": "blue",
-                    "pallando": "blue",
-                ],
-            ),
-        )
+    func `init?(codingValue:) returns nil for unknown value`() {
+        #expect(Species(codingValue: "X") == nil)
+    }
+
+    @Test(arguments: Species.codingValues)
+    func `codingValue default conformance`(value: Species, codingValue: String) {
+        #expect(value.codingValue == codingValue)
+    }
+
+    @Test
+    func `codingValue returns nil for unknown value`() {
+        #expect(Species.tiefling.codingValue == nil)
     }
 }
 
-struct TagSetCodableTests {
-    enum Species: String, TagCoding {
+struct AlternateCodingTests {
+    enum Species: String, AlternativeCodingMap {
         case human
         case dwarf
         case elf
         case hobbit
 
-        static let tags: [(Species, String)] = [
+        static let codingValues: [(Species, String)] = [
             (.human, "H"),
             (.dwarf, "D"),
             (.elf, "E"),
@@ -215,7 +143,64 @@ struct TagSetCodableTests {
     }
 
     @Test
-    func `Implement Codable with TagSet`() throws {
+    func `AlternateCoding holds its initialized value`() {
+        let value: Species = .human
+        #expect(AlternateCoding(value)?.value == value)
+    }
+
+    @Test
+    func `init?(_:) is nil when initialized with nil`() {
+        #expect(AlternateCoding<Species>(nil) == nil)
+    }
+
+    @Test
+    func `Implement Codable with AlternateCoding`() throws {
+        try testCodable(
+            json: """
+            "H"
+            """,
+            value: AlternateCoding<Species>(.human),
+        )
+    }
+
+    @Test(arguments: Species.codingValues)
+    func `Alternate enumeration value codings`(species: Species, codingValue: String) throws {
+        try testCodable(
+            json: """
+            "\(codingValue)"
+            """,
+            value: AlternateCoding(species),
+        )
+    }
+
+    @Test
+    func `init(from:) throws error when decoding unknown value`() throws {
+        let json = """
+        "X"
+        """
+        #expect(throws: DecodingError.self) {
+            try JSONDecoder().decode(AlternateCoding<Species>.self, from: #require(json.data(using: .utf8)))
+        }
+    }
+}
+
+struct AlternateSetCodingTests {
+    enum Species: String, AlternativeCodingMap {
+        case human
+        case dwarf
+        case elf
+        case hobbit
+
+        static let codingValues: [(Species, String)] = [
+            (.human, "H"),
+            (.dwarf, "D"),
+            (.elf, "E"),
+            (.hobbit, "O"),
+        ]
+    }
+
+    @Test
+    func `Implement Codable with AlternateSetCoding`() throws {
         try testCodable(
             json: """
             [
@@ -223,88 +208,35 @@ struct TagSetCodableTests {
                 "O"
             ]
             """,
-            value: TagSet<Species>([.human, .hobbit]),
+            value: AlternateSetCoding<Species>([.human, .hobbit]),
         )
     }
 
     @Test
-    func `Empty TagSet`() throws {
+    func `AlternateSetCoding with empty set`() throws {
         try testCodable(
             json: """
             [
             ]
             """,
-            value: TagSet<Species>(),
+            value: AlternateSetCoding<Species>([]),
         )
     }
 
     @Test
-    func `Unknown tag in set`() throws {
+    func `Unknown coding value in set`() throws {
         let json = """
         [
             "X"
         ]
         """
         #expect(throws: DecodingError.self) {
-            try JSONDecoder().decode(TagSet<Species>.self, from: #require(json.data(using: .utf8)))
+            try JSONDecoder().decode(AlternateSetCoding<Species>.self, from: #require(json.data(using: .utf8)))
         }
     }
-}
-
-struct TaggedCodableTests {
-    enum Species: String, TagCoding {
-        case human
-        case dwarf
-        case elf
-        case hobbit
-
-        static let tags: [(Species, String)] = [
-            (.human, "H"),
-            (.dwarf, "D"),
-            (.elf, "E"),
-            (.hobbit, "O"),
-        ]
-    }
 
     @Test
-    func `Tagged holds its initialized value`() {
-        let value: Species = .human
-        #expect(Tagged(value).value == value)
-    }
-
-    @Test
-    func `Tagged is nil when initialized with nil`() {
-        let value: Species? = nil
-        #expect(Tagged(value) == nil)
-    }
-
-    @Test
-    func `Implement Codable with Tagged`() throws {
-        try testCodable(
-            json: """
-            "H"
-            """,
-            value: Tagged<Species>(.human),
-        )
-    }
-
-    @Test(arguments: Species.tags)
-    func `Tagged enumeration values`(species: Species, tag: String) throws {
-        try testCodable(
-            json: """
-            "\(tag)"
-            """,
-            value: Tagged(species),
-        )
-    }
-
-    @Test
-    func `Unknown tag`() throws {
-        let json = """
-        "X"
-        """
-        #expect(throws: DecodingError.self) {
-            try JSONDecoder().decode(Tagged<Species>.self, from: #require(json.data(using: .utf8)))
-        }
+    func `init?(_:) is nil when initialized with nil`() {
+        #expect(AlternateSetCoding<Species>(nil) == nil)
     }
 }

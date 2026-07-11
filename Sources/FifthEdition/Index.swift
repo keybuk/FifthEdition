@@ -5,8 +5,6 @@
 //  Created by Scott James Remnant on 5/7/26.
 //
 
-import MemberwiseInit
-
 /// Index of files.
 ///
 /// Used for the index of ``Bestiary`` files.
@@ -28,10 +26,21 @@ import MemberwiseInit
 ///         .appending(path: path)
 /// }
 /// ```
-@MemberwiseInit(.public)
 public struct Index: Equatable, Sendable {
     /// Index entries.
     ///
     /// Maps source identifiers to a filename relative to this index.
     public var entries: [String: String] = [:]
+
+    /// Initialize an index.
+    public init(_ entries: [String: String]) {
+        self.entries = entries
+    }
+}
+
+extension Index: ExpressibleByDictionaryLiteral {
+    /// Initialize ``entries`` from a dictionary literal.
+    public init(dictionaryLiteral elements: (String, String)...) {
+        self.init(Dictionary(uniqueKeysWithValues: elements))
+    }
 }

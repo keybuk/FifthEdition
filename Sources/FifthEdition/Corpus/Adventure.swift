@@ -43,7 +43,7 @@ public struct Adventure: Equatable, Sendable {
     public var parentSource: String?
 
     /// Kind of publication, used for grouping.
-    public var group: AdventureGroup
+    public var group: Group
 
     /// Date of publication.
     public var published: Date
@@ -58,7 +58,7 @@ public struct Adventure: Equatable, Sendable {
     public var author: String?
 
     /// Range of character levels players will play through.
-    public var level: AdventureLevel
+    public var level: Level
 
     /// Adventurers League average player level.
     ///
@@ -84,30 +84,37 @@ public struct Adventure: Equatable, Sendable {
     public var cover: MediaHref?
 
     /// Table of contents.
-    public var contents: [CorpusContents] = []
+    public var contents: [Contents] = []
 }
 
 /// Kinds of adventure publications, used for grouping.
-public enum AdventureGroup: String, CaseIterable, Codable, Sendable {
-    case supplement
-    case supplementAlt = "supplement-alt"
-    case prerelease
-    case homebrew
-    case organizedPlay = "organized-play"
-    case other
+public extension Adventure {
+    enum Group: String, CaseIterable, Codable, Sendable {
+        case supplement
+        case supplementAlt = "supplement-alt"
+        case prerelease
+        case homebrew
+        case organizedPlay = "organized-play"
+        case other
+    }
 }
 
 /// Character levels that the adventure ranges across.
-public enum AdventureLevel: Equatable, Sendable {
-    case range(ClosedRange<Int>)
-    case special(String)
+public extension Adventure {
+    enum Level: Equatable, Sendable {
+        case range(ClosedRange<Int>)
+        case special(String)
+    }
 }
 
-extension AdventureLevel: CustomStringConvertible, ExpressibleByStringLiteral {
+extension Adventure.Level: ExpressibleByStringLiteral {
+    /// Initialize ``special(_:)`` from a string literal.
     public init(stringLiteral value: String) {
         self = .special(value)
     }
+}
 
+extension Adventure.Level: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .range(range): "\(range.lowerBound)–\(range.upperBound)"

@@ -41,7 +41,7 @@ extension Adventure: Codable {
         id = try container.decode(String.self, forKey: .id)
         source = try container.decode(String.self, forKey: .source)
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
-        group = try container.decode(AdventureGroup.self, forKey: .group)
+        group = try container.decode(Group.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
         alAveragePlayerLevel = try container.decodeIfPresent(Int.self, forKey: .alAveragePlayerLevel)
 
@@ -57,8 +57,8 @@ extension Adventure: Codable {
         }
 
         alId = try container.decodeIfPresent(String.self, forKey: .alId)
-        contents = try container.decode([CorpusContents].self, forKey: .contents)
-        level = try container.decode(AdventureLevel.self, forKey: .level)
+        contents = try container.decode([Contents].self, forKey: .contents)
+        level = try container.decode(Level.self, forKey: .level)
         published = try container.decode(Date.self, forKey: .published, configuration: .iso8601)
         revised = try container.decodeIfPresent(Date.self, forKey: .revised, configuration: .iso8601)
         publishedOrder = try container.decodeIfPresent(Int.self, forKey: .publishedOrder)
@@ -99,7 +99,7 @@ extension Adventure: Codable {
     }
 }
 
-extension AdventureLevel: Codable {
+extension Adventure.Level: Codable {
     enum CodingKeys: String, CodingKey {
         case start
         case end

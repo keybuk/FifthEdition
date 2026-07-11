@@ -16,59 +16,8 @@ public enum ActionTag: String, CaseIterable, Codable, Sendable {
     case tentacles = "Tentacles"
 }
 
-public enum Condition: String, CaseIterable, Codable, Sendable {
-    case blinded
-    case charmed
-    case deafened
-    case exhaustion
-    case frightened
-    case grappled
-    case incapacitated
-    case invisible
-    case paralyzed
-    case petrified
-    case poisoned
-    case prone
-    case restrained
-    case stunned
-    case unconscious
-    case disease
-}
-
-public enum CreatureType: String, CaseIterable, Codable, Sendable {
-    case aberration
-    case beast
-    case celestial
-    case construct
-    case dragon
-    case elemental
-    case fey
-    case fiend
-    case giant
-    case humanoid
-    case monstrosity
-    case ooze
-    case plant
-    case undead
-}
-
-public enum DamageType: String, CaseIterable, Codable, Sendable {
-    case acid
-    case bludgeoning
-    case cold
-    case fire
-    case force
-    case lightning
-    case necrotic
-    case piercing
-    case poison
-    case psychic
-    case radiant
-    case slashing
-    case thunder
-}
-
-public enum DragonAge: String, CaseIterable, Codable, Sendable {
+@EnumWrapper
+public enum DragonAgeValue: String, Sendable {
     case young
     case adult
     case wyrmling
@@ -77,7 +26,10 @@ public enum DragonAge: String, CaseIterable, Codable, Sendable {
     case aspect
 }
 
-public enum DragonColor: String, CaseIterable, Codable, Sendable {
+public typealias DragonAge = DragonAgeValue.Wrapper
+
+@EnumWrapper
+public enum DragonColorValue: String, Sendable {
     case black
     case blue
     case green
@@ -92,90 +44,90 @@ public enum DragonColor: String, CaseIterable, Codable, Sendable {
     case spirit
 }
 
-public enum EnvironmentType: String, CaseIterable, Codable, Sendable {
-    case any
-    case underwater
-    case coastal
-    case mountain
-    case grassland
-    case hill
-    case arctic
-    case urban
-    case forest
-    case swamp
-    case underdark
-    case desert
-    case badlands
-    case farmland
-    case planar
-    case planarTransitive = "planar, transitive"
-    case planarElemental = "planar, elemental"
-    case planarInner = "planar, inner"
-    case planarUpper = "planar, upper"
-    case planarLower = "planar, lower"
-    case planarFeywild = "planar, feywild"
-    case planarShadowfell = "planar, shadowfell"
-    case planarWater = "planar, water"
-    case planarEarth = "planar, earth"
-    case planarFire = "planar, fire"
-    case planarAir = "planar, air"
-    case planarOoze = "planar, ooze"
-    case planarMagma = "planar, magma"
-    case planarAsh = "planar, ash"
-    case planarIce = "planar, ice"
-    case planarElementalChaos = "planar, elemental chaos"
-    case planarEthereal = "planar, ethereal"
-    case planarAstral = "planar, astral"
-    case planarArborea = "planar, arborea"
-    case planarArcadia = "planar, arcadia"
-    case planarBeastlands = "planar, beastlands"
-    case planarBytopia = "planar, bytopia"
-    case planarElysium = "planar, elysium"
-    case planarMountCelestia = "planar, mount celestia"
-    case planarYsgard = "planar, ysgard"
-    case planarAbyss = "planar, abyss"
-    case planarAcheron = "planar, acheron"
-    case planarCarceri = "planar, carceri"
-    case planarGehenna = "planar, gehenna"
-    case planarHades = "planar, hades"
-    case planarNineHells = "planar, nine hells"
-    case planarPandemonium = "planar, pandemonium"
-    case planarLimbo = "planar, limbo"
-    case planarMechanus = "planar, mechanus"
-    case planarOutlands = "planar, outlands"
-}
+public typealias DragonColor = DragonColorValue.Wrapper
 
 public enum LanguageTag: String, CaseIterable, Codable, Sendable {
     case any = "Any (Choose)"
+    // all
     case all
     case cantSpeakKnownLanguages = "Can't Speak Known Languages"
+    // "Any languages it knew in life"
+    // "the languages it knew in life"
     case languagesKnownInLife = "Languages Known in Life"
     case telepathy
     case other
+    // Aarakocra
+    // Aartuk
     case abyssal
     case aquan
     case auran
-    case common
+    // Bullywug
     case celestial
+    case common
     case commonSignLanguage = "Common Sign Language"
-    case dwarvish
-    case draconic
+    // deep crow
+    // demodand
     case deepSpeech = "Deep Speech"
+    case draconic
     case druidic
+    case dwarvish
     case elvish
-    case gnomish
+    // giant owl
     case giant
-    case goblin
     case gith
+    // gnoll
+    case gnomish
+    case goblin
+    /// grung
     case halfling
-    case infernal
+    // homarid
     case ignan
+    case infernal
+    /// kruthik
+    /// modron
     case orc
+    /// "Primordial (Aquan)"
+    /// "Primordial (Auran)"
     case primordial
+    // quori
     case sylvan
     case terran
+    // thayan
     case thievesCant = "Thieves' cant"
     case undercommon
+    // yeti
+
+    // {language}
+    // {language} plus any {four} languages
+    // {language} plus {one} {more,other} language
+    // {language} plus {two,three} {more,other} languages
+    // {language} + telepathy(range inc mile)
+    // telepathy(range inc mile)
+    // telepathy(range inc mile) but can't speak
+    // understands {language}
+    // understands {language} but can't speak[ it]
+    // understands {language} and {language} but can't speak[ it]
+    // understands {language} plus {one} {more,other} language but can't speak[ it]
+    // understands {language} plus {two} {more,other} languages but can't speak[ it]
+    // [and ]any {one} language"
+    // [and ]any {one} language (usually {language}"
+    // [and ]any {two,four} languages"
+
+    // understands all languages it spoke in life but can't speak
+    // understands the languages it knew in life but can't speak
+
+    // understands one language of its creator but can't speak
+    // understands the languages of its creator but can't speak
+
+    // "Understands the languages you know"
+    // "Understands the languages you speak"
+    // "all languages known to its summoner"
+    // "one language of its creator's choice"
+    // "plus one of your choice"
+
+    // "all languages known by any creature within 30 feet of it"
+    // "and any languages it knew before becoming a vargouille"
+    // "but it can't speak"
 }
 
 public enum MiscTag: String, CaseIterable, Codable, Sendable {
@@ -193,61 +145,7 @@ public enum MiscTag: String, CaseIterable, Codable, Sendable {
     case hasThrownWeapons = "Has Thrown Weapons"
 }
 
-public enum SavingThrow: String, CaseIterable, Codable, Sendable {
-    case strength
-    case constitution
-    case dexterity
-    case intelligence
-    case wisdom
-    case charisma
-}
-
-public enum Sense: String, CaseIterable, Codable, Sendable {
-    case blindsight
-    case darkvision
-    case superiorDarkvision
-    case tremorsense
-    case truesight
-}
-
-public enum SidekickType: String, CaseIterable, Codable, Sendable {
-    case expert
-    case spellcaster
-    case warrior
-}
-
-/// Creature size.
-public enum Size: String, CaseIterable, Codable, Sendable {
-    case tiny
-    case small
-    case medium
-    case large
-    case huge
-    case gargantuan
-}
-
-public enum Skill: String, CaseIterable, Codable, Sendable {
-    case acrobatics
-    case animalHandling = "animal handling"
-    case arcana
-    case athletics
-    case deception
-    case history
-    case insight
-    case intimidation
-    case investigation
-    case medicine
-    case nature
-    case perception
-    case performance
-    case persuasion
-    case religion
-    case sleightOfHand = "sleight of hand"
-    case stealth
-    case survival
-}
-
-public enum SpellcastingType: String, CaseIterable, Codable, Sendable {
+public enum SpellcastingTag: String, CaseIterable, Codable, Sendable {
     case psionics
     case innate
     case formOnly = "Form Only"
@@ -262,54 +160,6 @@ public enum SpellcastingType: String, CaseIterable, Codable, Sendable {
     case sorcerer = "Class, Sorcerer"
     case warlock = "Class, Warlock"
     case wizard = "Class, Wizard"
-}
-
-public enum Tool: String, CaseIterable, Codable, Sendable {
-    case artisansTools = "artisan's tools"
-    case alchemistsSupplies = "alchemist's supplies"
-    case brewersSupplies = "brewer's supplies"
-    case calligraphersSupplies = "calligrapher's supplies"
-    case carpentersTools = "carpenter's tools"
-    case cartographersTools = "cartographer's tools"
-    case cobblersTools = "cobbler's tools"
-    case cooksUtensils = "cook's utensils"
-    case glassblowersTools = "glassblower's tools"
-    case jewelersTools = "jeweler's tools"
-    case leatherworkersTools = "leatherworker's tools"
-    case masonsTools = "mason's tools"
-    case paintersSupplies = "painter's supplies"
-    case pottersTools = "potter's tools"
-    case smithsTools = "smith's tools"
-    case tinkersTools = "tinker's tools"
-    case weaversTools = "weaver's tools"
-    case woodcarversTools = "woodcarver's tools"
-    case disguisKit = "disguise kit"
-    case forgeryKit = "forgery kit"
-    case gamingSet = "gaming set"
-    case dragonchessSet = "dragonchess set"
-    case diceSet = "dice set"
-    case threeDragonAnteSet = "three-dragon ante set"
-    case playingCardSet = "playing card set"
-    case herbalismKit = "herbalism kit"
-    case musicalInstrument = "musical instrument"
-    case bagpipes
-    case drum
-    case dulcimer
-    case flute
-    case horn
-    case lute
-    case lyre
-    case panFlute = "pan flute"
-    case shawm
-    case viol
-    case navigatorsTools = "navigator's tools"
-    case thievesTools = "thieves' tools"
-    case poisonersKit = "poisoner's kit"
-    case vehicles
-    case vehiclesAir = "vehicles (air)"
-    case vehiclesLand = "vehicles (land)"
-    case vehiclesWater = "vehicles (water)"
-    case vehiclesSpace = "vehicles (space)"
 }
 
 public enum TraitTag: String, CaseIterable, Codable, Sendable {
@@ -361,13 +211,4 @@ public enum TraitTag: String, CaseIterable, Codable, Sendable {
     case waterBreathing = "Water Breathing"
     case webSense = "Web Sense"
     case webWalker = "Web Walker"
-}
-
-public enum Treasure: String, CaseIterable, Codable, Sendable {
-    case any
-    case individual
-    case arcana
-    case armaments
-    case implements
-    case relics
 }
