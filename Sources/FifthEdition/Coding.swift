@@ -7,453 +7,133 @@
 
 import Foundation
 
-/// Extend Date to support encoding in an alternate format specified by configuration.
-extension Date: @retroactive CodableWithConfiguration {
-    public enum CodingConfiguration {
-        case iso8601
-    }
-
-    static let formatStyle = Date.ISO8601FormatStyle(timeZone: .current)
-        .year().month().day()
-
-    public init(from decoder: any Decoder, configuration _: CodingConfiguration) throws {
-        let container = try decoder.singleValueContainer()
-        let dateStr = try container.decode(String.self)
-        if let dateValue = try? Date(dateStr, strategy: Self.formatStyle) {
-            self = dateValue
-        } else {
-            throw DecodingError.dataCorruptedError(in: container,
-                                                   debugDescription: "Invalid date")
-        }
-    }
-
-    public func encode(to encoder: any Encoder, configuration _: CodingConfiguration) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(formatted(Self.formatStyle))
+/// Extend Set to support decoding elements with a configuration.
+extension Set: @retroactive DecodableWithConfiguration
+    where Element: DecodableWithConfiguration
+{
+    public init(from decoder: any Decoder, configuration: Element.DecodingConfiguration) throws {
+        try self.init(Array(from: decoder, configuration: configuration))
     }
 }
 
-/// Protocol for alternate value coding.
-///
-/// Wraps an underlying type ``Value`` so that conforming types can implement custom ``Decodable`` and ``Encodable``
-/// implementations on ``value``.
-///
-/// ```swift
-/// struct ValueCoding: Codable, CodingValue {
-///     var value: Value
-///
-///     init(_ value: Value) { self.value = value }
-///
-///     init(from decoder: any Decoder) throws { ... }
-///     func encode(to encoder: any Encoder) throws { ... }
-/// }
-/// ```
-///
-/// Decoding:
-/// ```swift
-/// let container = try decoder.container(keyedBy: CodingKeys.self)
-/// value = try container.decode(ValueCoding.self, forKey: .value).value
-/// optionalValue = try container.decodeIfPresent(ValueCoding.self, forKey: .optionalValue)?.value
-/// ```
-///
-/// Encoding:
-/// ```swift
-/// var container = encoder.container(keyedBy: CodingKeys.self)
-/// try container.encode(ValueCoding(value), forKey: .value)
-/// try container.encodeIfPresent(ValueCoding(optionalValue), forKey: .optionalValue)
-/// ```
-protocol CodingValue {
-    associatedtype Value
-
-    var value: Value { get set }
-
-    init(_ value: Value)
-    init?(_ value: Value?)
+/// Extend Set to support encoding elements with a configuration.
+extension Set: @retroactive EncodableWithConfiguration
+    where Element: EncodableWithConfiguration
+{
+    public func encode(to encoder: any Encoder, configuration: Element.EncodingConfiguration) throws {
+        try Array(self).encode(to: encoder, configuration: configuration)
+    }
 }
 
-extension CodingValue {
+/// Protocol for enumerated types that have an alternative value when coded.
+///
+/// For example `Size.medium` might be encoded as either "medium" or "M".
+protocol AlternativeCoding {
+    associatedtype CodingValue
+
+    var codingValue: CodingValue? { get }
+
+    init?(codingValue: CodingValue)
+}
+
+protocol AlternativeCodingMap: AlternativeCoding {
+    associatedtype CodingValue
+
+    static var codingValues: [(Self, CodingValue)] { get }
+}
+
+extension AlternativeCodingMap where CodingValue: Equatable {
+    init?(codingValue: CodingValue) {
+        guard let value = Self.codingValues.first(where: { $0.1 == codingValue })?.0 else { return nil }
+        self = value
+    }
+}
+
+extension AlternativeCodingMap where Self: Equatable {
+    var codingValue: CodingValue? {
+        Self.codingValues.first { $0.0 == self }?.1
+    }
+}
+
+/// Wrapper around ``Value`` to provide an alternate ``Codable`` implementation using ``AlternativeCoding``.
+struct AlternateCoding<Value: AlternativeCoding> {
+    var value: Value
+
     init?(_ value: Value?) {
         guard let value else { return nil }
-        self.init(value)
-    }
-}
-
-/// A type that can be used as a key for encoding and decoding any container.
-///
-/// This can be used in place of the usual ``CodingKeys`` enumeration when the set of key names is only known at
-/// runtime, or derived entirely from the source data.
-///
-/// ```swift
-/// typealias CodingKeys = DynamicCodingKey
-/// ```
-///
-/// Use the type to access the container, and use the type's initializer to obtain a key for any string. This can be
-/// particularly powerful when combined with the container's ``allKeys`` property.
-///
-/// When decoding:
-/// ```swift
-/// let container = try decoder.container(keyedBy: CodingKeys.self)
-/// value = try container.decode(Value.self, forKey: CodingKeys("any key"))
-/// ```
-///
-/// When encoding:
-/// ```swift
-/// var container = encoder.container(keyedBy: CodingKeys.self)
-/// try container.encode(value, forKey: CodingKeys("any key"))
-/// ```
-struct DynamicCodingKey: CodingKey {
-    var stringValue: String
-    var intValue: Int? {
-        nil
-    }
-
-    init(stringValue: String) {
-        self.stringValue = stringValue
-    }
-
-    /// Creates a new instance from the given string.
-    /// - Parameter stringValue: The string value of the desired key.
-    init(_ stringValue: String) {
-        self.stringValue = stringValue
-    }
-
-    init?(intValue _: Int) {
-        nil
-    }
-}
-
-/// A type that can be used as a key for encoding and decoding a container with some keys from another enum.
-///
-/// This can be used in place of the usual ``CodingKeys`` enumeration when the set of key names should be derived from
-/// another enumeration without confirming it to ``CodingKey``, or if additional keys may be present in addition to
-/// those in the enumeration.
-///
-/// If the key is a valid member of `T` then the enum value is available in `value`, otherwise it will be `nil` but the
-/// coding key remains a valid value.
-///
-/// ```swift
-/// typealias CodingKeys = EnumCodingKey<SomeEnum>
-/// ```
-///
-/// The type's initializers may be used to obtain a key for a given enumeration value, or for any other string. If the
-/// enumeration conforms to ``CaseIterable``, then an ``allCases`` property exists that yields key-typed equivalents.
-/// Unknown cases can be discovered using the container's ``allKeys`` property.
-///
-/// When decoding:
-/// ```swift
-/// let container = try decoder.container(keyedBy: CodingKeys.self)
-/// value = try container.decode(Value.self, forKey: CodingKeys(.someCase))
-/// unknown = try container.decode(Unknown.self, forKey: CodingKeys(stringValue: "unknown key")
-/// ```
-///
-/// When encoding:
-/// ```swift
-/// var container = encoder.container(keyedBy: CodingKeys.self)
-/// try container.encode(value, forKey: CodingKeys(.someCase))
-/// try container.encode(unknown, forKey: CodingKeys(stringValue: "unknown key"))
-/// ```
-struct EnumCodingKey<Value: RawRepresentable>: CodingKey
-    where Value.RawValue == String
-{
-    /// The equivalent enumeration value, if valid, otherwise `nil`.
-    var value: Value?
-    var stringValue: String
-    var intValue: Int? {
-        nil
-    }
-
-    init(stringValue: String) {
-        value = Value(rawValue: stringValue)
-        self.stringValue = stringValue
-    }
-
-    /// Creates a new instance from the given enumeration value.
-    /// - Parameter value: The enumeration value of the desired key.
-    init(_ value: Value) {
         self.value = value
-        stringValue = value.rawValue
-    }
-
-    init?(intValue _: Int) {
-        nil
     }
 }
 
-extension EnumCodingKey: Sendable
-    where Value: Sendable {}
+extension AlternateCoding: Equatable where Value: Equatable {}
+extension AlternateCoding: Hashable where Value: Hashable {}
 
-extension EnumCodingKey: CaseIterable
-    where Value: CaseIterable
-{
-    /// A collection of all keys for the underlying enumeration type.
-    static var allCases: [EnumCodingKey<Value>] {
-        Value.allCases.map { value in Self(value) }
+extension AlternateCoding: Decodable where Value.CodingValue: Decodable {
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let codingValue = try container.decode(Value.CodingValue.self)
+        guard let decodedValue = Value(codingValue: codingValue) else {
+            throw DecodingError.dataCorruptedError(in: container,
+                                                   debugDescription: "Unknown value: \(codingValue)")
+        }
+
+        value = decodedValue
     }
 }
 
-/// Wrapper around Set<Element> in order to provide an alternate Codable implementation.
-public struct TagSet<Element: Hashable>: Collection, ExpressibleByArrayLiteral, Hashable, Sequence, SetAlgebra {
-    private var wrappedSet: Set<Element>
+extension AlternateCoding: Encodable where Value.CodingValue: Encodable {
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        guard let codingValue = value.codingValue else {
+            throw EncodingError.invalidValue(value,
+                                             EncodingError.Context(codingPath: container.codingPath,
+                                                                   debugDescription: "No coding for value: \(value)"))
+        }
 
-    public init<S>(_ sequence: S) where S: Sequence, Element == S.Element {
-        wrappedSet = Set(sequence)
-    }
-
-    // ExpressibleByArrayLiteral
-
-    public init(arrayLiteral elements: Element...) {
-        wrappedSet = Set(elements)
-    }
-
-    // Collection
-
-    public typealias Element = Element
-    public typealias Index = Set<Element>.Index
-
-    public var startIndex: Index {
-        wrappedSet.startIndex
-    }
-
-    public var endIndex: Index {
-        wrappedSet.endIndex
-    }
-
-    public func index(after i: Index) -> Index {
-        wrappedSet.index(after: i)
-    }
-
-    public subscript(i: Index) -> Element {
-        wrappedSet[i]
-    }
-
-    // Sequence
-
-    public typealias Iterator = Set<Element>.Iterator
-
-    public func makeIterator() -> Iterator {
-        wrappedSet.makeIterator()
-    }
-
-    // SetAlgebra
-
-    public init() {
-        wrappedSet = []
-    }
-
-    public var isEmpty: Bool {
-        wrappedSet.isEmpty
-    }
-
-    public func contains(_ member: Element) -> Bool {
-        wrappedSet.contains(member)
-    }
-
-    @discardableResult
-    public mutating func insert(_ newMember: Element) -> (inserted: Bool, memberAfterInsert: Element) {
-        wrappedSet.insert(newMember)
-    }
-
-    @discardableResult
-    public mutating func update(with newMember: Element) -> Element? {
-        wrappedSet.update(with: newMember)
-    }
-
-    @discardableResult
-    public mutating func remove(_ member: Element) -> Element? {
-        wrappedSet.remove(member)
-    }
-
-    public mutating func formIntersection(_ other: TagSet<Element>) {
-        wrappedSet.formIntersection(other)
-    }
-
-    public mutating func formSymmetricDifference(_ other: TagSet<Element>) {
-        wrappedSet.formSymmetricDifference(other)
-    }
-
-    public mutating func formUnion(_ other: TagSet<Element>) {
-        wrappedSet.formUnion(other)
-    }
-
-    public func intersection(_ other: TagSet<Element>) -> TagSet<Element> {
-        TagSet(wrappedSet.intersection(other.wrappedSet))
-    }
-
-    public func symmetricDifference(_ other: TagSet<Element>) -> TagSet<Element> {
-        TagSet(wrappedSet.symmetricDifference(other.wrappedSet))
-    }
-
-    public func union(_ other: TagSet<Element>) -> TagSet<Element> {
-        TagSet(wrappedSet.union(other.wrappedSet))
+        try container.encode(codingValue)
     }
 }
 
-extension TagSet: Equatable where Element: Equatable {}
-extension TagSet: Sendable where Element: Sendable {}
+/// Wrapper around ``Set<Value>`` to provide an alternate ``Codable`` implementation using ``AlternativeCoding``.
+struct AlternateSetCoding<Value: AlternativeCoding & Hashable> {
+    var value: Set<Value>
 
-extension TagSet: CustomStringConvertible
-    where Set<Element>: CustomStringConvertible
-{
-    public var description: String {
-        wrappedSet.description
+    init?(_ value: Set<Value>?) {
+        guard let value else { return nil }
+        self.value = value
     }
 }
 
-extension TagSet: CustomDebugStringConvertible
-    where Set<Element>: CustomDebugStringConvertible
-{
-    public var debugDescription: String {
-        wrappedSet.debugDescription
-    }
-}
+extension AlternateSetCoding: Equatable where Value: Equatable {}
+extension AlternateSetCoding: Hashable where Value: Hashable {}
 
-/// Maps a value of itself to a tag.
-public protocol TagCoding {
-    associatedtype Tag
-
-    static var tags: [(Self, Tag)] { get }
-}
-
-extension TagCoding
-    where Tag: Equatable
-{
-    static func value(for tag: Tag) -> Self? {
-        tags.first { this in
-            this.1 == tag
-        }?.0
-    }
-}
-
-extension TagCoding
-    where Self: Equatable
-{
-    static func tag(for value: Self) -> Tag? {
-        tags.first { this in
-            this.0 == value
-        }?.1
-    }
-}
-
-extension TagSet: Decodable
-    where Element: Equatable,
-    Element: TagCoding,
-    Element.Tag: Decodable,
-    Element.Tag: Equatable
-{
-    public init(from decoder: any Decoder) throws {
+extension AlternateSetCoding: Decodable where Value.CodingValue: Decodable {
+    init(from decoder: any Decoder) throws {
         var container = try decoder.unkeyedContainer()
 
-        var values = Self()
-        while let tag = try? container.decode(Element.Tag.self) {
-            guard let value = Element.value(for: tag) else {
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "Unknown tag: \(tag)",
-                )
+        value = []
+        while !container.isAtEnd {
+            let codingValue = try container.decode(Value.CodingValue.self)
+            guard let decodedValue = Value(codingValue: codingValue) else {
+                throw DecodingError.dataCorruptedError(in: container,
+                                                       debugDescription: "Unknown value: \(codingValue)")
             }
-
-            values.insert(value)
+            value.insert(decodedValue)
         }
-
-        self = values
     }
 }
 
-extension TagSet: Encodable
-    where Element: Equatable,
-    Element: TagCoding,
-    Element.Tag: Encodable,
-    Element.Tag: Equatable
-{
-    public func encode(to encoder: any Encoder) throws {
+extension AlternateSetCoding: Encodable where Value.CodingValue: Encodable {
+    func encode(to encoder: any Encoder) throws {
         var container = encoder.unkeyedContainer()
-        for value in self {
-            guard let tag = Element.tag(for: value) else {
-                throw EncodingError.invalidValue(
-                    value,
-                    EncodingError.Context(
-                        codingPath: container.codingPath,
-                        debugDescription: "No tag for value: \(value)",
-                    ),
-                )
+        for decodedValue in value {
+            guard let codingValue = decodedValue.codingValue else {
+                throw EncodingError.invalidValue(value,
+                                                 EncodingError.Context(codingPath: container.codingPath,
+                                                                       debugDescription: "No coding for value: \(decodedValue)"))
             }
 
-            try container.encode(tag)
+            try container.encode(codingValue)
         }
-    }
-}
-
-/// Wrapper around Value in order to provide an alternate Codable implementation.
-public struct Tagged<Value: TagCoding> {
-    public var value: Value
-
-    public init(_ value: Value) {
-        self.value = value
-    }
-
-    public init?(_ value: Value?) {
-        guard let value else { return nil }
-
-        self.value = value
-    }
-}
-
-extension Tagged: Equatable where Value: Equatable {}
-extension Tagged: Hashable where Value: Hashable {}
-extension Tagged: Sendable where Value: Sendable {}
-
-extension Tagged: CustomStringConvertible
-    where Value: CustomStringConvertible
-{
-    public var description: String {
-        value.description
-    }
-}
-
-extension Tagged: CustomDebugStringConvertible
-    where Value: CustomDebugStringConvertible
-{
-    public var debugDescription: String {
-        value.debugDescription
-    }
-}
-
-extension Tagged: Decodable
-    where Value: Equatable,
-    Value.Tag: Decodable,
-    Value.Tag: Equatable
-{
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let tag = try container.decode(Value.Tag.self)
-        guard let value = Value.value(for: tag) else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Unknown tag: \(tag)",
-            )
-        }
-
-        self.value = value
-    }
-}
-
-extension Tagged: Encodable
-    where Value: Equatable,
-    Value.Tag: Encodable,
-    Value.Tag: Equatable
-{
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        guard let tag = Value.tag(for: value) else {
-            throw EncodingError.invalidValue(
-                value,
-                EncodingError.Context(
-                    codingPath: container.codingPath,
-                    debugDescription: "No tag for value: \(value)",
-                ),
-            )
-        }
-
-        try container.encode(tag)
     }
 }
