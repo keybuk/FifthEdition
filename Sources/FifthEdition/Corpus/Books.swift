@@ -4,8 +4,6 @@
 //
 //  Created by Scott James Remnant on 4/11/26.
 //
-//  Implements schema-template/books.json
-//  Version: 1.2.19
 
 import MemberwiseInit
 

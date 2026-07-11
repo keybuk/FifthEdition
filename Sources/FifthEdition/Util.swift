@@ -4,8 +4,6 @@
 //
 //  Created by Scott James Remnant on 12/27/25.
 //
-//  Derived from schema-template/util.json
-//  Version: 1.18.0
 
 import EnumOptionSet
 import MemberwiseInit

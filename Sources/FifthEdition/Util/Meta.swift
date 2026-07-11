@@ -4,8 +4,6 @@
 //
 //  Created by Scott James Remnant on 5/25/26.
 //
-//  Implements schema-template/util.json
-//  Version: 1.18.0
 
 import MemberwiseInit
 

@@ -4,8 +4,6 @@
 //
 //  Created by Scott James Remnant on 12/29/25.
 //
-//  Derived from schema-template/util-edition.json
-//  Version: 1.0.1
 
 public enum ActionTag: String, CaseIterable, Codable, Sendable {
     case breathWeapon = "Breath Weapon"

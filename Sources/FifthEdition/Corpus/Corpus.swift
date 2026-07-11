@@ -4,11 +4,6 @@
 //
 //  Created by Scott James Remnant on 5/2/26.
 //
-//  Implements schema-template/corpus-shared.json
-//  Version: 1.0.1
-//
-//  Implements schema-template/util-edition.json
-//  Version: 1.0.1
 
 import MemberwiseInit
 

@@ -4,8 +4,6 @@
 //
 //  Created by Scott James Remnant on 12/28/25.
 //
-//  Derived from schema-template/util-token.json
-//  Version: 1.0.3
 
 import MemberwiseInit
 

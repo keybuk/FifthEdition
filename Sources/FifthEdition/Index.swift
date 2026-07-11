@@ -4,14 +4,6 @@
 //
 //  Created by Scott James Remnant on 5/7/26.
 //
-//  Derived from schema-template/bestiary/index.json
-//  Version: 1.0.0
-//
-//  Derived from schema-template/spells/index.json
-//  Version: 1.0.0
-//
-//  Derived from schema-template/class/index.json
-//  Version: 1.0.0
 
 import MemberwiseInit
 
