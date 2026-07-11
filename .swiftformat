@@ -28,8 +28,14 @@
 --allow-partial-wrapping false
 
 --enable blockComments
+--enable emptyExtensions
 --enable isEmpty
 --enable noGuardInTests
+--enable preferContains
+--enable preferCountWhere
+--enable preferFirstWhere
+--enable preferFlatMap
+--enable preferMinOverSorted
 --enable preferSwiftTesting
 --enable privateStateVariables
 --enable singlePropertyPerLine
