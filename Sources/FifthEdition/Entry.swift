@@ -7,16 +7,16 @@
 
 import Foundation
 
-public struct Entry: Codable, Equatable, Sendable {
+public struct Entry: Codable, Equatable, Hashable, Sendable {
     // TODO:
 }
 
-public struct Spellcasting: Codable, Equatable, Sendable {
+public struct Spellcasting: Codable, Equatable, Hashable, Sendable {
     // TODO:
 }
 
 /// Link to media.
-public enum MediaHref: Equatable, Sendable {
+public enum MediaHref: Equatable, Hashable, Sendable {
     /// Relative path with 5etools image archive.
     case path(String)
 

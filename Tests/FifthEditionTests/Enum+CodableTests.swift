@@ -10,7 +10,7 @@ import Testing
 
 struct ActionTagCodableTests {
     @Test(arguments: ActionTag.allCases)
-    func `Action tags`(_ actionTag: ActionTag) throws {
+    func `Action tags`(actionTag: ActionTag) throws {
         try testCodable(
             json: """
             "\(actionTag.rawValue)"
@@ -20,53 +20,19 @@ struct ActionTagCodableTests {
     }
 }
 
-struct ConditionCodableTests {
-    @Test(arguments: Condition.allCases)
-    func conditions(_ condition: Condition) throws {
+struct DamageTagCodableTests {
+    @Test(arguments: Damage.codingValues)
+    func `Damage alternate coding`(damage: Damage, codingValue: String) throws {
         try testCodable(
             json: """
-            "\(condition.rawValue)"
+            "\(codingValue)"
             """,
-            value: condition,
-        )
-    }
-}
-
-struct CreatureTypeCodableTests {
-    @Test(arguments: CreatureType.allCases)
-    func `Creature types`(_ creatureType: CreatureType) throws {
-        try testCodable(
-            json: """
-            "\(creatureType.rawValue)"
-            """,
-            value: creatureType,
-        )
-    }
-}
-
-struct DamageTypeCodableTests {
-    @Test(arguments: DamageType.allCases)
-    func `Damage types`(_ damageType: DamageType) throws {
-        try testCodable(
-            json: """
-            "\(damageType.rawValue)"
-            """,
-            value: damageType,
-        )
-    }
-
-    @Test(arguments: DamageType.tags)
-    func `Tagged damage types`(damageType: DamageType, tag: String) throws {
-        try testCodable(
-            json: """
-            "\(tag)"
-            """,
-            value: Tagged(damageType),
+            value: AlternateCoding(damage),
         )
     }
 
     @Test
-    func `Tagged damage type set`() throws {
+    func `Damage set alternate coding`() throws {
         try testCodable(
             json: """
             [
@@ -74,7 +40,7 @@ struct DamageTypeCodableTests {
                 "S"
             ]
             """,
-            value: TagSet<DamageType>([
+            value: AlternateSetCoding<Damage>([
                 .bludgeoning,
                 .slashing,
             ]),
@@ -84,7 +50,7 @@ struct DamageTypeCodableTests {
 
 struct DragonAgeCodableTests {
     @Test(arguments: DragonAge.allCases)
-    func `Dragon ages`(_ dragonAge: DragonAge) throws {
+    func `Dragon ages`(dragonAge: DragonAge) throws {
         try testCodable(
             json: """
             "\(dragonAge.rawValue)"
@@ -92,11 +58,49 @@ struct DragonAgeCodableTests {
             value: dragonAge,
         )
     }
+
+    @Test
+    func `Unknown dragon age`() throws {
+        try testCodable(
+            json: """
+            "geriatric"
+            """,
+            value: DragonAge(rawValue: "geriatric"),
+        )
+    }
+
+    @Test(arguments: DragonAge.allCases)
+    func `Dragon age can be used as dictionary key`(dragonAge: DragonAge) throws {
+        try testCodable(
+            json: """
+            {
+                "\(dragonAge.rawValue)": 42
+            }
+            """,
+            value: [
+                dragonAge: 42,
+            ],
+        )
+    }
+
+    @Test
+    func `Unknown dragon age can be used as dictionary key`() throws {
+        try testCodable(
+            json: """
+            {
+                "geriatric": 42
+            }
+            """,
+            value: [
+                DragonAge(rawValue: "geriatric"): 42,
+            ],
+        )
+    }
 }
 
 struct DragonColorCodableTests {
     @Test(arguments: DragonColor.allCases)
-    func `Dragon colors`(_ dragonColor: DragonColor) throws {
+    func `Dragon colors`(dragonColor: DragonColor) throws {
         try testCodable(
             json: """
             "\(dragonColor.rawValue)"
@@ -104,23 +108,49 @@ struct DragonColorCodableTests {
             value: dragonColor,
         )
     }
-}
 
-struct EnvironmentTypeCodableTests {
-    @Test(arguments: EnvironmentType.allCases)
-    func `Environment types`(_ environmentType: EnvironmentType) throws {
+    @Test
+    func `Unknown dragon color`() throws {
         try testCodable(
             json: """
-            "\(environmentType.rawValue)"
+            "octarine"
             """,
-            value: environmentType,
+            value: DragonColor(rawValue: "octarine"),
+        )
+    }
+
+    @Test(arguments: DragonColor.allCases)
+    func `Dragon color can be used as dictionary key`(dragonColor: DragonColor) throws {
+        try testCodable(
+            json: """
+            {
+                "\(dragonColor.rawValue)": 42
+            }
+            """,
+            value: [
+                dragonColor: 42,
+            ],
+        )
+    }
+
+    @Test
+    func `Unknown dragon color can be used as dictionary key`() throws {
+        try testCodable(
+            json: """
+            {
+                "octarine": 42
+            }
+            """,
+            value: [
+                DragonColor(rawValue: "octarine"): 42,
+            ],
         )
     }
 }
 
 struct LanguageTagCodableTests {
     @Test(arguments: LanguageTag.allCases)
-    func `Language tag`(_ languageTag: LanguageTag) throws {
+    func `Language tag`(languageTag: LanguageTag) throws {
         try testCodable(
             json: """
             "\(languageTag.rawValue)"
@@ -129,18 +159,18 @@ struct LanguageTagCodableTests {
         )
     }
 
-    @Test(arguments: LanguageTag.tags)
-    func `Tagged language tags`(languageTag: LanguageTag, tag: String) throws {
+    @Test(arguments: LanguageTag.codingValues)
+    func `Language tag alternate coding`(languageTag: LanguageTag, codingValue: String) throws {
         try testCodable(
             json: """
-            "\(tag)"
+            "\(codingValue)"
             """,
-            value: Tagged(languageTag),
+            value: AlternateCoding(languageTag),
         )
     }
 
     @Test
-    func `Tagged language tags set`() throws {
+    func `Language tag set alternate coding`() throws {
         try testCodable(
             json: """
             [
@@ -148,7 +178,7 @@ struct LanguageTagCodableTests {
                 "TP"
             ]
             """,
-            value: TagSet<LanguageTag>([
+            value: AlternateSetCoding<LanguageTag>([
                 .languagesKnownInLife,
                 .telepathy,
             ]),
@@ -158,7 +188,7 @@ struct LanguageTagCodableTests {
 
 struct MiscTagCodableTests {
     @Test(arguments: MiscTag.allCases)
-    func `Misc tag`(_ miscTag: MiscTag) throws {
+    func `Misc tag`(miscTag: MiscTag) throws {
         try testCodable(
             json: """
             "\(miscTag.rawValue)"
@@ -167,18 +197,18 @@ struct MiscTagCodableTests {
         )
     }
 
-    @Test(arguments: MiscTag.tags)
-    func `Tagged misc tags`(miscTag: MiscTag, tag: String) throws {
+    @Test(arguments: MiscTag.codingValues)
+    func `Misc tag alternate coding`(miscTag: MiscTag, codingValue: String) throws {
         try testCodable(
             json: """
-            "\(tag)"
+            "\(codingValue)"
             """,
-            value: Tagged(miscTag),
+            value: AlternateCoding(miscTag),
         )
     }
 
     @Test
-    func `Tagged misc tags set`() throws {
+    func `Misc tag set alternate coding`() throws {
         try testCodable(
             json: """
             [
@@ -186,7 +216,7 @@ struct MiscTagCodableTests {
                 "CUR"
             ]
             """,
-            value: TagSet<MiscTag>([
+            value: AlternateSetCoding<MiscTag>([
                 .hasAreasOfEffect,
                 .inflictsCurse,
             ]),
@@ -194,138 +224,29 @@ struct MiscTagCodableTests {
     }
 }
 
-struct SavingThrowCodableTests {
-    @Test(arguments: SavingThrow.allCases)
-    func `Saving throws`(_ savingThrow: SavingThrow) throws {
+struct SpellcastingTagCodableTests {
+    @Test(arguments: SpellcastingTag.allCases)
+    func `Spellcasting types`(spellcastingTag: SpellcastingTag) throws {
         try testCodable(
             json: """
-            "\(savingThrow.rawValue)"
+            "\(spellcastingTag.rawValue)"
             """,
-            value: savingThrow,
-        )
-    }
-}
-
-struct SenseCodableTests {
-    @Test(arguments: Sense.allCases)
-    func senses(_ sense: Sense) throws {
-        try testCodable(
-            json: """
-            "\(sense.rawValue)"
-            """,
-            value: sense,
+            value: spellcastingTag,
         )
     }
 
-    @Test(arguments: Sense.tags)
-    func `Tagged senses`(sense: Sense, tag: String) throws {
+    @Test(arguments: SpellcastingTag.codingValues)
+    func `Spellcasting type alternate coding`(spellcastingTag: SpellcastingTag, codingValue: String) throws {
         try testCodable(
             json: """
-            "\(tag)"
+            "\(codingValue)"
             """,
-            value: Tagged(sense),
+            value: AlternateCoding(spellcastingTag),
         )
     }
 
     @Test
-    func `Tagged senses set`() throws {
-        try testCodable(
-            json: """
-            [
-                "B",
-                "T"
-            ]
-            """,
-            value: TagSet<Sense>([
-                .blindsight,
-                .tremorsense,
-            ]),
-        )
-    }
-}
-
-struct SidekickTypeCodableTests {
-    @Test(arguments: SidekickType.allCases)
-    func `Sidekick types`(_ sidekickType: SidekickType) throws {
-        try testCodable(
-            json: """
-            "\(sidekickType.rawValue)"
-            """,
-            value: sidekickType,
-        )
-    }
-}
-
-struct SizeCodableTests {
-    @Test(arguments: Size.allCases)
-    func sizes(_ size: Size) throws {
-        try testCodable(
-            json: """
-            "\(size.rawValue)"
-            """,
-            value: size,
-        )
-    }
-
-    @Test(arguments: Size.tags)
-    func `Tagged sizes`(size: Size, tag: String) throws {
-        try testCodable(
-            json: """
-            "\(tag)"
-            """,
-            value: Tagged(size),
-        )
-    }
-
-    @Test
-    func `Tagged size set`() throws {
-        try testCodable(
-            json: """
-            [
-                "T",
-                "S"
-            ]
-            """,
-            value: TagSet<Size>([.tiny, .small]),
-        )
-    }
-}
-
-struct SkillCodableTests {
-    @Test(arguments: Skill.allCases)
-    func skills(_ skill: Skill) throws {
-        try testCodable(
-            json: """
-            "\(skill.rawValue)"
-            """,
-            value: skill,
-        )
-    }
-}
-
-struct SpellcastingTypeCodableTests {
-    @Test(arguments: SpellcastingType.allCases)
-    func `Spellcasting types`(_ spellcastingType: SpellcastingType) throws {
-        try testCodable(
-            json: """
-            "\(spellcastingType.rawValue)"
-            """,
-            value: spellcastingType,
-        )
-    }
-
-    @Test(arguments: SpellcastingType.tags)
-    func `Tagged spellcasting types`(spellcastingType: SpellcastingType, tag: String) throws {
-        try testCodable(
-            json: """
-            "\(tag)"
-            """,
-            value: Tagged(spellcastingType),
-        )
-    }
-
-    @Test
-    func `Tagged spellcasting types set`() throws {
+    func `Spellcasting type set alternate coding`() throws {
         try testCodable(
             json: """
             [
@@ -333,7 +254,7 @@ struct SpellcastingTypeCodableTests {
                 "I",
             ]
             """,
-            value: TagSet<SpellcastingType>([
+            value: AlternateSetCoding<SpellcastingTag>([
                 .innate,
                 .psionics,
             ]),
@@ -341,33 +262,9 @@ struct SpellcastingTypeCodableTests {
     }
 }
 
-struct ToolCodableTests {
-    @Test(arguments: Tool.allCases)
-    func tools(_ tool: Tool) throws {
-        try testCodable(
-            json: """
-            "\(tool.rawValue)"
-            """,
-            value: tool,
-        )
-    }
-}
-
-struct TreasureCodableTests {
-    @Test(arguments: Treasure.allCases)
-    func treasure(_ treasure: Treasure) throws {
-        try testCodable(
-            json: """
-            "\(treasure.rawValue)"
-            """,
-            value: treasure,
-        )
-    }
-}
-
 struct TraitTagCodableTests {
     @Test(arguments: TraitTag.allCases)
-    func `Trait tags`(_ traitTag: TraitTag) throws {
+    func `Trait tags`(traitTag: TraitTag) throws {
         try testCodable(
             json: """
             "\(traitTag.rawValue)"

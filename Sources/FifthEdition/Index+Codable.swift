@@ -7,6 +7,7 @@
 
 extension Index: Codable {
     public init(from decoder: any Decoder) throws {
+        // Value is a dictionary.
         let container = try decoder.singleValueContainer()
         entries = try container.decode([String: String].self)
     }

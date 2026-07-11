@@ -5,8 +5,6 @@
 //  Created by Scott James Remnant on 12/25/25.
 //
 
-import MemberwiseInit
-
 /// Bestiary of monsters published in an adventure or source book.
 ///
 /// Each monster in the bestiary is parsed as a ``Creature`` and available through the ``monster`` property.
@@ -33,7 +31,6 @@ import MemberwiseInit
 ///     // ...
 /// }
 /// ```
-@MemberwiseInit(.public, _optionalsDefaultNil: true)
 public struct Bestiary: Codable, Equatable, Sendable {
     /// Relative path of the directory within the 5etools source archive containing the per-source data files.
     public static let jsonBasePath: String = "data/bestiary"
@@ -41,9 +38,27 @@ public struct Bestiary: Codable, Equatable, Sendable {
     /// Relative path of the index data file within the 5etools source archive.
     public static let jsonIndexPath: String = "\(jsonBasePath)/index.json"
 
-    /// Creatures in the bestiary.
-    public var monster: [Creature] = []
+    /// Collection of creatures.
+    public var monster: [Creature]
 
-    /// Metadata about the bestiary..
+    /// Metadata.
     public var meta: Meta?
+
+    /// Initialize bestiary.
+    /// - Parameters:
+    ///   - monster: Collection of creatures.
+    ///   - meta: Metadata.
+    public init(_ monster: [Creature] = [],
+                meta: Meta? = nil)
+    {
+        self.monster = monster
+        self.meta = meta
+    }
+}
+
+extension Bestiary: ExpressibleByArrayLiteral {
+    /// Initialize ``monster`` from an array literal.
+    public init(arrayLiteral elements: Creature...) {
+        self.init(elements)
+    }
 }

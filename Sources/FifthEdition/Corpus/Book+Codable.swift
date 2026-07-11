@@ -30,12 +30,12 @@ extension Book: Codable {
         id = try container.decode(String.self, forKey: .id)
         source = try container.decode(String.self, forKey: .source)
         parentSource = try container.decodeIfPresent(String.self, forKey: .parentSource)
-        group = try container.decode(BookGroup.self, forKey: .group)
+        group = try container.decode(Group.self, forKey: .group)
         author = try container.decodeIfPresent(String.self, forKey: .author)
         published = try container.decode(Date.self, forKey: .published, configuration: .iso8601)
         revised = try container.decodeIfPresent(Date.self, forKey: .revised, configuration: .iso8601)
         cover = try container.decodeIfPresent(MediaHref.self, forKey: .cover)
-        contents = try container.decode([CorpusContents].self, forKey: .contents)
+        contents = try container.decode([Contents].self, forKey: .contents)
     }
 
     public func encode(to encoder: any Encoder) throws {

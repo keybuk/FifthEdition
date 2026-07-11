@@ -5,8 +5,6 @@
 //  Created by Scott James Remnant on 4/11/26.
 //
 
-import MemberwiseInit
-
 /// Adventures.
 ///
 /// Each adventure is parsed as an ``Adventure`` and available through the ``adventure`` property.
@@ -21,11 +19,22 @@ import MemberwiseInit
 /// let adventuresData = try Data(contentsOf: adventuresURL)
 /// let adventures = try decoder.decode(Adventures.self, from: adventuresData)
 /// ```
-@MemberwiseInit(.public)
 public struct Adventures: Codable, Equatable, Sendable {
     /// Relative path of the data file within the 5etools source archive.
     public static let jsonPath: String = "data/adventures.json"
 
     /// Collection of adventures.
     public var adventure: [Adventure] = []
+
+    /// Initialize adventures.
+    public init(_ adventure: [Adventure]) {
+        self.adventure = adventure
+    }
+}
+
+extension Adventures: ExpressibleByArrayLiteral {
+    /// Initialize ``adventure`` from an array literal.
+    public init(arrayLiteral elements: Adventure...) {
+        self.init(elements)
+    }
 }

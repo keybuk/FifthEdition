@@ -8,38 +8,56 @@
 import Testing
 @testable import FifthEdition
 
-struct SizeComparableTests {
-    static let testValues: [Bool] = [
-        Size.tiny < Size.large,
-        Size.medium < Size.huge,
-        Size.medium > Size.small,
-        Size.large > Size.tiny,
-        Size.small < Size.huge,
-    ]
-
-    @Test(arguments: zip(Size.allCases, Size.allCases.dropFirst()))
-    func `Size smaller than next`(_ a: Size, _ b: Size) {
-        #expect(a < b)
+struct DragonAgeInitTests {
+    @Test
+    func `init(stringLiteral:) sets rawValue`() {
+        let dragonAge: DragonAge = "adult"
+        #expect(dragonAge == .adult)
     }
 
-    @Test(arguments: testValues)
-    func `Size comparisons`(_ testedValue: Bool) {
-        #expect(testedValue)
+    @Test
+    func `init(stringLiteral:) sets rawValue for unknown`() {
+        let dragonAge: DragonAge = "geriatric"
+        #expect(dragonAge == DragonAge(rawValue: "geriatric"))
     }
 }
 
-struct SizeGridSquaresTests {
-    static let expectedValues = [
-        (Size.tiny, 1),
-        (Size.small, 1),
-        (Size.medium, 1),
-        (Size.large, 2),
-        (Size.huge, 3),
-        (Size.gargantuan, 4),
-    ]
+struct DragonAgeStringTests {
+    @Test(arguments: DragonAge.allCases)
+    func `description is rawValue`(dragonAge: DragonAge) {
+        #expect(String(describing: dragonAge) == dragonAge.rawValue)
+    }
 
-    @Test(arguments: expectedValues)
-    func `gridSquares has expected value`(size: Size, expectedValue: Int) {
-        #expect(size.gridSquares == expectedValue)
+    @Test
+    func `description is rawValue for unknown`() {
+        let dragonAge = DragonAge(rawValue: "geriatric")
+        #expect(String(describing: dragonAge) == dragonAge.rawValue)
+    }
+}
+
+struct DragonColorInitTests {
+    @Test
+    func `init(stringLiteral:) sets rawValue`() {
+        let dragonColor: DragonColor = "copper"
+        #expect(dragonColor == .copper)
+    }
+
+    @Test
+    func `init(stringLiteral:) sets rawValue for unknown`() {
+        let dragonColor: DragonColor = "octarine"
+        #expect(dragonColor == DragonColor(rawValue: "octarine"))
+    }
+}
+
+struct DragonColorStringTests {
+    @Test(arguments: DragonColor.allCases)
+    func `description is rawValue`(dragonColor: DragonColor) {
+        #expect(String(describing: dragonColor) == dragonColor.rawValue)
+    }
+
+    @Test
+    func `description is rawValue for unknown`() {
+        let dragonColor = DragonColor(rawValue: "octarine")
+        #expect(String(describing: dragonColor) == dragonColor.rawValue)
     }
 }

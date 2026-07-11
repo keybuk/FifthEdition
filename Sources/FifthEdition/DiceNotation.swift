@@ -51,15 +51,15 @@ public enum Die: Int, CaseIterable, Equatable, Hashable, Sendable {
     case d100 = 100
 }
 
-extension Die: CustomStringConvertible {
-    public var description: String {
-        "d\(rawValue.formatted(.number))"
-    }
-}
-
 extension Die: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.rawValue < rhs.rawValue
+    }
+}
+
+extension Die: CustomStringConvertible {
+    public var description: String {
+        "d\(rawValue)"
     }
 }
 
@@ -76,6 +76,10 @@ extension Die: Rollable {
 }
 
 /// One or more ``Die`` to be rolled, or a modifier to be applied.
+///
+/// Each ``Die`` to be rolled, along with the count of that die, is given in the associated values of ``die(_:count:)``.
+///
+/// Modifiers to be added to, or subtracted from, the roll are given in the associated value of ``modifier(_:)``.
 public enum Dice: Equatable, Hashable, Sendable {
     case die(Die, count: Int = 1)
     case modifier(Int)
@@ -84,8 +88,10 @@ public enum Dice: Equatable, Hashable, Sendable {
 extension Dice: CustomStringConvertible {
     public var description: String {
         switch self {
-        case let .die(die, count): "\(count.formatted(.number))\(die)"
-        case let .modifier(modifier): modifier.formatted(.number)
+        case let .die(die, count):
+            count.formatted(.number) + die.description
+        case let .modifier(modifier):
+            modifier.formatted(.number)
         }
     }
 }
@@ -112,26 +118,19 @@ extension Dice: Rollable {
     }
 }
 
-private func abs(_ dice: Dice) -> Dice {
-    switch dice {
-    case let .die(die, count): .die(die, count: abs(count))
-    case let .modifier(modifier): .modifier(abs(modifier))
-    }
-}
-
 /// Dice notation.
 ///
-/// Encodes the notation of one or more ``Dice`` to be rolled, with zero or more modifiers added or subtracted, e.g.
-/// `"2d6 + 4"`.
+/// Encodes the notation of ``Dice`` to be rolled, with modifiers added or subtracted, e.g. `"2d6 + 4"`.
 public struct DiceNotation: Equatable, Hashable, Sendable {
     /// Dice to be rolled and modifiers to be added to or subtracted from the rolled total.
     public let dice: [Dice]
 
+    /// Initialize dice.
     public init(_ dice: [Dice]) {
         self.dice = dice
     }
 
-    /// Create a simple dice notation.
+    /// Initialize a simple dice notation.
     /// - Parameters:
     ///   - die: Die to be rolled.
     ///   - count: Number of `die` to be rolled.
@@ -142,17 +141,21 @@ public struct DiceNotation: Equatable, Hashable, Sendable {
     }
 }
 
-extension DiceNotation: ExpressibleByArrayLiteral {
+extension DiceNotation: ExpressibleByArrayLiteral, ExpressibleByStringLiteral {
+    /// Initialize ``dice`` from an array literal.
     public init(arrayLiteral elements: Dice...) {
         self.init(elements)
     }
-}
 
-extension DiceNotation: CustomStringConvertible {
-    /// Creates a new dice notation from the given string.
+    /// Initialize from a string literal by parsing as a string.
+    public init(stringLiteral value: StringLiteralType) {
+        self.init(string: value)!
+    }
+
+    /// Initialize a new dice notation from the given string.
     /// - Parameter string: The string representation of the dice notation.
     /// - Returns: `nil` if the string does not match the format of a dice notation.
-    public init?(_ string: String) {
+    public init?(string: String) {
         let signReference = RegexBuilder.Reference(Int.self)
         let signRegex = Regex {
             ZeroOrMore(.whitespace)
@@ -216,22 +219,28 @@ extension DiceNotation: CustomStringConvertible {
 
         self.init(dice)
     }
+}
 
+extension DiceNotation: CustomStringConvertible {
     public var description: String {
         dice.reduce("") { partialResult, dice in
             switch dice {
-            case let .die(_, count) where count < 0:
-                partialResult.isEmpty ? "\(dice)" : "\(partialResult) - \(abs(dice))"
-            case .die:
-                partialResult.isEmpty ? "\(dice)" : "\(partialResult) + \(dice)"
-            case let .modifier(modifier) where modifier < 0:
-                partialResult.isEmpty
-                    ? "\(modifier.formatted(.number))"
-                    : "\(partialResult) - \(abs(modifier).formatted(.number))"
+            case let .die(die, count):
+                if partialResult.isEmpty {
+                    dice.description
+                } else if count < 0 {
+                    "\(partialResult) - \(abs(count))\(die)"
+                } else {
+                    "\(partialResult) + \(count)\(die)"
+                }
             case let .modifier(modifier):
-                partialResult.isEmpty
-                    ? "\(modifier.formatted(.number))"
-                    : "\(partialResult) + \(modifier.formatted(.number))"
+                if partialResult.isEmpty {
+                    dice.description
+                } else if modifier < 0 {
+                    "\(partialResult) - \(abs(modifier))"
+                } else {
+                    "\(partialResult) + \(modifier)"
+                }
             }
         }
     }
