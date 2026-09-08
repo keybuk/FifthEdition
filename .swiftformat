@@ -43,3 +43,5 @@
 --enable testSuiteAccessControl
 --enable urlMacro
 --enable validateTestCases
+
+--disable swiftTestingTestCaseNames
