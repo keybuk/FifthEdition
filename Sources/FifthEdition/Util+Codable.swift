@@ -224,7 +224,8 @@ extension Speed: Codable {
         {
             speeds = [.walk: .speed(value)]
         } else if let container = try? decoder.singleValueContainer(),
-                  let value = try? container.decode(String.self), value == "Varies"
+                  let value = try? container.decode(String.self),
+                  value == "Varies"
         {
             self = .varies
         } else {

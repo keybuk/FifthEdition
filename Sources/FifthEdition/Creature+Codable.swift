@@ -361,7 +361,12 @@ extension Creature.CreatureType: Codable {
 
     public func encode(to encoder: any Encoder) throws {
         if case let .type(value) = type,
-           swarmSize == nil, tags == nil, sidekickType == nil, sidekickTags == nil, sidekickHidden == nil, note == nil
+           swarmSize == nil,
+           tags == nil,
+           sidekickType == nil,
+           sidekickTags == nil,
+           sidekickHidden == nil,
+           note == nil
         {
             var container = encoder.singleValueContainer()
             try container.encode(value)

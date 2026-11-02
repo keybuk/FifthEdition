@@ -29,6 +29,7 @@
 
 --enable blockComments
 --enable emptyExtensions
+--enable forWhere
 --enable isEmpty
 --enable noGuardInTests
 --enable preferContains
@@ -37,7 +38,7 @@
 --enable preferFlatMap
 --enable preferMinOverSorted
 --enable preferSwiftTesting
---enable privateStateVariables
+--enable privateSwiftUIDynamicProperties
 --enable singlePropertyPerLine
 --enable sortSwitchCases
 --enable testSuiteAccessControl
